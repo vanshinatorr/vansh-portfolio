@@ -207,11 +207,11 @@ const FontLoader = () => (
     .nav-cta {
       font-size:.8rem; font-weight:600; letter-spacing:.05em;
       padding:.5rem 1.25rem; border-radius:6px;
-      background:var(--accent); color:#fff; text-decoration:none;
+      border:1px solid var(--border); color:var(--muted); text-decoration:none;
       text-transform:uppercase;
-      transition:opacity .2s, transform .2s, box-shadow .2s;
+      transition:border-color .2s, color .2s, transform .2s;
     }
-    .nav-cta:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 4px 20px rgba(124,58,237,.5); }
+    .nav-cta:hover { border-color:var(--accent2); color:var(--accent2); transform:translateY(-1px); }
 
     /* ─── SECTION ────────────────────────────────────────── */
     section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; margin:0 auto; }
