@@ -70,15 +70,15 @@ const FontLoader = () => (
       font-size: clamp(3.8rem, 14vw, 11rem);
       font-weight: 800; letter-spacing: -0.01em;
       
-      /* Liquid Metal / Chrome Sweep background */
+      /* Liquid Platinum Chrome Sweep (mostly solid bright silver/white, high contrast) */
       background: linear-gradient(120deg, 
-        rgba(240,240,245,0.05) 0%, 
-        rgba(240,240,245,0.05) 30%, 
+        #ffffff 0%, 
+        #e8e8ef 30%, 
         var(--accent2) 42%, 
         #ffffff 50%, 
         var(--accent2) 58%, 
-        rgba(240,240,245,0.05) 70%, 
-        rgba(240,240,245,0.05) 100%
+        #e8e8ef 70%, 
+        #ffffff 100%
       );
       background-size: 260% 100%;
       background-position: 180% 0%;
@@ -86,7 +86,7 @@ const FontLoader = () => (
       -webkit-background-clip: text;
       
       color: transparent;
-      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.22);
+      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.38);
       line-height: 1; user-select: none;
       will-change: transform;
     }
@@ -95,7 +95,7 @@ const FontLoader = () => (
       -webkit-background-clip: initial;
       background-clip: initial;
       color: transparent;
-      -webkit-text-stroke: 1.2px rgba(167,139,250,0.5);
+      -webkit-text-stroke: 1.2px rgba(167,139,250,0.65);
       text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
       transition: text-shadow 0.4s ease;
     }
@@ -782,6 +782,7 @@ function IntroScreen({ onDone }) {
       // Pop the final dot & trigger long-echoing shockwave ripple
       .to(charsRef.current[INTRO_LETTERS.length], {
         color: 'var(--accent2)', webkitTextStroke: '0px transparent',
+        textShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
         scale: 1.25, duration: 0.65, ease: 'power3.out'
       }, '<')
       .fromTo(shockwaveRef.current, 
