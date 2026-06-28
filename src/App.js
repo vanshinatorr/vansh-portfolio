@@ -737,25 +737,25 @@ function IntroScreen({ onDone }) {
     });
 
     tl
-      // 1. Center laser line sweeps out
-      .to(ruleRef.current, { scaleX: 1, duration: 0.52, ease: 'power3.out' })
-      // 2. Alternate assembly (odd letters drop down, even letters slide up, blur resolves)
+      // 1. Center laser line sweeps out (slow and majestic)
+      .to(ruleRef.current, { scaleX: 1, duration: 0.88, ease: 'power4.inOut' })
+      // 2. Alternate assembly (odd letters drop down, even letters slide up, blur resolves slowly)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
-        stagger: 0.08, duration: 0.78, ease: 'power3.out'
-      }, '-=0.22');
+        stagger: 0.15, duration: 1.15, ease: 'power4.out'
+      }, '-=0.45');
 
-    // 2.5. Sliding Decryption Scramble effect synced with baseline arrivals
+    // 2.5. Sliding Decryption Scramble effect (slower flicker rate for tech feel)
     INTRO_LETTERS.forEach((finalChar, index) => {
       const charEl = charsRef.current[index];
       if (!charEl) return;
       const scrambleChars = "X//%@$#&?*01";
       tl.to({ val: 0 }, {
         val: 1,
-        duration: 0.46,
+        duration: 0.68,
         ease: 'none',
         onUpdate: function() {
-          if (this.progress() < 0.85) {
+          if (this.progress() < 0.88) {
             charEl.innerText = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
           } else {
             charEl.innerText = finalChar;
@@ -764,58 +764,58 @@ function IntroScreen({ onDone }) {
         onComplete: () => {
           charEl.innerText = finalChar;
         }
-      }, `-=${0.88 - index * 0.08}`);
+      }, `-=${1.15 - index * 0.15}`);
     });
 
     tl
-      // 3. Hollow-to-Solid Liquid Chrome Reflection Sweep (gradient moves left, letters heartbeat-pulse)
+      // 3. Hollow-to-Solid Liquid Chrome Reflection Sweep (slower, liquid metallic wave)
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         backgroundPosition: '0% 0%', webkitTextStroke: '0px transparent',
-        scale: 1.1, stagger: 0.05, duration: 0.48, ease: 'power2.out'
-      }, '-=0.15')
+        scale: 1.1, stagger: 0.08, duration: 0.95, ease: 'power3.out'
+      }, '-=0.25')
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
-        scale: 1, stagger: 0.05, duration: 0.32, ease: 'power2.inOut'
-      }, '-=0.4')
+        scale: 1, stagger: 0.08, duration: 0.72, ease: 'power3.inOut'
+      }, '-=0.88')
       
-      // Pop the final dot & trigger shockwave ring expand
+      // Pop the final dot & trigger long-echoing shockwave ripple
       .to(charsRef.current[INTRO_LETTERS.length], {
         color: 'var(--accent2)', webkitTextStroke: '0px transparent',
-        scale: 1.25, duration: 0.38, ease: 'power2.out'
+        scale: 1.25, duration: 0.65, ease: 'power3.out'
       }, '<')
       .fromTo(shockwaveRef.current, 
         { display: 'block', scale: 0.1, opacity: 0.95 },
-        { scale: 8.5, opacity: 0, duration: 0.88, ease: 'power3.out' },
+        { scale: 8.5, opacity: 0, duration: 1.45, ease: 'power3.out' },
         '<'
       )
       .to(charsRef.current[INTRO_LETTERS.length], {
-        scale: 1, duration: 0.28, ease: 'power2.inOut'
-      }, '-=0.12')
+        scale: 1, duration: 0.45, ease: 'power3.inOut'
+      }, '-=0.28')
       
       // 4. Subtitle fades up
       .to(subRef.current, {
-        opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-      }, '-=0.25')
+        opacity: 1, y: 0, duration: 0.88, ease: 'power3.out'
+      }, '-=0.38')
       // 5. Hold for reading
-      .to({}, { duration: 0.85 })
-      // 6. IMPLOSION: Letters pull into center, scale down, and blur away
+      .to({}, { duration: 1.2 })
+      // 6. IMPLOSION: Letters pull into center, scale down, and blur away (heavy gravity-well collapse)
       .to(nameRef.current, {
         letterSpacing: '-1.15em',
-        scale: 0.25,
+        scale: 0.22,
         filter: 'blur(14px)',
         opacity: 0,
-        duration: 0.78,
-        ease: 'power3.inOut'
+        duration: 1.15,
+        ease: 'power4.inOut'
       })
       // 7. Laser line and subtitle collapse simultaneously
       .to(ruleRef.current, {
-        scaleX: 0, opacity: 0, duration: 0.68, ease: 'power3.inOut'
+        scaleX: 0, opacity: 0, duration: 0.95, ease: 'power4.inOut'
       }, '<')
       .to(subRef.current, {
-        y: 18, opacity: 0, filter: 'blur(8px)', duration: 0.68, ease: 'power3.inOut'
+        y: 18, opacity: 0, filter: 'blur(8px)', duration: 0.95, ease: 'power4.inOut'
       }, '<')
-      // 8. SKEWED DIAGONAL CURTAIN WIPE — shutter effect as panels fly apart
-      .to(topRef.current, { y: '-101%', skewY: -4.5, duration: 0.92, ease: 'power4.inOut' }, '-=0.32')
-      .to(botRef.current, { y: '101%',  skewY: -4.5, duration: 0.92, ease: 'power4.inOut' }, '<');
+      // 8. SKEWED DIAGONAL CURTAIN WIPE — majestic shutter exit
+      .to(topRef.current, { y: '-101%', skewY: -4.5, duration: 1.35, ease: 'power4.inOut' }, '-=0.45')
+      .to(botRef.current, { y: '101%',  skewY: -4.5, duration: 1.35, ease: 'power4.inOut' }, '<');
 
     return () => tl.kill();
   }, [onDone]);
