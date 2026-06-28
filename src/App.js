@@ -980,7 +980,7 @@ export default function Portfolio() {
                 { icon:"💼", label:"linkedin.com/in/vansh-vijay",    href:"https://www.linkedin.com/in/vansh-vijay/" },
                 { icon:"🐙", label:"github.com/vanshinatorr",        href:"https://github.com/vanshinatorr" },
                 { icon:"🐦", label:"x.com/vanshvijay9",              href:"https://x.com/vanshvijay9" },
-                { icon:"📷", label:"instagram.com/vansh_vj",         href:"https://instagram.com/vansh_vj" },
+                { icon:"🪐", label:"instagram.com/vansh_vj",         href:"https://instagram.com/vansh_vj" },
               ].map(l => (
                 <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="contact-link">
                   <span className="contact-link-icon">{l.icon}</span>{l.label}
