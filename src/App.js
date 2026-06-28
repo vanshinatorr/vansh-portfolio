@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ── Fonts ─────────────────────────────────────────────────────────────────────
 const FontLoader = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -66,12 +66,12 @@ const FontLoader = () => (
     }
     .intro-char {
       display: inline-block;
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
+      font-family: 'Outfit', sans-serif;
       font-size: clamp(3.8rem, 14vw, 11rem);
-      font-weight: 700; letter-spacing: -0.01em;
-      color: var(--text); line-height: 1; user-select: none;
-      padding-right: 0.08em; /* prevents italic slanting clipping inside mask */
+      font-weight: 800; letter-spacing: -0.01em;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.4);
+      line-height: 1; user-select: none;
       will-change: transform;
     }
     .intro-char.dot {
@@ -501,7 +501,7 @@ function ParticleCanvas() {
     let particles = [];
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth;
+      canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
     resize();
@@ -606,8 +606,8 @@ function TiltCard({ children, className = "", style = {} }) {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width  - 0.5;
-    const y = (e.clientY - rect.top)  / rect.height - 0.5;
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
     el.style.transition = "box-shadow .3s, border-color .3s";
     el.style.transform = `perspective(600px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg) scale(1.03)`;
     // Move sheen
@@ -646,8 +646,8 @@ function useMagnetic(strength = 0.38) {
   const handleMouseMove = useCallback((e) => {
     const el = ref.current; if (!el) return;
     const rect = el.getBoundingClientRect();
-    const dx = (e.clientX - rect.left - rect.width  / 2) * strength;
-    const dy = (e.clientY - rect.top  - rect.height / 2) * strength;
+    const dx = (e.clientX - rect.left - rect.width / 2) * strength;
+    const dy = (e.clientY - rect.top - rect.height / 2) * strength;
     el.style.transform = `translate(${dx}px,${dy}px)`;
   }, [strength]);
   const handleMouseLeave = useCallback(() => {
@@ -659,25 +659,27 @@ function useMagnetic(strength = 0.38) {
   return { ref, onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave };
 }
 
+const INTRO_LETTERS = "Vanshh".split("");
+
 // ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
 function IntroScreen({ onDone }) {
   const screenRef = useRef(null);
-  const topRef    = useRef(null);
-  const botRef    = useRef(null);
-  const ruleRef   = useRef(null);
-  const nameRef   = useRef(null);
-  const charsRef  = useRef([]);
-  const subRef    = useRef(null);
+  const topRef = useRef(null);
+  const botRef = useRef(null);
+  const ruleRef = useRef(null);
+  const nameRef = useRef(null);
+  const charsRef = useRef([]);
+  const subRef = useRef(null);
 
   useEffect(() => {
     const el = screenRef.current;
     if (!el) return;
 
     // Set initial states for rack focus & hidden state
-    gsap.set(ruleRef.current,  { scaleX: 0 });
+    gsap.set(ruleRef.current, { scaleX: 0 });
     gsap.set(charsRef.current, { y: -25, scale: 1.5, filter: 'blur(16px)', opacity: 0 });
-    gsap.set(subRef.current,   { opacity: 0, y: 12 });
-    gsap.set(nameRef.current,  { letterSpacing: '0.04em' });
+    gsap.set(subRef.current, { opacity: 0, y: 12 });
+    gsap.set(nameRef.current, { letterSpacing: '0.04em' });
 
     const tl = gsap.timeline({
       delay: 0.15,
@@ -690,16 +692,25 @@ function IntroScreen({ onDone }) {
     tl
       // 1. Center laser line sweeps out
       .to(ruleRef.current, { scaleX: 1, duration: 0.52, ease: 'power3.out' })
-      // 2. Letters Rack-Focus in (blur resolves, scales down, slides down to baseline)
+      // 2. Letters Rack-Focus in as hollow outlines (blur resolves, slides to baseline)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
         stagger: 0.08, duration: 0.72, ease: 'power3.out'
       }, '-=0.22')
-      // 3. Subtitle fades up
+      // 3. Hollow-to-Solid Liquid Fill (letters fill to white, dot fills to glowing purple)
+      .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
+        color: '#f0f0f5', webkitTextStroke: '0px transparent',
+        stagger: 0.045, duration: 0.46, ease: 'power2.out'
+      }, '-=0.18')
+      .to(charsRef.current[INTRO_LETTERS.length], {
+        color: 'var(--accent2)', webkitTextStroke: '0px transparent',
+        duration: 0.46, ease: 'power2.out'
+      }, '<')
+      // 4. Subtitle fades up
       .to(subRef.current, {
         opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-      }, '-=0.15')
-      // 4. Hold for premium reading time
+      }, '-=0.18')
+      // 5. Hold for reading
       .to({}, { duration: 0.85 })
       // 5. IMPLOSION: Letters pull into center, scale down, and blur away
       .to(nameRef.current, {
@@ -719,12 +730,10 @@ function IntroScreen({ onDone }) {
       }, '<')
       // 7. CURTAIN SPLIT WIPE — triggers slightly before implosion ends for momentum
       .to(topRef.current, { y: '-101%', duration: 0.82, ease: 'power4.inOut' }, '-=0.28')
-      .to(botRef.current, { y: '101%',  duration: 0.82, ease: 'power4.inOut' }, '<');
+      .to(botRef.current, { y: '101%', duration: 0.82, ease: 'power4.inOut' }, '<');
 
     return () => tl.kill();
   }, [onDone]);
-
-  const letters = "Vanshh".split("");
 
   return (
     <div ref={screenRef} id="intro-screen">
@@ -732,14 +741,14 @@ function IntroScreen({ onDone }) {
       <div ref={botRef} className="intro-panel intro-panel-bottom" />
       <div className="intro-content">
         <div ref={ruleRef} className="intro-rule" />
-        <div ref={nameRef} className="intro-name" style={{ display:'flex', alignItems:'baseline' }}>
-          {letters.map((char, i) => (
+        <div ref={nameRef} className="intro-name" style={{ display: 'flex', alignItems: 'baseline' }}>
+          {INTRO_LETTERS.map((char, i) => (
             <span key={i} className={`intro-mask${char.toLowerCase() === 'n' ? ' mirror-n' : ''}`}>
               <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
             </span>
           ))}
           <span className="intro-mask">
-            <span ref={el => { charsRef.current[letters.length] = el; }} className="intro-char dot">.</span>
+            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot">.</span>
           </span>
         </div>
         <p ref={subRef} className="intro-sub">full stack developer</p>
@@ -778,7 +787,7 @@ export default function Portfolio() {
   // Scroll Progress
   useEffect(() => {
     const bar = document.getElementById("scroll-progress");
-    const ids = ["hero","about","projects","skills","achievements","contact"];
+    const ids = ["hero", "about", "projects", "skills", "achievements", "contact"];
     const fn = () => {
       const y = window.scrollY;
       setScrolled(y > 40);
@@ -819,29 +828,29 @@ export default function Portfolio() {
   }, [introDone]);
 
   const projects = [
-    { idx:"01", name:"ConsistPay", desc:"A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags:["Node.js","Express","MongoDB","JWT","Razorpay","Gemini AI","React"], live:"https://daily-coding-habit-tracker.vercel.app", repo:"https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge:"60+ users" },
-    { idx:"02", name:"Chess Multiplayer", desc:"Real-time multiplayer chess platform. Room-based matchmaking, live move sync across clients, turn management, and game timers — all over WebSockets.", tags:["Socket.IO","Node.js","WebSockets","JavaScript"], live:"https://chess-multiplayer-y54n.onrender.com", repo:"https://github.com/vanshinatorr/chess-multiplayer", badge:"Live" },
-    { idx:"03", name:"Hotel Landing Page", desc:"Modern responsive hotel booking website with room showcase and booking form. Focused on clean UI, responsive layouts, and visual design — demonstrating frontend fundamentals done right.", tags:["HTML", "CSS", "Responsive Design", "UI/UX"], repo:"https://github.com/vanshinatorr/hotel-landing-page-01", badge:"Frontend" },
+    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "60+ users" },
+    { idx: "02", name: "Chess Multiplayer", desc: "Real-time multiplayer chess platform. Room-based matchmaking, live move sync across clients, turn management, and game timers — all over WebSockets.", tags: ["Socket.IO", "Node.js", "WebSockets", "JavaScript"], live: "https://chess-multiplayer-y54n.onrender.com", repo: "https://github.com/vanshinatorr/chess-multiplayer", badge: "Live" },
+    { idx: "03", name: "Hotel Landing Page", desc: "Modern responsive hotel booking website with room showcase and booking form. Focused on clean UI, responsive layouts, and visual design — demonstrating frontend fundamentals done right.", tags: ["HTML", "CSS", "Responsive Design", "UI/UX"], repo: "https://github.com/vanshinatorr/hotel-landing-page-01", badge: "Frontend" },
   ];
 
   const skills = [
-    { title:"Backend",       items:["Node.js","Express.js","REST APIs","JWT Auth","Socket.IO","Razorpay","Gemini AI"], primary:true },
-    { title:"Frontend",      items:["React.js","JavaScript","Tailwind CSS","HTML / CSS"] },
-    { title:"Database & Tools", items:["MongoDB","Mongoose","Postman","Git","Vercel","Render","VS Code"] },
-    { title:"CS Fundamentals", items:["DSA — 300+ problems","OOPs","DBMS","Operating Systems"] },
+    { title: "Backend", items: ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Socket.IO", "Razorpay", "Gemini AI"], primary: true },
+    { title: "Frontend", items: ["React.js", "JavaScript", "Tailwind CSS", "HTML / CSS"] },
+    { title: "Database & Tools", items: ["MongoDB", "Mongoose", "Postman", "Git", "Vercel", "Render", "VS Code"] },
+    { title: "CS Fundamentals", items: ["DSA — 300+ problems", "OOPs", "DBMS", "Operating Systems"] },
   ];
 
   const achievements = [
-    { icon:"🥇", title:"Top 50 on Codolio",       sub:"Ranked among top 50 coding profiles out of 2000+ students at JECRC University" },
-    { icon: "♟️", title: "District Chess Champion",   sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com — strategic thinker on and off the board." },
-    { icon:"🧩", title:"300+ DSA Problems",        sub:"Solved across LeetCode & GFG — arrays, trees, DP, hashing, recursion, graphs." },
-    { icon:"💼", title:"Full Stack Intern",         sub:"Plasmid Innovation — Jul to Sep 2025. Real-world MERN development." },
+    { icon: "🥇", title: "Top 50 on Codolio", sub: "Ranked among top 50 coding profiles out of 2000+ students at JECRC University" },
+    { icon: "♟️", title: "District Chess Champion", sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com — strategic thinker on and off the board." },
+    { icon: "🧩", title: "300+ DSA Problems", sub: "Solved across LeetCode & GFG — arrays, trees, DP, hashing, recursion, graphs." },
+    { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul to Sep 2025. Real-world MERN development." },
   ];
 
   const aboutCards = [
-    { label:"Currently Building", val:"ConsistPay",         sub:"60+ users · Live payments · AI insights" },
-    { label:"University",         val:"JECRC, Jaipur",      sub:"B.Tech CSE · 2023–2027" },
-    { label:"Experience",         val:"Plasmid Innovation", sub:"Full Stack Intern · Jul–Sep 2025" },
+    { label: "Currently Building", val: "ConsistPay", sub: "60+ users · Live payments · AI insights" },
+    { label: "University", val: "JECRC, Jaipur", sub: "B.Tech CSE · 2023–2027" },
+    { label: "Experience", val: "Plasmid Innovation", sub: "Full Stack Intern · Jul–Sep 2025" },
     { label: "Chess", val: "District Champion", sub: "1500+ ELO · College Runner-Up" },
   ];
 
@@ -856,7 +865,7 @@ export default function Portfolio() {
       <nav className={scrolled ? "scrolled" : ""}>
         <a href="#hero" className="nav-logo">VV<span>.</span></a>
         <ul className="nav-links">
-          {["About","Projects","Skills","Contact"].map(l => (
+          {["About", "Projects", "Skills", "Contact"].map(l => (
             <li key={l}>
               <a href={`#${l.toLowerCase()}`} className={activeSection === l.toLowerCase() ? "active" : ""}>{l}</a>
             </li>
@@ -869,28 +878,28 @@ export default function Portfolio() {
       </nav>
 
       {/* ── HERO ── */}
-      <section id="hero" className="noise" style={{ position:"relative" }}>
+      <section id="hero" className="noise" style={{ position: "relative" }}>
         <div className="orb orb-1" />
         <div className="orb orb-2" />
         <div className="orb orb-3" />
         <ParticleCanvas />
 
-        <p className="hero-eyebrow" style={{ position:"relative", zIndex:1 }}>vansh vijay — full stack developer</p>
-        <h1 className="hero-name" style={{ position:"relative", zIndex:1 }}>
+        <p className="hero-eyebrow" style={{ position: "relative", zIndex: 1 }}>vansh vijay — full stack developer</p>
+        <h1 className="hero-name" style={{ position: "relative", zIndex: 1 }}>
           <ScrambleText text="Building" delay={100} /><br />
           <span className="accent-line"><ScrambleText text="products," delay={400} /></span>
           <ScrambleText text=" not projects." delay={700} />
         </h1>
-        <p className="hero-statement" style={{ position:"relative", zIndex:1 }}>
+        <p className="hero-statement" style={{ position: "relative", zIndex: 1 }}>
           <strong>MERN stack developer & founder of ConsistPay</strong> — a real platform used by 60+ students with live Razorpay payments and Gemini AI.{" "}
-          <Typewriter lines={["Final year CSE @ JECRC.","Open to SDE internships.","Shipping real things."]} />
+          <Typewriter lines={["Final year CSE @ JECRC.", "Open to SDE internships.", "Shipping real things."]} />
         </p>
-        <div className="hero-actions" style={{ position:"relative", zIndex:1 }}>
+        <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
           <a href="#projects" className="btn-primary" {...m1}>View Projects ↓</a>
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" {...m2}>GitHub →</a>
         </div>
-        <div className="hero-stats" style={{ position:"relative", zIndex:1 }}>
-          {[{to:60,suffix:"+",label:"ConsistPay Users"},{to:300,suffix:"+",label:"DSA Problems"},{to:1500,suffix:"+",label:"Chess ELO"},{to:204,suffix:"",label:"GitHub Contributions"}].map(s => (
+        <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
+          {[{ to: 60, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: 204, suffix: "", label: "GitHub Contributions" }].map(s => (
             <div className="stat-item" key={s.label}>
               <span className="stat-num"><Counter to={s.to} suffix={s.suffix} /></span>
               <span className="stat-label">{s.label}</span>
@@ -933,12 +942,12 @@ export default function Portfolio() {
         <p className="section-label reveal">Projects</p>
         <div className="projects-list">
           {projects.map((p, i) => (
-            <div className="project-row reveal" key={p.idx} style={{ transitionDelay:`${i * 0.08}s` }}>
+            <div className="project-row reveal" key={p.idx} style={{ transitionDelay: `${i * 0.08}s` }}>
               <div>
                 <div className="project-index">{p.idx}</div>
                 <div className="project-name">{p.name}</div>
                 <div className="project-desc">{p.desc}</div>
-                <div className="project-tags" style={{ marginTop:"1rem" }}>
+                <div className="project-tags" style={{ marginTop: "1rem" }}>
                   {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
                 </div>
               </div>
@@ -960,7 +969,7 @@ export default function Portfolio() {
         <p className="section-label reveal">Skills</p>
         <div className="skills-grid">
           {skills.map((g, i) => (
-            <div key={g.title} className="reveal" style={{ transitionDelay:`${i * 0.1}s` }}>
+            <div key={g.title} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
               <div className="skill-group-title">{g.title}</div>
               <div className="skill-chips">
                 {g.items.map(s => <span key={s} className={`skill-chip${g.primary ? " primary" : ""}`}>{s}</span>)}
@@ -977,7 +986,7 @@ export default function Portfolio() {
         <p className="section-label reveal">Achievements</p>
         <div className="ach-grid">
           {achievements.map((a, i) => (
-            <TiltCard key={a.title} className="ach-card reveal" style={{ transitionDelay:`${i * 0.1}s` }}>
+            <TiltCard key={a.title} className="ach-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
               <div className="ach-card-sheen" />
               <div className="ach-icon">{a.icon}</div>
               <div className="ach-title">{a.title}</div>
@@ -998,11 +1007,11 @@ export default function Portfolio() {
             <p className="contact-sub">Open to SDE internships, full-stack roles, and startup opportunities. If you're building something interesting, I want to hear about it.</p>
             <div className="contact-links">
               {[
-                { icon:"✉️", label:"vanshvijay9784@gmail.com",       href:"mailto:vanshvijay9784@gmail.com" },
-                { icon:"💼", label:"linkedin.com/in/vansh-vijay",    href:"https://www.linkedin.com/in/vansh-vijay/" },
-                { icon:"🐙", label:"github.com/vanshinatorr",        href:"https://github.com/vanshinatorr" },
-                { icon:"🐦", label:"x.com/vanshvijay9",              href:"https://x.com/vanshvijay9" },
-                { icon:"🪐", label:"instagram.com/vansh_vj",         href:"https://instagram.com/vansh_vj" },
+                { icon: "✉️", label: "vanshvijay9784@gmail.com", href: "mailto:vanshvijay9784@gmail.com" },
+                { icon: "💼", label: "linkedin.com/in/vansh-vijay", href: "https://www.linkedin.com/in/vansh-vijay/" },
+                { icon: "🐙", label: "github.com/vanshinatorr", href: "https://github.com/vanshinatorr" },
+                { icon: "🐦", label: "x.com/vanshvijay9", href: "https://x.com/vanshvijay9" },
+                { icon: "🪐", label: "instagram.com/vansh_vj", href: "https://instagram.com/vansh_vj" },
               ].map(l => (
                 <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="contact-link">
                   <span className="contact-link-icon">{l.icon}</span>{l.label}
@@ -1016,7 +1025,7 @@ export default function Portfolio() {
               <div className="avail-title">Open to opportunities</div>
               <div className="avail-sub">Looking for roles starting 2026 onwards. Prefer startups and product companies.</div>
               <div className="avail-types">
-                {["SDE Internship (6 months)","Full Stack Developer","Backend Developer","Startup / Early-stage"].map(t => (
+                {["SDE Internship (6 months)", "Full Stack Developer", "Backend Developer", "Startup / Early-stage"].map(t => (
                   <span key={t} className="avail-type">{t}</span>
                 ))}
               </div>
