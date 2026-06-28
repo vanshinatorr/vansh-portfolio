@@ -70,15 +70,15 @@ const FontLoader = () => (
       font-size: clamp(3.8rem, 14vw, 11rem);
       font-weight: 800; letter-spacing: -0.01em;
       
-      /* Liquid Platinum Chrome Sweep (mostly solid bright silver/white, high contrast) */
+      /* Liquid Platinum Chrome Sweep (high contrast slate white & metallic purple reflection) */
       background: linear-gradient(120deg, 
-        #ffffff 0%, 
-        #e8e8ef 30%, 
-        var(--accent2) 42%, 
+        #f8fafc 0%, 
+        #cbd5e1 25%, 
+        #8b5cf6 40%, 
         #ffffff 50%, 
-        var(--accent2) 58%, 
-        #e8e8ef 70%, 
-        #ffffff 100%
+        #8b5cf6 60%, 
+        #cbd5e1 75%, 
+        #f8fafc 100%
       );
       background-size: 260% 100%;
       background-position: 180% 0%;
@@ -86,7 +86,7 @@ const FontLoader = () => (
       -webkit-background-clip: text;
       
       color: transparent;
-      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.38);
+      -webkit-text-stroke: 1.2px rgba(167, 139, 250, 0.45);
       line-height: 1; user-select: none;
       will-change: transform;
     }
@@ -95,7 +95,7 @@ const FontLoader = () => (
       -webkit-background-clip: initial;
       background-clip: initial;
       color: transparent;
-      -webkit-text-stroke: 1.2px rgba(167,139,250,0.65);
+      -webkit-text-stroke: 1.2px rgba(167, 139, 250, 0.72);
       text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
       transition: text-shadow 0.4s ease;
     }
