@@ -742,7 +742,7 @@ function IntroScreen({ onDone }) {
       // 2. Alternate assembly (starts after a brief pause once laser line is fully drawn)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
-        stagger: 0.15, duration: 1.15, ease: 'power4.out'
+        stagger: 0.15, duration: 1.45, ease: 'power3.out'
       }, '+=0.2');
 
     // 2.5. Sliding Decryption Scramble effect (clean and throttled flicker)
@@ -766,7 +766,7 @@ function IntroScreen({ onDone }) {
         onComplete: () => {
           charEl.innerText = finalChar;
         }
-      }, `-=${1.15 - index * 0.15}`);
+      }, `-=${1.45 - index * 0.15}`);
     });
 
     tl
