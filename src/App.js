@@ -61,6 +61,9 @@ const FontLoader = () => (
     .intro-mask {
       display: inline-block; overflow: hidden; line-height: 1.1;
     }
+    .intro-mask.mirror-n {
+      transform: scaleX(-1);
+    }
     .intro-char {
       display: inline-block;
       font-family: 'Syne', sans-serif;
@@ -714,7 +717,7 @@ function IntroScreen({ onDone }) {
         <div ref={ruleRef} className="intro-rule" />
         <div className="intro-name" style={{ display:'flex', alignItems:'baseline' }}>
           {letters.map((char, i) => (
-            <span key={i} className="intro-mask">
+            <span key={i} className={`intro-mask${char.toLowerCase() === 'n' ? ' mirror-n' : ''}`}>
               <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
             </span>
           ))}
