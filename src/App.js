@@ -91,13 +91,16 @@ const FontLoader = () => (
       will-change: transform;
     }
     .intro-char.dot {
-      background: none;
-      -webkit-background-clip: initial;
-      background-clip: initial;
-      color: transparent;
-      -webkit-text-stroke: 1.2px rgba(167, 139, 250, 0.72);
-      text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
-      transition: text-shadow 0.4s ease;
+      display: inline-block;
+      width: clamp(10px, 2.5vw, 18px);
+      height: clamp(10px, 2.5vw, 18px);
+      border-radius: 50%;
+      background: transparent;
+      border: 1.5px solid rgba(167, 139, 250, 0.72);
+      margin-left: 0.12em;
+      margin-bottom: clamp(4px, 0.8vw, 8px);
+      transform-origin: center;
+      will-change: transform, background-color, border-color, box-shadow;
     }
     .intro-shockwave {
       position: absolute;
@@ -105,11 +108,11 @@ const FontLoader = () => (
       width: 40px; height: 40px;
       border: 1.8px solid var(--accent2);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
       pointer-events: none;
       box-shadow: 0 0 25px rgba(167,139,250,0.65), inset 0 0 15px rgba(167,139,250,0.4);
       z-index: 5;
       display: none;
+      will-change: transform, opacity;
     }
     .intro-sub {
       font-family: 'JetBrains Mono', monospace;
@@ -692,6 +695,88 @@ function useMagnetic(strength = 0.38) {
   return { ref, onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave };
 }
 
+// ── Native Sound Synthesizer (Web Audio API) ─────────────────────────────────
+const playSynthSFX = (type) => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    if (type === 'laser') {
+      // 1. Futuristic noise bandpass sweep for laser line
+      const bufferSize = ctx.sampleRate * 0.45;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(250, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(7500, ctx.currentTime + 0.38);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.045, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.42);
+      
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+    }
+    
+    if (type === 'tick') {
+      // 2. High-end carbon mechanical click for letter lock
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.038);
+      gain.gain.setValueAtTime(0.012, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.038);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.045);
+    }
+    
+    if (type === 'impact') {
+      // 3. Cinematic deep sub-bass drop + high crystalline ping
+      const oscSub = ctx.createOscillator();
+      const oscPing = ctx.createOscillator();
+      const gainSub = ctx.createGain();
+      const gainPing = ctx.createGain();
+      
+      // Sub-bass sweep
+      oscSub.type = 'sine';
+      oscSub.frequency.setValueAtTime(80, ctx.currentTime);
+      oscSub.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 0.85);
+      gainSub.gain.setValueAtTime(0.24, ctx.currentTime);
+      gainSub.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.9);
+      oscSub.connect(gainSub);
+      gainSub.connect(ctx.destination);
+      
+      // Glass/sine bell ping
+      oscPing.type = 'triangle';
+      oscPing.frequency.setValueAtTime(780, ctx.currentTime);
+      oscPing.frequency.exponentialRampToValueAtTime(390, ctx.currentTime + 0.35);
+      gainPing.gain.setValueAtTime(0.045, ctx.currentTime);
+      gainPing.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+      oscPing.connect(gainPing);
+      gainPing.connect(ctx.destination);
+      
+      oscSub.start();
+      oscSub.stop(ctx.currentTime + 0.95);
+      oscPing.start();
+      oscPing.stop(ctx.currentTime + 0.55);
+    }
+  } catch (e) {
+    // Fail silently on browsers blocking early AudioContext
+  }
+};
+
 const INTRO_LETTERS = "Vanshh".split("");
 
 // ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
@@ -713,7 +798,7 @@ function IntroScreen({ onDone }) {
     gsap.set(ruleRef.current, { scaleX: 0 });
     gsap.set(subRef.current, { opacity: 0, y: 12 });
     gsap.set(nameRef.current, { letterSpacing: '0.04em' });
-    gsap.set(shockwaveRef.current, { scale: 0.1, opacity: 0, display: 'none' });
+    gsap.set(shockwaveRef.current, { xPercent: -50, yPercent: -50, scale: 0.1, opacity: 0, display: 'none' });
     
     // Alternating vertical entrance offsets (odd letters high, even letters low)
     charsRef.current.forEach((char, i) => {
@@ -738,11 +823,14 @@ function IntroScreen({ onDone }) {
 
     tl
       // 1. Center laser line sweeps out (slow and majestic)
-      .to(ruleRef.current, { scaleX: 1, duration: 0.88, ease: 'power4.inOut' })
+      .to(ruleRef.current, { 
+        scaleX: 1, duration: 0.88, ease: 'power4.inOut',
+        onStart: () => playSynthSFX('laser')
+      })
       // 2. Alternate assembly (starts after a brief pause once laser line is fully drawn)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
-        stagger: 0.15, duration: 1.15, ease: 'power4.out'
+        stagger: 0.15, duration: 1.45, ease: 'power3.out'
       }, '+=0.2');
 
     // 2.5. Sliding Decryption Scramble effect (clean and throttled flicker)
@@ -765,8 +853,9 @@ function IntroScreen({ onDone }) {
         },
         onComplete: () => {
           charEl.innerText = finalChar;
+          playSynthSFX('tick');
         }
-      }, `-=${1.15 - index * 0.15}`);
+      }, `-=${1.45 - index * 0.15}`);
     });
 
     tl
@@ -781,9 +870,10 @@ function IntroScreen({ onDone }) {
       
       // Pop the final dot & trigger long-echoing shockwave ripple
       .to(charsRef.current[INTRO_LETTERS.length], {
-        color: 'var(--accent2)', webkitTextStroke: '0px transparent',
-        textShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
-        scale: 1.25, duration: 0.65, ease: 'power3.out'
+        backgroundColor: 'var(--accent2)', borderColor: 'transparent',
+        boxShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
+        scale: 1.25, duration: 0.65, ease: 'power3.out',
+        onStart: () => playSynthSFX('impact')
       }, '<')
       .fromTo(shockwaveRef.current, 
         { display: 'block', scale: 0.1, opacity: 0.95 },
@@ -836,7 +926,7 @@ function IntroScreen({ onDone }) {
             </span>
           ))}
           <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
-            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot">.</span>
+            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot" />
             <div ref={shockwaveRef} className="intro-shockwave" />
           </span>
         </div>
