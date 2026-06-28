@@ -121,6 +121,41 @@ const FontLoader = () => (
       color: var(--muted); margin-top: 1.5rem;
       opacity: 0; will-change: transform;
     }
+    .intro-start-btn {
+      background: none; border: 1.2px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1; font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem; letter-spacing: 0.35em;
+      padding: 1.2rem 2.8rem; border-radius: 4px;
+      cursor: pointer; position: relative;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 0 rgba(167, 139, 250, 0);
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .intro-start-btn::before {
+      content: ''; position: absolute; inset: -1px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0; z-index: -1;
+      transition: opacity 0.4s ease;
+    }
+    .intro-start-btn:hover {
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 0 35px rgba(167, 139, 250, 0.28);
+      transform: translateY(-2px);
+    }
+    .intro-start-btn:hover::before {
+      opacity: 0.18;
+    }
+    .intro-start-btn span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.25rem;
+      opacity: 0.65;
+    }
     @keyframes fadeIn { to { opacity: 1; } }
 
 
@@ -781,6 +816,7 @@ const INTRO_LETTERS = "Vanshh".split("");
 
 // ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
 function IntroScreen({ onDone }) {
+  const [started, setStarted] = useState(false);
   const screenRef = useRef(null);
   const topRef = useRef(null);
   const botRef = useRef(null);
@@ -791,6 +827,7 @@ function IntroScreen({ onDone }) {
   const shockwaveRef = useRef(null);
 
   useEffect(() => {
+    if (!started) return;
     const el = screenRef.current;
     if (!el) return;
 
@@ -911,27 +948,37 @@ function IntroScreen({ onDone }) {
       .to(botRef.current, { y: '101%',  skewY: -4.5, duration: 1.35, ease: 'power4.inOut' }, '<');
 
     return () => tl.kill();
-  }, [onDone]);
+  }, [started, onDone]);
 
   return (
-    <div ref={screenRef} id="intro-screen">
+    <div ref={screenRef} id="intro-screen" style={{ pointerEvents: started ? 'none' : 'auto' }}>
       <div ref={topRef} className="intro-panel intro-panel-top" />
       <div ref={botRef} className="intro-panel intro-panel-bottom" />
-      <div className="intro-content">
-        <div ref={ruleRef} className="intro-rule" />
-        <div ref={nameRef} className="intro-name" style={{ display: 'flex', alignItems: 'baseline' }}>
-          {INTRO_LETTERS.map((char, i) => (
-            <span key={i} className={`intro-mask${char.toLowerCase() === 'n' ? ' mirror-n' : ''}`}>
-              <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
-            </span>
-          ))}
-          <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
-            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot" />
-            <div ref={shockwaveRef} className="intro-shockwave" />
-          </span>
+      
+      {!started ? (
+        <div className="intro-content" style={{ zIndex: 10 }}>
+          <button onClick={() => setStarted(true)} className="intro-start-btn">
+            EXPLORE EXPERIENCE
+            <span>headphones recommended</span>
+          </button>
         </div>
-        <p ref={subRef} className="intro-sub">full stack developer</p>
-      </div>
+      ) : (
+        <div className="intro-content">
+          <div ref={ruleRef} className="intro-rule" />
+          <div ref={nameRef} className="intro-name" style={{ display: 'flex', alignItems: 'baseline' }}>
+            {INTRO_LETTERS.map((char, i) => (
+              <span key={i} className={`intro-mask${char.toLowerCase() === 'n' ? ' mirror-n' : ''}`}>
+                <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
+              </span>
+            ))}
+            <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
+              <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot" />
+              <div ref={shockwaveRef} className="intro-shockwave" />
+            </span>
+          </div>
+          <p ref={subRef} className="intro-sub">full stack developer</p>
+        </div>
+      )}
     </div>
   );
 }
