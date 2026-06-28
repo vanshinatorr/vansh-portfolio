@@ -729,7 +729,7 @@ function IntroScreen({ onDone }) {
     });
 
     const tl = gsap.timeline({
-      delay: 0.15,
+      delay: 0.4,
       onComplete: () => {
         onDone();
         gsap.set(el, { display: 'none' });
@@ -739,11 +739,11 @@ function IntroScreen({ onDone }) {
     tl
       // 1. Center laser line sweeps out (slow and majestic)
       .to(ruleRef.current, { scaleX: 1, duration: 0.88, ease: 'power4.inOut' })
-      // 2. Alternate assembly (odd letters drop down, even letters slide up, blur resolves slowly)
+      // 2. Alternate assembly (starts after a brief pause once laser line is fully drawn)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
         stagger: 0.15, duration: 1.15, ease: 'power4.out'
-      }, '-=0.45');
+      }, '+=0.2');
 
     // 2.5. Sliding Decryption Scramble effect (clean and throttled flicker)
     INTRO_LETTERS.forEach((finalChar, index) => {
