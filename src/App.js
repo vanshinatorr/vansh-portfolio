@@ -24,7 +24,7 @@ const FontLoader = () => (
       --green:   #22c55e;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: auto; }
     body {
       background: var(--bg); color: var(--text);
       font-family: 'Inter', sans-serif;
@@ -741,9 +741,11 @@ export default function Portfolio() {
   // Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.25,
+      duration: 1.15,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
     });
+    lenis.on('scroll', ScrollTrigger.update);
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     const rafId = requestAnimationFrame(raf);
     return () => { lenis.destroy(); cancelAnimationFrame(rafId); };
@@ -861,7 +863,7 @@ export default function Portfolio() {
         </h1>
         <p className="hero-statement" style={{ position:"relative", zIndex:1 }}>
           <strong>MERN stack developer & founder of ConsistPay</strong> — a real platform used by 60+ students with live Razorpay payments and Gemini AI.{" "}
-          <Typewriter lines={["Pre-final year CSE @ JECRC.","Open to SDE internships.","Shipping real things."]} />
+          <Typewriter lines={["Final year CSE @ JECRC.","Open to SDE internships.","Shipping real things."]} />
         </p>
         <div className="hero-actions" style={{ position:"relative", zIndex:1 }}>
           <a href="#projects" className="btn-primary" {...m1}>View Projects ↓</a>
@@ -886,7 +888,7 @@ export default function Portfolio() {
           <div className="reveal">
             <h2 className="about-headline">CSE student.<br /><span className="line2">Product founder.</span><br />Backend engineer.</h2>
             <div className="about-body">
-              <p>I'm a pre-final year Computer Science student at JECRC University, Jaipur. I build full-stack products with the MERN stack — from REST APIs and JWT authentication to real-time WebSocket systems and payment integrations.</p>
+              <p>I'm a final year Computer Science student at JECRC University, Jaipur. I build full-stack products with the MERN stack — from REST APIs and JWT authentication to real-time WebSocket systems and payment integrations.</p>
               <p><strong>ConsistPay</strong> is my flagship product — a coding accountability platform where students put real money on the line for daily consistency. It has 60+ active users, live Razorpay transactions, and Gemini AI-powered insights. I built and deployed every part of it.</p>
               <p>I also interned at <strong>Plasmid Innovation</strong> where I worked on real MERN projects. Currently solving DSA daily and prepping for SDE placements.</p>
             </div>
