@@ -99,6 +99,18 @@ const FontLoader = () => (
       text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
       transition: text-shadow 0.4s ease;
     }
+    .intro-shockwave {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 40px; height: 40px;
+      border: 1.8px solid var(--accent2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 0 25px rgba(167,139,250,0.65), inset 0 0 15px rgba(167,139,250,0.4);
+      z-index: 5;
+      display: none;
+    }
     .intro-sub {
       font-family: 'JetBrains Mono', monospace;
       font-size: clamp(0.6rem, 1.3vw, 0.78rem);
@@ -691,6 +703,7 @@ function IntroScreen({ onDone }) {
   const nameRef = useRef(null);
   const charsRef = useRef([]);
   const subRef = useRef(null);
+  const shockwaveRef = useRef(null);
 
   useEffect(() => {
     const el = screenRef.current;
@@ -700,6 +713,7 @@ function IntroScreen({ onDone }) {
     gsap.set(ruleRef.current, { scaleX: 0 });
     gsap.set(subRef.current, { opacity: 0, y: 12 });
     gsap.set(nameRef.current, { letterSpacing: '0.04em' });
+    gsap.set(shockwaveRef.current, { scale: 0.1, opacity: 0, display: 'none' });
     
     // Alternating vertical entrance offsets (odd letters high, even letters low)
     charsRef.current.forEach((char, i) => {
@@ -729,26 +743,58 @@ function IntroScreen({ onDone }) {
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
         stagger: 0.08, duration: 0.78, ease: 'power3.out'
-      }, '-=0.22')
+      }, '-=0.22');
+
+    // 2.5. Sliding Decryption Scramble effect synced with baseline arrivals
+    INTRO_LETTERS.forEach((finalChar, index) => {
+      const charEl = charsRef.current[index];
+      if (!charEl) return;
+      const scrambleChars = "X//%@$#&?*01";
+      tl.to({ val: 0 }, {
+        val: 1,
+        duration: 0.46,
+        ease: 'none',
+        onUpdate: function() {
+          if (this.progress() < 0.85) {
+            charEl.innerText = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+          } else {
+            charEl.innerText = finalChar;
+          }
+        },
+        onComplete: () => {
+          charEl.innerText = finalChar;
+        }
+      }, `-=${0.88 - index * 0.08}`);
+    });
+
+    tl
       // 3. Hollow-to-Solid Liquid Chrome Reflection Sweep (gradient moves left, letters heartbeat-pulse)
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         backgroundPosition: '0% 0%', webkitTextStroke: '0px transparent',
         scale: 1.1, stagger: 0.05, duration: 0.48, ease: 'power2.out'
-      }, '-=0.2')
+      }, '-=0.15')
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         scale: 1, stagger: 0.05, duration: 0.32, ease: 'power2.inOut'
       }, '-=0.4')
+      
+      // Pop the final dot & trigger shockwave ring expand
       .to(charsRef.current[INTRO_LETTERS.length], {
         color: 'var(--accent2)', webkitTextStroke: '0px transparent',
         scale: 1.25, duration: 0.38, ease: 'power2.out'
       }, '<')
+      .fromTo(shockwaveRef.current, 
+        { display: 'block', scale: 0.1, opacity: 0.95 },
+        { scale: 8.5, opacity: 0, duration: 0.88, ease: 'power3.out' },
+        '<'
+      )
       .to(charsRef.current[INTRO_LETTERS.length], {
         scale: 1, duration: 0.28, ease: 'power2.inOut'
       }, '-=0.12')
+      
       // 4. Subtitle fades up
       .to(subRef.current, {
         opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
-      }, '-=0.18')
+      }, '-=0.25')
       // 5. Hold for reading
       .to({}, { duration: 0.85 })
       // 6. IMPLOSION: Letters pull into center, scale down, and blur away
@@ -786,8 +832,9 @@ function IntroScreen({ onDone }) {
               <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
             </span>
           ))}
-          <span className="intro-mask">
+          <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
             <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot">.</span>
+            <div ref={shockwaveRef} className="intro-shockwave" />
           </span>
         </div>
         <p ref={subRef} className="intro-sub">full stack developer</p>
