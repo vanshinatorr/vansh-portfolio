@@ -677,9 +677,20 @@ function IntroScreen({ onDone }) {
 
     // Set initial states for rack focus & hidden state
     gsap.set(ruleRef.current, { scaleX: 0 });
-    gsap.set(charsRef.current, { y: -25, scale: 1.5, filter: 'blur(16px)', opacity: 0 });
     gsap.set(subRef.current, { opacity: 0, y: 12 });
     gsap.set(nameRef.current, { letterSpacing: '0.04em' });
+    
+    // Alternating vertical entrance offsets (odd letters high, even letters low)
+    charsRef.current.forEach((char, i) => {
+      if (char) {
+        gsap.set(char, {
+          y: i % 2 === 0 ? -36 : 36,
+          scale: 1.45,
+          filter: 'blur(16px)',
+          opacity: 0
+        });
+      }
+    });
 
     const tl = gsap.timeline({
       delay: 0.15,
@@ -692,20 +703,26 @@ function IntroScreen({ onDone }) {
     tl
       // 1. Center laser line sweeps out
       .to(ruleRef.current, { scaleX: 1, duration: 0.52, ease: 'power3.out' })
-      // 2. Letters Rack-Focus in as hollow outlines (blur resolves, slides to baseline)
+      // 2. Alternate assembly (odd letters drop down, even letters slide up, blur resolves)
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
-        stagger: 0.08, duration: 0.72, ease: 'power3.out'
+        stagger: 0.08, duration: 0.78, ease: 'power3.out'
       }, '-=0.22')
-      // 3. Hollow-to-Solid Liquid Fill (letters fill to white, dot fills to glowing purple)
+      // 3. Hollow-to-Solid neon pop (letters fill to white with a heartbeat pulse, dot to purple)
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         color: '#f0f0f5', webkitTextStroke: '0px transparent',
-        stagger: 0.045, duration: 0.46, ease: 'power2.out'
+        scale: 1.1, stagger: 0.05, duration: 0.24, ease: 'power2.out'
       }, '-=0.18')
+      .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
+        scale: 1, stagger: 0.05, duration: 0.24, ease: 'power2.in'
+      }, '-=0.32')
       .to(charsRef.current[INTRO_LETTERS.length], {
         color: 'var(--accent2)', webkitTextStroke: '0px transparent',
-        duration: 0.46, ease: 'power2.out'
+        scale: 1.2, duration: 0.24, ease: 'power2.out'
       }, '<')
+      .to(charsRef.current[INTRO_LETTERS.length], {
+        scale: 1, duration: 0.24, ease: 'power2.in'
+      }, '-=0.12')
       // 4. Subtitle fades up
       .to(subRef.current, {
         opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
