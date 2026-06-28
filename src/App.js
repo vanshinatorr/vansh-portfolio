@@ -41,8 +41,8 @@ const FontLoader = () => (
       position: absolute; left: 0; right: 0;
       background: #05050d; z-index: 1; will-change: transform;
     }
-    .intro-panel-top    { top: 0;    height: 50.5%; }
-    .intro-panel-bottom { bottom: 0; height: 50.5%; }
+    .intro-panel-top    { top: 0;    height: 56.5%; }
+    .intro-panel-bottom { bottom: 0; height: 56.5%; }
     /* Content sits above panels */
     .intro-content {
       position: absolute; inset: 0; z-index: 2;
@@ -69,14 +69,35 @@ const FontLoader = () => (
       font-family: 'Outfit', sans-serif;
       font-size: clamp(3.8rem, 14vw, 11rem);
       font-weight: 800; letter-spacing: -0.01em;
+      
+      /* Liquid Metal / Chrome Sweep background */
+      background: linear-gradient(120deg, 
+        rgba(240,240,245,0.05) 0%, 
+        rgba(240,240,245,0.05) 30%, 
+        var(--accent2) 42%, 
+        #ffffff 50%, 
+        var(--accent2) 58%, 
+        rgba(240,240,245,0.05) 70%, 
+        rgba(240,240,245,0.05) 100%
+      );
+      background-size: 260% 100%;
+      background-position: 180% 0%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      
       color: transparent;
-      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.4);
+      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.22);
       line-height: 1; user-select: none;
       will-change: transform;
     }
     .intro-char.dot {
-      color: var(--accent2);
-      text-shadow: 0 0 45px rgba(167,139,250,.95), 0 0 90px rgba(167,139,250,.5);
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+      color: transparent;
+      -webkit-text-stroke: 1.2px rgba(167,139,250,0.5);
+      text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
+      transition: text-shadow 0.4s ease;
     }
     .intro-sub {
       font-family: 'JetBrains Mono', monospace;
@@ -687,7 +708,8 @@ function IntroScreen({ onDone }) {
           y: i % 2 === 0 ? -36 : 36,
           scale: 1.45,
           filter: 'blur(16px)',
-          opacity: 0
+          opacity: 0,
+          backgroundPosition: '180% 0%'
         });
       }
     });
@@ -708,20 +730,20 @@ function IntroScreen({ onDone }) {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
         stagger: 0.08, duration: 0.78, ease: 'power3.out'
       }, '-=0.22')
-      // 3. Hollow-to-Solid neon pop (letters fill to white with a heartbeat pulse, dot to purple)
+      // 3. Hollow-to-Solid Liquid Chrome Reflection Sweep (gradient moves left, letters heartbeat-pulse)
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
-        color: '#f0f0f5', webkitTextStroke: '0px transparent',
-        scale: 1.1, stagger: 0.05, duration: 0.24, ease: 'power2.out'
-      }, '-=0.18')
+        backgroundPosition: '0% 0%', webkitTextStroke: '0px transparent',
+        scale: 1.1, stagger: 0.05, duration: 0.48, ease: 'power2.out'
+      }, '-=0.2')
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
-        scale: 1, stagger: 0.05, duration: 0.24, ease: 'power2.in'
-      }, '-=0.32')
+        scale: 1, stagger: 0.05, duration: 0.32, ease: 'power2.inOut'
+      }, '-=0.4')
       .to(charsRef.current[INTRO_LETTERS.length], {
         color: 'var(--accent2)', webkitTextStroke: '0px transparent',
-        scale: 1.2, duration: 0.24, ease: 'power2.out'
+        scale: 1.25, duration: 0.38, ease: 'power2.out'
       }, '<')
       .to(charsRef.current[INTRO_LETTERS.length], {
-        scale: 1, duration: 0.24, ease: 'power2.in'
+        scale: 1, duration: 0.28, ease: 'power2.inOut'
       }, '-=0.12')
       // 4. Subtitle fades up
       .to(subRef.current, {
@@ -729,7 +751,7 @@ function IntroScreen({ onDone }) {
       }, '-=0.18')
       // 5. Hold for reading
       .to({}, { duration: 0.85 })
-      // 5. IMPLOSION: Letters pull into center, scale down, and blur away
+      // 6. IMPLOSION: Letters pull into center, scale down, and blur away
       .to(nameRef.current, {
         letterSpacing: '-1.15em',
         scale: 0.25,
@@ -738,16 +760,16 @@ function IntroScreen({ onDone }) {
         duration: 0.78,
         ease: 'power3.inOut'
       })
-      // 6. Laser line and subtitle collapse simultaneously
+      // 7. Laser line and subtitle collapse simultaneously
       .to(ruleRef.current, {
         scaleX: 0, opacity: 0, duration: 0.68, ease: 'power3.inOut'
       }, '<')
       .to(subRef.current, {
         y: 18, opacity: 0, filter: 'blur(8px)', duration: 0.68, ease: 'power3.inOut'
       }, '<')
-      // 7. CURTAIN SPLIT WIPE — triggers slightly before implosion ends for momentum
-      .to(topRef.current, { y: '-101%', duration: 0.82, ease: 'power4.inOut' }, '-=0.28')
-      .to(botRef.current, { y: '101%', duration: 0.82, ease: 'power4.inOut' }, '<');
+      // 8. SKEWED DIAGONAL CURTAIN WIPE — shutter effect as panels fly apart
+      .to(topRef.current, { y: '-101%', skewY: -4.5, duration: 0.92, ease: 'power4.inOut' }, '-=0.32')
+      .to(botRef.current, { y: '101%',  skewY: -4.5, duration: 0.92, ease: 'power4.inOut' }, '<');
 
     return () => tl.kill();
   }, [onDone]);
