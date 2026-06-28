@@ -745,18 +745,20 @@ function IntroScreen({ onDone }) {
         stagger: 0.15, duration: 1.15, ease: 'power4.out'
       }, '-=0.45');
 
-    // 2.5. Sliding Decryption Scramble effect (slower flicker rate for tech feel)
+    // 2.5. Sliding Decryption Scramble effect (clean and throttled flicker)
     INTRO_LETTERS.forEach((finalChar, index) => {
       const charEl = charsRef.current[index];
       if (!charEl) return;
-      const scrambleChars = "X//%@$#&?*01";
+      const scrambleChars = "VASH01";
       tl.to({ val: 0 }, {
         val: 1,
-        duration: 0.68,
+        duration: 0.38,
         ease: 'none',
         onUpdate: function() {
-          if (this.progress() < 0.88) {
-            charEl.innerText = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+          if (this.progress() < 0.82) {
+            // Throttle character swap rate to only 8 state-changes
+            const tick = Math.floor(this.progress() * 8);
+            charEl.innerText = scrambleChars[(tick + index) % scrambleChars.length];
           } else {
             charEl.innerText = finalChar;
           }
