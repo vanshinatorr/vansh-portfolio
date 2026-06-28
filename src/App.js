@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ── Fonts ─────────────────────────────────────────────────────────────────────
 const FontLoader = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -66,10 +66,12 @@ const FontLoader = () => (
     }
     .intro-char {
       display: inline-block;
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(3.8rem, 13vw, 10rem);
-      font-weight: 800; letter-spacing: -0.03em;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(3.8rem, 14vw, 11rem);
+      font-weight: 700; letter-spacing: -0.01em;
       color: var(--text); line-height: 1; user-select: none;
+      padding-right: 0.08em; /* prevents italic slanting clipping inside mask */
       will-change: transform;
     }
     .intro-char.dot {
