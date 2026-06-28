@@ -663,6 +663,7 @@ function IntroScreen({ onDone }) {
   const topRef    = useRef(null);
   const botRef    = useRef(null);
   const ruleRef   = useRef(null);
+  const nameRef   = useRef(null);
   const charsRef  = useRef([]);
   const subRef    = useRef(null);
 
@@ -670,13 +671,14 @@ function IntroScreen({ onDone }) {
     const el = screenRef.current;
     if (!el) return;
 
-    // Set initial states
+    // Set initial states for rack focus & hidden state
     gsap.set(ruleRef.current,  { scaleX: 0 });
-    gsap.set(charsRef.current, { y: '110%' });
-    gsap.set(subRef.current,   { opacity: 0, y: 14 });
+    gsap.set(charsRef.current, { y: -25, scale: 1.5, filter: 'blur(16px)', opacity: 0 });
+    gsap.set(subRef.current,   { opacity: 0, y: 12 });
+    gsap.set(nameRef.current,  { letterSpacing: '0.04em' });
 
     const tl = gsap.timeline({
-      delay: 0.1,
+      delay: 0.15,
       onComplete: () => {
         onDone();
         gsap.set(el, { display: 'none' });
@@ -684,25 +686,38 @@ function IntroScreen({ onDone }) {
     });
 
     tl
-      // 1. Rule shoots out from center
-      .to(ruleRef.current, { scaleX: 1, duration: 0.48, ease: 'power3.out' })
-      // 2. Letters slide up from behind mask
+      // 1. Center laser line sweeps out
+      .to(ruleRef.current, { scaleX: 1, duration: 0.52, ease: 'power3.out' })
+      // 2. Letters Rack-Focus in (blur resolves, scales down, slides down to baseline)
       .to(charsRef.current, {
-        y: '0%', stagger: 0.065, duration: 0.58, ease: 'power3.out'
-      }, '-=0.15')
+        y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
+        stagger: 0.08, duration: 0.72, ease: 'power3.out'
+      }, '-=0.22')
       // 3. Subtitle fades up
       .to(subRef.current, {
-        opacity: 1, y: 0, duration: 0.48, ease: 'power2.out'
-      }, '-=0.12')
-      // 4. Hold
-      .to({}, { duration: 0.9 })
-      // 5. Content fades out
-      .to([ruleRef.current, subRef.current, ...charsRef.current], {
-        opacity: 0, duration: 0.3, ease: 'power2.in'
+        opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
+      }, '-=0.15')
+      // 4. Hold for premium reading time
+      .to({}, { duration: 0.85 })
+      // 5. IMPLOSION: Letters pull into center, scale down, and blur away
+      .to(nameRef.current, {
+        letterSpacing: '-1.15em',
+        scale: 0.25,
+        filter: 'blur(14px)',
+        opacity: 0,
+        duration: 0.78,
+        ease: 'power3.inOut'
       })
-      // 6. CURTAIN SPLIT — simultaneous
-      .to(topRef.current, { y: '-101%', duration: 0.88, ease: 'power3.inOut' }, '-=0.05')
-      .to(botRef.current, { y: '101%',  duration: 0.88, ease: 'power3.inOut' }, '<');
+      // 6. Laser line and subtitle collapse simultaneously
+      .to(ruleRef.current, {
+        scaleX: 0, opacity: 0, duration: 0.68, ease: 'power3.inOut'
+      }, '<')
+      .to(subRef.current, {
+        y: 18, opacity: 0, filter: 'blur(8px)', duration: 0.68, ease: 'power3.inOut'
+      }, '<')
+      // 7. CURTAIN SPLIT WIPE — triggers slightly before implosion ends for momentum
+      .to(topRef.current, { y: '-101%', duration: 0.82, ease: 'power4.inOut' }, '-=0.28')
+      .to(botRef.current, { y: '101%',  duration: 0.82, ease: 'power4.inOut' }, '<');
 
     return () => tl.kill();
   }, [onDone]);
@@ -715,7 +730,7 @@ function IntroScreen({ onDone }) {
       <div ref={botRef} className="intro-panel intro-panel-bottom" />
       <div className="intro-content">
         <div ref={ruleRef} className="intro-rule" />
-        <div className="intro-name" style={{ display:'flex', alignItems:'baseline' }}>
+        <div ref={nameRef} className="intro-name" style={{ display:'flex', alignItems:'baseline' }}>
           {letters.map((char, i) => (
             <span key={i} className={`intro-mask${char.toLowerCase() === 'n' ? ' mirror-n' : ''}`}>
               <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
