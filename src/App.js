@@ -242,15 +242,7 @@ const FontLoader = () => (
       transition:border-color .2s, transform .2s, background .2s, box-shadow .3s;
     }
     .btn-ghost:hover { border-color:var(--accent2); background:rgba(167,139,250,.06); box-shadow:0 0 20px rgba(167,139,250,.15); transform:translateY(-2px); }
-    .btn-resume {
-      display:inline-flex; align-items:center; gap:.5rem;
-      padding:.875rem 2.1rem; border-radius:8px;
-      border:1px solid var(--border); color:var(--text);
-      font-family:'Space Grotesk',sans-serif;
-      font-size:.9rem; font-weight:500; text-decoration:none;
-      transition:border-color .2s, transform .2s, background .2s, box-shadow .3s;
-    }
-    .btn-resume:hover { border-color:var(--accent2); background:rgba(167,139,250,.06); box-shadow:0 0 20px rgba(167,139,250,.15); transform:translateY(-2px); }
+
 
     .hero-stats {
       margin-top:5rem; display:flex; gap:3rem; flex-wrap:wrap;
@@ -874,7 +866,6 @@ export default function Portfolio() {
         <div className="hero-actions" style={{ position:"relative", zIndex:1 }}>
           <a href="#projects" className="btn-primary" {...m1}>View Projects ↓</a>
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" {...m2}>GitHub →</a>
-          <a href="https://drive.google.com/file/d/1GyHChavEDZVK24a2ADnrQPKTnfp3HYp6/view?usp=sharing" target="_blank" rel="noreferrer" className="btn-resume">↓ Resume</a>
         </div>
         <div className="hero-stats" style={{ position:"relative", zIndex:1 }}>
           {[{to:60,suffix:"+",label:"ConsistPay Users"},{to:300,suffix:"+",label:"DSA Problems"},{to:1500,suffix:"+",label:"Chess ELO"},{to:204,suffix:"",label:"GitHub Contributions"}].map(s => (
