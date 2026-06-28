@@ -738,21 +738,26 @@ function IntroScreen({ onDone }) {
 
     tl
       // 1. Center laser line sweeps out (slow and majestic)
-      .to(ruleRef.current, { scaleX: 1, duration: 0.88, ease: 'power4.inOut' })
-      // 2. Alternate assembly (odd letters drop down, even letters slide up, blur resolves slowly)
-      .to(charsRef.current, {
-        y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
-        stagger: 0.15, duration: 1.15, ease: 'power4.out'
-      }, '-=0.45');
+      .to(ruleRef.current, { scaleX: 1, duration: 0.88, ease: 'power4.inOut' });
 
-    // 2.5. Sliding Decryption Scramble effect (clean and throttled flicker)
+    tl.addLabel("assemblyStart", "-=0.45");
+
+    // 2. Alternate assembly (odd letters drop down, even letters slide up, slow step-by-step tempo)
+    tl.to(charsRef.current, {
+      y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
+      stagger: 0.24, duration: 1.35, ease: 'power4.out'
+    }, "assemblyStart");
+
+    // 2.5. Sliding Decryption Scramble effect (precisely synced to each character's movement)
     INTRO_LETTERS.forEach((finalChar, index) => {
       const charEl = charsRef.current[index];
       if (!charEl) return;
       const scrambleChars = "VASH01";
+      const startTime = index * 0.24 + 0.35; // begins 0.35s after letter starts moving
+      
       tl.to({ val: 0 }, {
         val: 1,
-        duration: 0.38,
+        duration: 0.55,
         ease: 'none',
         onUpdate: function() {
           if (this.progress() < 0.82) {
@@ -766,7 +771,7 @@ function IntroScreen({ onDone }) {
         onComplete: () => {
           charEl.innerText = finalChar;
         }
-      }, `-=${1.15 - index * 0.15}`);
+      }, `assemblyStart+=${startTime}`);
     });
 
     tl
