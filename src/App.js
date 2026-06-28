@@ -91,13 +91,16 @@ const FontLoader = () => (
       will-change: transform;
     }
     .intro-char.dot {
-      background: none;
-      -webkit-background-clip: initial;
-      background-clip: initial;
-      color: transparent;
-      -webkit-text-stroke: 1.2px rgba(167, 139, 250, 0.72);
-      text-shadow: 0 0 45px rgba(167,139,250,0), 0 0 90px rgba(167,139,250,0);
-      transition: text-shadow 0.4s ease;
+      display: inline-block;
+      width: clamp(10px, 2.5vw, 18px);
+      height: clamp(10px, 2.5vw, 18px);
+      border-radius: 50%;
+      background: transparent;
+      border: 1.5px solid rgba(167, 139, 250, 0.72);
+      margin-left: 0.12em;
+      margin-bottom: clamp(4px, 0.8vw, 8px);
+      transform-origin: center;
+      will-change: transform, background-color, border-color, box-shadow;
     }
     .intro-shockwave {
       position: absolute;
@@ -105,11 +108,11 @@ const FontLoader = () => (
       width: 40px; height: 40px;
       border: 1.8px solid var(--accent2);
       border-radius: 50%;
-      transform: translate(-50%, -50%);
       pointer-events: none;
       box-shadow: 0 0 25px rgba(167,139,250,0.65), inset 0 0 15px rgba(167,139,250,0.4);
       z-index: 5;
       display: none;
+      will-change: transform, opacity;
     }
     .intro-sub {
       font-family: 'JetBrains Mono', monospace;
@@ -713,7 +716,7 @@ function IntroScreen({ onDone }) {
     gsap.set(ruleRef.current, { scaleX: 0 });
     gsap.set(subRef.current, { opacity: 0, y: 12 });
     gsap.set(nameRef.current, { letterSpacing: '0.04em' });
-    gsap.set(shockwaveRef.current, { scale: 0.1, opacity: 0, display: 'none' });
+    gsap.set(shockwaveRef.current, { xPercent: -50, yPercent: -50, scale: 0.1, opacity: 0, display: 'none' });
     
     // Alternating vertical entrance offsets (odd letters high, even letters low)
     charsRef.current.forEach((char, i) => {
@@ -781,8 +784,8 @@ function IntroScreen({ onDone }) {
       
       // Pop the final dot & trigger long-echoing shockwave ripple
       .to(charsRef.current[INTRO_LETTERS.length], {
-        color: 'var(--accent2)', webkitTextStroke: '0px transparent',
-        textShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
+        backgroundColor: 'var(--accent2)', borderColor: 'transparent',
+        boxShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
         scale: 1.25, duration: 0.65, ease: 'power3.out'
       }, '<')
       .fromTo(shockwaveRef.current, 
@@ -836,7 +839,7 @@ function IntroScreen({ onDone }) {
             </span>
           ))}
           <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
-            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot">.</span>
+            <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot" />
             <div ref={shockwaveRef} className="intro-shockwave" />
           </span>
         </div>
