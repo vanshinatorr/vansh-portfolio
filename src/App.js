@@ -92,28 +92,26 @@ const FontLoader = () => (
     }
     .intro-char.dot {
       display: inline-block;
-      width: clamp(10px, 2.5vw, 18px);
-      height: clamp(10px, 2.5vw, 18px);
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: transparent;
-      border: 1.5px solid rgba(167, 139, 250, 0.72);
-      margin-left: 0.12em;
-      margin-bottom: clamp(4px, 0.8vw, 8px);
+      background: var(--accent2);
+      margin-left: 0.15em;
+      margin-bottom: clamp(6px, 1.2vw, 12px);
       transform-origin: center;
-      will-change: transform, background-color, border-color, box-shadow;
+      will-change: transform, opacity;
     }
     .intro-shockwave {
       position: absolute;
       top: 50%; left: 50%;
-      width: 40px; height: 40px;
-      border: 1.8px solid var(--accent2);
+      width: 20px; height: 20px;
+      border: 1px solid rgba(167, 139, 250, 0.4);
       border-radius: 50%;
       pointer-events: none;
-      box-shadow: 0 0 25px rgba(167,139,250,0.65), inset 0 0 15px rgba(167,139,250,0.4);
       z-index: 5;
       display: none;
       will-change: transform, opacity;
     }
+
     .intro-sub {
       font-family: 'JetBrains Mono', monospace;
       font-size: clamp(0.6rem, 1.3vw, 0.78rem);
@@ -892,21 +890,21 @@ function IntroScreen({ onDone }) {
         scale: 1, stagger: 0.08, duration: 0.72, ease: 'power3.inOut'
       }, '-=0.88')
       
-      // Pop the final dot & trigger long-echoing shockwave ripple
+      // Pop the final dot with a clean subtle glow
       .to(charsRef.current[INTRO_LETTERS.length], {
-        backgroundColor: 'var(--accent2)', borderColor: 'transparent',
-        boxShadow: '0 0 25px rgba(167,139,250,0.95), 0 0 50px rgba(167,139,250,0.5)',
-        scale: 1.25, duration: 0.65, ease: 'power3.out',
+        boxShadow: '0 0 12px rgba(167,139,250,0.7)',
+        scale: 1.2, duration: 0.42, ease: 'power3.out',
         onStart: () => playSynthSFX('impact')
       }, '<')
+      // Trigger a quick, sharp target ring that scales up fast and dissipates
       .fromTo(shockwaveRef.current, 
-        { display: 'block', scale: 0.1, opacity: 0.95 },
-        { scale: 8.5, opacity: 0, duration: 1.45, ease: 'power3.out' },
+        { display: 'block', scale: 0.6, opacity: 0.8 },
+        { scale: 4.8, opacity: 0, duration: 0.72, ease: 'power2.out' },
         '<'
       )
       .to(charsRef.current[INTRO_LETTERS.length], {
-        scale: 1, duration: 0.45, ease: 'power3.inOut'
-      }, '-=0.28')
+        scale: 1, duration: 0.35, ease: 'power3.inOut'
+      }, '-=0.22')
       
       // 4. Subtitle fades up
       .to(subRef.current, {
