@@ -437,131 +437,116 @@ const FontLoader = () => (
 
     /* ─── PROJECTS HOVER PORTAL ─── */
     .project-preview-portal {
-      width: 230px; height: 140px;
+      width: 240px; height: 155px;
       perspective: 1000px;
       will-change: transform;
     }
     .portal-inner {
       width: 100%; height: 100%;
-      border-radius: 10px;
-      background: rgba(9, 9, 16, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      background: #06060c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       padding: 10px;
       overflow: hidden;
-      transform: rotateX(5deg) rotateY(-5deg);
-      transform-origin: center;
-      transition: transform 0.3s ease;
-    }
-    .portal-mockup {
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column;
-      gap: 6px;
+      display: flex; flex-direction: column; gap: 8px;
     }
     .mock-header {
       display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px;
     }
     .mock-dots { display: flex; gap: 4px; }
     .mock-dots span {
-      width: 5px; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.15);
+      width: 5px; height: 5px; border-radius: 50%;
     }
-    .mock-dots span:nth-child(1) { background: #ef4444; opacity: 0.85; }
-    .mock-dots span:nth-child(2) { background: #eab308; opacity: 0.85; }
-    .mock-dots span:nth-child(3) { background: #22c55e; opacity: 0.85; }
+    .mock-dots span:nth-child(1) { background: #ff5f56; }
+    .mock-dots span:nth-child(2) { background: #ffbd2e; }
+    .mock-dots span:nth-child(3) { background: #27c93f; }
     .mock-url {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; color: var(--muted);
-      opacity: 0.55; letter-spacing: 0.02em;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; color: var(--muted);
+      opacity: 0.6; letter-spacing: 0.02em;
     }
-    .mock-layout {
-      flex: 1; display: flex; gap: 8px; align-items: center; overflow: hidden;
+    .mock-content {
+      flex: 1; display: flex; gap: 8px; align-items: stretch; overflow: hidden;
     }
     
-    /* ConsistPay layout details */
-    .cp-dashboard {
-      flex: 0.45; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 6px; padding: 6px; height: 100%;
+    /* ConsistPay UI */
+    .cp-card-left {
+      flex: 0.5; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 6px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between;
     }
-    .cp-ring {
-      position: relative; width: 36px; height: 36px; border-radius: 50%;
-      background: conic-gradient(var(--accent2) 0% 84%, rgba(255, 255, 255, 0.05) 84% 100%);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+    .cp-pool-label { font-size: 0.45rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .cp-pool-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1; margin: 4px 0; }
+    .cp-pool-sub { font-size: 0.45rem; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 2px; }
+    .cp-card-right {
+      flex: 0.5; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;
     }
-    .cp-ring::after {
-      content: '84%'; position: absolute; inset: 3px; border-radius: 50%;
-      background: #090910; display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.55rem; font-weight: 700; color: #fff;
+    .cp-stat-box {
+      background: rgba(167, 139, 250, 0.05); border: 1px solid rgba(167, 139, 250, 0.1);
+      border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: space-between;
     }
-    .cp-lbl {
-      font-size: 0.46rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; text-transform: uppercase;
+    .cp-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--accent2); }
+    .cp-stat-lbl { font-size: 0.45rem; color: var(--muted); text-transform: uppercase; }
+    .cp-streak-badge {
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15);
+      border-radius: 4px; padding: 4px; text-align: center; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.45rem; color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
     }
-    .cp-grid {
-      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px;
-      height: 100%; align-content: center;
-    }
-    .cp-box {
-      aspect-ratio: 1; border-radius: 1.5px; background: rgba(255, 255, 255, 0.02);
-      border: 0.5px solid rgba(255, 255, 255, 0.04);
-    }
-    .cp-box.g1 { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); }
-    .cp-box.g2 { background: rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.6); }
-    .cp-box.p1 { background: rgba(167, 139, 250, 0.18); border-color: rgba(167, 139, 250, 0.35); }
-    .cp-box.p2 { background: rgba(167, 139, 250, 0.45); border-color: rgba(167, 139, 250, 0.7); }
     
-    /* Chess Multiplayer layout details */
-    .chess-players {
-      flex: 0.45; display: flex; flex-direction: column; gap: 4px;
+    /* Chess Multiplayer UI */
+    .chess-left {
+      flex: 0.45; display: flex; flex-direction: column; justify-content: space-between; gap: 5px;
     }
-    .player-card {
-      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 1px;
+    .chess-timer {
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 5px; padding: 5px; display: flex; align-items: center; justify-content: space-between;
     }
-    .player-card.active { border-color: rgba(167, 139, 250, 0.25); background: rgba(167, 139, 250, 0.02); }
-    .player-name {
-      font-size: 0.5rem; font-weight: 600; color: #fff;
+    .chess-timer-label { font-size: 0.45rem; color: var(--muted); }
+    .chess-timer-val { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700; color: #f59e0b; }
+    .chess-timer.active { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.02); }
+    .chess-timer.active .chess-timer-val { color: #10b981; }
+    .chess-room-status {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; color: var(--muted);
+      opacity: 0.8; display: flex; align-items: center; gap: 3px;
     }
-    .player-elo {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; color: var(--accent2);
+    .chess-room-dot { width: 4px; height: 4px; border-radius: 50%; background: #ef4444; animation: blink 1.2s infinite; }
+    .chess-board-grid {
+      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 5px; padding: 2px; aspect-ratio: 1;
     }
-    .chess-board-mock {
-      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
-      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 4px; padding: 3px; aspect-ratio: 1; height: 100%;
+    .chess-tile {
+      aspect-ratio: 1; border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem;
     }
-    .chess-sq {
-      border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.5rem;
-    }
-    .chess-sq.dark { background: rgba(255, 255, 255, 0.02); }
-    .chess-sq.light { background: rgba(255, 255, 255, 0.06); }
-    .chess-sq.highlight { background: rgba(167, 139, 250, 0.2); box-shadow: 0 0 5px rgba(167, 139, 250, 0.35); }
-    .chess-p { color: rgba(255,255,255,0.7); }
+    .chess-tile.d { background: rgba(255,255,255,0.02); }
+    .chess-tile.l { background: rgba(255,255,255,0.06); }
+    .chess-tile.hl { background: rgba(167, 139, 250, 0.2); }
+    .chess-tile.active-piece { color: var(--accent2); text-shadow: 0 0 8px var(--accent2); }
     
-    /* Hotel landing page layout details */
-    .hotel-hero-mock {
-      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
-      height: 100%; padding: 2px 0;
+    /* Hotel Landing Page UI */
+    .hotel-wrap-mock {
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;
     }
-    .hotel-title {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; font-weight: 700;
-      color: #fff; line-height: 1.1; letter-spacing: -0.01em;
+    .hotel-headline-mock {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; font-weight: 700; color: #fff;
+      line-height: 1.2;
     }
-    .hotel-title span {
+    .hotel-headline-mock span {
       background: linear-gradient(90deg, #fbbf24, #f59e0b);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .hotel-sub {
-      font-size: 0.48rem; color: var(--muted); opacity: 0.65; line-height: 1.2;
+    .hotel-form-row {
+      display: flex; gap: 4px; width: 100%; margin: 4px 0;
     }
-    .hotel-preview-img {
-      width: 100%; height: 30px; border-radius: 4px;
-      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%);
-      border: 1px dashed rgba(251, 191, 36, 0.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.42rem; color: #fbbf24; letter-spacing: 0.04em; text-transform: uppercase;
+    .hotel-field {
+      flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 4px; padding: 4px; font-size: 0.45rem; color: #cbd5e1; text-align: center;
+    }
+    .hotel-btn-mock {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b); border: none;
+      border-radius: 4px; padding: 5px; color: #0d0d0d; font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.48rem; font-weight: 700; text-align: center; text-transform: uppercase;
+      letter-spacing: 0.05em; box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
     }
 
     /* ─── RESPONSIVE ─────────────────────────────────────── */
@@ -1418,76 +1403,69 @@ export default function Portfolio() {
           transform: 'translate3d(-100px, -100px, 0)'
         }}
       >
-        <div className="portal-inner">
-          {hoveredProject === "01" && (
-            <div className="portal-mockup consistpay-mock">
-              <div className="mock-header">
-                <div className="mock-dots"><span></span><span></span><span></span></div>
-                <div className="mock-url">consistpay.dev</div>
+        <div className='portal-inner'>
+          {hoveredProject === '01' && (
+            <div className='portal-mockup consistpay-mock'>
+              <div className='mock-header'>
+                <div className='mock-dots'><span></span><span></span><span></span></div>
+                <div className='mock-url'>consistpay.dev</div>
               </div>
-              <div className="mock-layout">
-                <div className="cp-dashboard">
-                  <div className="cp-ring"></div>
-                  <div className="cp-lbl">Streak</div>
+              <div className='mock-content'>
+                <div className='cp-card-left'>
+                  <span className='cp-pool-label'>Escrow Pool</span>
+                  <span className='cp-pool-val'>₹ 500</span>
+                  <span className='cp-pool-sub'>● active</span>
                 </div>
-                <div className="cp-grid">
-                  <div className="cp-box g2"></div>
-                  <div className="cp-box p1"></div>
-                  <div className="cp-box g1"></div>
-                  <div className="cp-box p2"></div>
-                  <div className="cp-box p2"></div>
-                  <div className="cp-box g2"></div>
-                  <div className="cp-box"></div>
-                  <div className="cp-box g1"></div>
-                  <div className="cp-box g1"></div>
-                  <div className="cp-box"></div>
-                  <div className="cp-box p1"></div>
-                  <div className="cp-box g2"></div>
+                <div className='cp-card-right'>
+                  <div className='cp-stat-box'>
+                    <span className='cp-stat-num'>84%</span>
+                    <span className='cp-stat-lbl'>Rate</span>
+                  </div>
+                  <div className='cp-streak-badge'>12d Streak</div>
                 </div>
               </div>
             </div>
           )}
-          {hoveredProject === "02" && (
-            <div className="portal-mockup chess-mock">
-              <div className="mock-header">
-                <div className="mock-dots"><span></span><span></span><span></span></div>
-                <div className="mock-url">chess.vanshvijay.dev</div>
+          {hoveredProject === '02' && (
+            <div className='portal-mockup chess-mock'>
+              <div className='mock-header'>
+                <div className='mock-dots'><span></span><span></span><span></span></div>
+                <div className='mock-url'>chess.vansh.dev</div>
               </div>
-              <div className="mock-layout">
-                <div className="chess-players">
-                  <div className="player-card active">
-                    <span className="player-name">Vanshh</span>
-                    <span className="player-elo">1500 ELO</span>
+              <div className='mock-content'>
+                <div className='chess-left'>
+                  <div className='chess-timer active'>
+                    <span className='chess-timer-label'>W</span>
+                    <span className='chess-timer-val'>04:52</span>
                   </div>
-                  <div className="player-card">
-                    <span className="player-name">Opponent</span>
-                    <span className="player-elo">1480 ELO</span>
+                  <div className='chess-timer'>
+                    <span className='chess-timer-label'>B</span>
+                    <span className='chess-timer-val'>03:15</span>
                   </div>
                 </div>
-                <div className="chess-board-mock">
-                  <div className="chess-sq light"></div><div className="chess-sq dark"></div><div className="chess-sq light"></div><div className="chess-sq dark"></div>
-                  <div className="chess-sq dark"></div><div className="chess-sq light highlight"><span className="chess-p">♞</span></div><div className="chess-sq dark"></div><div className="chess-sq light"></div>
-                  <div className="chess-sq light"></div><div className="chess-sq dark"></div><div className="chess-sq light highlight"></div><div className="chess-sq dark"></div>
-                  <div className="chess-sq dark"></div><div className="chess-sq light"></div><div className="chess-sq dark"></div><div className="chess-sq light"><span className="chess-p">♟</span></div>
+                <div className='chess-board-grid'>
+                  <div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l'></div><div className='chess-tile d'></div>
+                  <div className='chess-tile d'></div><div className='chess-tile l hl'><span className='chess-tile active-piece'>♞</span></div><div className='chess-tile d'></div><div className='chess-tile l'></div>
+                  <div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l hl'></div><div className='chess-tile d'></div>
+                  <div className='chess-tile d'></div><div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l'><span className='chess-tile active-piece'>♟</span></div>
                 </div>
               </div>
             </div>
           )}
-          {hoveredProject === "03" && (
-            <div className="portal-mockup hotel-mock">
-              <div className="mock-header">
-                <div className="mock-dots"><span></span><span></span><span></span></div>
-                <div className="mock-url">grandplaza.co</div>
+          {hoveredProject === '03' && (
+            <div className='portal-mockup hotel-mock'>
+              <div className='mock-header'>
+                <div className='mock-dots'><span></span><span></span><span></span></div>
+                <div className='mock-url'>grandplaza.co</div>
               </div>
-              <div className="mock-layout">
-                <div className="hotel-hero-mock">
-                  <div>
-                    <div className="hotel-title">Grand <span>Plaza</span></div>
-                    <div className="hotel-sub">Luxury boutique hotels & suites experience.</div>
+              <div className='mock-content'>
+                <div className='hotel-wrap-mock'>
+                  <div className='hotel-headline-mock'>Grand <span>Plaza</span></div>
+                  <div className='hotel-form-row'>
+                    <div className='hotel-field'>2 Guests</div>
+                    <div className='hotel-field'>28 Jun</div>
                   </div>
-                  <div className="hotel-preview-img">
-                    [ Wireframe Showcase ]
-                  </div>
+                  <div className='hotel-btn-mock'>Book Now</div>
                 </div>
               </div>
             </div>
