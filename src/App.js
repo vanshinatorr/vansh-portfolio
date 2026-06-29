@@ -401,26 +401,33 @@ const FontLoader = () => (
     .skill-chip.primary:hover { border-color:var(--accent2); box-shadow:0 4px 16px rgba(124,58,237,.25); }
 
     /* ─── CONTACT ────────────────────────────────────────── */
-    .contact-wrap { display:grid; grid-template-columns:1.2fr .8fr; gap:5rem; align-items:start; }
-    .contact-headline { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,4vw,3.2rem); font-weight:700; letter-spacing:-.03em; line-height:1.1; color:var(--text); margin-bottom:1.25rem; }
-    .contact-sub { font-size:.95rem; color:var(--muted); line-height:1.7; }
-    .contact-links { display:flex; flex-direction:column; gap:.85rem; margin-top:2rem; }
-    .contact-link { display:flex; align-items:center; gap:.85rem; font-size:.88rem; color:var(--muted); text-decoration:none; transition:color .2s, transform .2s; padding:.5rem; border-radius:8px; }
-    .contact-link:hover { color:var(--text); transform:translateX(4px); }
-    .contact-link-icon { width:38px; height:38px; border-radius:9px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; transition:border-color .2s, box-shadow .2s; }
-    .contact-link:hover .contact-link-icon { border-color:var(--accent2); box-shadow:0 0 12px rgba(167,139,250,.2); }
-    .availability-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.75rem; position:relative; overflow:hidden; transition:border-color .3s, box-shadow .3s; }
-    .availability-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--green),transparent); }
-    .availability-card:hover { border-color:rgba(34,197,94,.3); box-shadow:0 8px 32px rgba(0,0,0,.3); }
-    .avail-dot-wrap { display:flex; align-items:center; gap:.6rem; margin-bottom:1rem; }
-    .avail-dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulseRing 2s infinite; }
-    .avail-label { font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--green); }
-    .avail-title { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
-    .avail-sub { font-size:.82rem; color:var(--muted); line-height:1.6; }
-    .avail-types { display:flex; flex-direction:column; gap:.4rem; margin-top:1.25rem; }
-    .avail-type { font-size:.8rem; color:var(--muted); display:flex; align-items:center; gap:.5rem; transition:color .2s; }
-    .avail-type:hover { color:var(--text); }
-    .avail-type::before { content:'→'; color:var(--accent2); font-size:.75rem; }
+    .contact-wrap {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      max-width: 650px; margin: 0 auto;
+    }
+    .contact-headline {
+      font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 700; letter-spacing: -.03em; line-height: 1.1; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .contact-sub { font-size: .95rem; color: var(--muted); line-height: 1.75; }
+    .contact-links {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+      margin-top: 2.25rem; width: 100%;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: .75rem; font-size: .85rem; color: var(--muted);
+      text-decoration: none; transition: color .2s, transform .2s, border-color .2s;
+      padding: .6rem 1.1rem; border-radius: 8px; background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .contact-link:hover {
+      color: var(--text); transform: translateY(-2px);
+      border-color: rgba(167, 139, 250, 0.25);
+    }
+    .contact-link-icon {
+      font-size: .95rem; display: flex; align-items: center; justify-content: center;
+    }
 
     /* ─── FOOTER ─────────────────────────────────────────── */
     footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; max-width:1100px; margin:0 auto; }
@@ -1302,18 +1309,6 @@ export default function Portfolio() {
                   <span className="contact-link-icon">{l.icon}</span>{l.label}
                 </a>
               ))}
-            </div>
-          </div>
-          <div className="reveal">
-            <div className="availability-card">
-              <div className="avail-dot-wrap"><span className="avail-dot" /><span className="avail-label">Available for hire</span></div>
-              <div className="avail-title">Open to opportunities</div>
-              <div className="avail-sub">Looking for roles starting 2026 onwards. Prefer startups and product companies.</div>
-              <div className="avail-types">
-                {["SDE Internship (6 months)", "Full Stack Developer", "Backend Developer", "Startup / Early-stage"].map(t => (
-                  <span key={t} className="avail-type">{t}</span>
-                ))}
-              </div>
             </div>
           </div>
         </div>
