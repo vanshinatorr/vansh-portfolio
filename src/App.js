@@ -949,8 +949,9 @@ export default function Portfolio() {
   // Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: 0.85,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      wheelMultiplier: 1.18,
       smoothWheel: true,
     });
     lenis.on('scroll', ScrollTrigger.update);
