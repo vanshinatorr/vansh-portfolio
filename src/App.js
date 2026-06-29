@@ -459,15 +459,19 @@ const FontLoader = () => (
     /* ─── RESPONSIVE ─────────────────────────────────────── */
     @media(max-width:768px){
       .project-preview-portal { display:none!important; }
-      nav{padding:1rem 1.25rem;} .nav-links{display:none;}
-      section{padding:5rem 1.25rem;} #hero{padding:7rem 1.25rem 3rem;}
-      .about-grid,.contact-wrap{grid-template-columns:1fr;gap:3rem;}
+      nav{padding:1rem 1rem;} .nav-links{display:none;}
+      .nav-right { gap: 0.5rem; }
+      .nav-resume { font-size: 0.72rem; padding: 0.4rem 0.8rem; }
+      .nav-cta { font-size: 0.72rem; padding: 0.4rem 0.9rem; }
+      section{padding:4.5rem 1rem;} #hero{padding:6.5rem 1rem 3rem;}
+      .about-grid,.contact-wrap{grid-template-columns:1fr;gap:2.5rem;}
       .skills-grid{grid-template-columns:1fr;} .ach-grid{grid-template-columns:1fr;}
-      .project-row{grid-template-columns:1fr;}
-      .project-links{align-items:flex-start;flex-direction:row;}
-      .hero-stats{gap:2rem;}
-      footer{flex-direction:column;gap:1rem;text-align:center;}
+      .project-row{grid-template-columns:1fr; padding: 1.5rem 1rem; gap: 1rem; }
+      .project-links{align-items:flex-start;flex-direction:row; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.5rem; }
+      .hero-stats{gap:2rem; margin-top: 3.5rem; }
+      footer{flex-direction:column;gap:1rem;text-align:center; padding: 2rem 1rem;}
     }
+
     @media(prefers-reduced-motion:reduce){
       .orb,.hero-name .accent-line{animation:none!important;}
       .reveal{transition:opacity .4s ease;}
