@@ -524,29 +524,42 @@ const FontLoader = () => (
     .chess-tile.active-piece { color: var(--accent2); text-shadow: 0 0 8px var(--accent2); }
     
     /* Hotel Landing Page UI */
-    .hotel-wrap-mock {
-      flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    .hotel-layout {
+      flex: 1; display: flex; gap: 8px; align-items: stretch; overflow: hidden;
     }
-    .hotel-headline-mock {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; font-weight: 700; color: #fff;
-      line-height: 1.2;
+    .hotel-suite-card {
+      flex: 0.45; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 6px;
+      padding: 6px; display: flex; flex-direction: column; justify-content: space-between;
     }
-    .hotel-headline-mock span {
-      background: linear-gradient(90deg, #fbbf24, #f59e0b);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .hotel-suite-tag {
+      font-size: 0.4rem; font-weight: 700; color: #fbbf24; text-transform: uppercase;
+      background: rgba(251, 191, 36, 0.12); padding: 2px 4px; border-radius: 3px; width: fit-content;
+      letter-spacing: 0.05em;
     }
-    .hotel-form-row {
-      display: flex; gap: 4px; width: 100%; margin: 4px 0;
+    .hotel-suite-spec {
+      font-size: 0.4rem; color: var(--muted); line-height: 1.2;
     }
-    .hotel-field {
-      flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 4px; padding: 4px; font-size: 0.45rem; color: #cbd5e1; text-align: center;
+    .hotel-details {
+      flex: 0.55; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 0;
     }
-    .hotel-btn-mock {
+    .hotel-header-area {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .hotel-brand {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 800; color: #fff;
+      letter-spacing: 0.04em;
+    }
+    .hotel-stars { font-size: 0.45rem; color: #fbbf24; }
+    .hotel-room-title { font-size: 0.58rem; font-weight: 600; color: #e2e8f0; margin-top: 2px; }
+    .hotel-price {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: #fbbf24; font-weight: 600;
+    }
+    .hotel-btn {
       background: linear-gradient(90deg, #fbbf24, #f59e0b); border: none;
       border-radius: 4px; padding: 5px; color: #0d0d0d; font-family: 'Space Grotesk', sans-serif;
       font-size: 0.48rem; font-weight: 700; text-align: center; text-transform: uppercase;
-      letter-spacing: 0.05em; box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+      letter-spacing: 0.05em; transition: transform 0.2s;
     }
 
     /* ─── RESPONSIVE ─────────────────────────────────────── */
@@ -1459,13 +1472,20 @@ export default function Portfolio() {
                 <div className='mock-url'>grandplaza.co</div>
               </div>
               <div className='mock-content'>
-                <div className='hotel-wrap-mock'>
-                  <div className='hotel-headline-mock'>Grand <span>Plaza</span></div>
-                  <div className='hotel-form-row'>
-                    <div className='hotel-field'>2 Guests</div>
-                    <div className='hotel-field'>28 Jun</div>
+                <div className='hotel-layout'>
+                  <div className='hotel-suite-card'>
+                    <span className='hotel-suite-tag'>Premium</span>
+                    <span className='hotel-suite-spec'>Ocean View<br />WiFi · Pool</span>
                   </div>
-                  <div className='hotel-btn-mock'>Book Now</div>
+                  <div className='hotel-details'>
+                    <div className='hotel-header-area'>
+                      <span className='hotel-brand'>GRAND PLAZA</span>
+                      <span className='hotel-stars'>★★★★★</span>
+                      <span className='hotel-room-title'>Royal Villa</span>
+                    </div>
+                    <span className='hotel-price'>₹ 18,500/N</span>
+                    <div className='hotel-btn'>Reserve</div>
+                  </div>
                 </div>
               </div>
             </div>
