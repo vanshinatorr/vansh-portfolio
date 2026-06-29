@@ -435,9 +435,8 @@ const FontLoader = () => (
     .reveal { opacity:0; transform:translateY(28px); transition:opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1); }
     .reveal.visible { opacity:1; transform:translateY(0); }
 
-    /* ─── PROJECTS HOVER PORTAL ─── */
     .project-preview-portal {
-      width: 240px; height: 155px;
+      width: 240px; height: 160px;
       perspective: 1000px;
       will-change: transform;
     }
@@ -1416,79 +1415,15 @@ export default function Portfolio() {
           transform: 'translate3d(-100px, -100px, 0)'
         }}
       >
-        <div className='portal-inner'>
+        <div className='portal-inner' style={{ padding: 0 }}>
           {hoveredProject === '01' && (
-            <div className='portal-mockup consistpay-mock'>
-              <div className='mock-header'>
-                <div className='mock-dots'><span></span><span></span><span></span></div>
-                <div className='mock-url'>consistpay.dev</div>
-              </div>
-              <div className='mock-content'>
-                <div className='cp-card-left'>
-                  <span className='cp-pool-label'>Escrow Pool</span>
-                  <span className='cp-pool-val'>₹ 500</span>
-                  <span className='cp-pool-sub'>● active</span>
-                </div>
-                <div className='cp-card-right'>
-                  <div className='cp-stat-box'>
-                    <span className='cp-stat-num'>84%</span>
-                    <span className='cp-stat-lbl'>Rate</span>
-                  </div>
-                  <div className='cp-streak-badge'>12d Streak</div>
-                </div>
-              </div>
-            </div>
+            <img src='/consistpay-preview.png' alt='ConsistPay Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
           {hoveredProject === '02' && (
-            <div className='portal-mockup chess-mock'>
-              <div className='mock-header'>
-                <div className='mock-dots'><span></span><span></span><span></span></div>
-                <div className='mock-url'>chess.vansh.dev</div>
-              </div>
-              <div className='mock-content'>
-                <div className='chess-left'>
-                  <div className='chess-timer active'>
-                    <span className='chess-timer-label'>W</span>
-                    <span className='chess-timer-val'>04:52</span>
-                  </div>
-                  <div className='chess-timer'>
-                    <span className='chess-timer-label'>B</span>
-                    <span className='chess-timer-val'>03:15</span>
-                  </div>
-                </div>
-                <div className='chess-board-grid'>
-                  <div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l'></div><div className='chess-tile d'></div>
-                  <div className='chess-tile d'></div><div className='chess-tile l hl'><span className='chess-tile active-piece'>♞</span></div><div className='chess-tile d'></div><div className='chess-tile l'></div>
-                  <div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l hl'></div><div className='chess-tile d'></div>
-                  <div className='chess-tile d'></div><div className='chess-tile l'></div><div className='chess-tile d'></div><div className='chess-tile l'><span className='chess-tile active-piece'>♟</span></div>
-                </div>
-              </div>
-            </div>
+            <img src='/chess-preview.png' alt='Chess Multiplayer Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
           {hoveredProject === '03' && (
-            <div className='portal-mockup hotel-mock'>
-              <div className='mock-header'>
-                <div className='mock-dots'><span></span><span></span><span></span></div>
-                <div className='mock-url'>grandplaza.co</div>
-              </div>
-              <div className='mock-content'>
-                <div className='hotel-layout'>
-                  <div className='hotel-suite-card'>
-                    <span className='hotel-suite-tag'>Premium</span>
-                    <span className='hotel-suite-spec'>Ocean View<br />WiFi · Pool</span>
-                  </div>
-                  <div className='hotel-details'>
-                    <div className='hotel-header-area'>
-                      <span className='hotel-brand'>GRAND PLAZA</span>
-                      <span className='hotel-stars'>★★★★★</span>
-                      <span className='hotel-room-title'>Royal Villa</span>
-                    </div>
-                    <span className='hotel-price'>₹ 18,500/N</span>
-                    <div className='hotel-btn'>Reserve</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <img src='/hotel-preview.png' alt='Hotel Landing Page Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
         </div>
       </div>
