@@ -1025,6 +1025,15 @@ export default function Portfolio() {
     }
   }, [hoveredProject]);
 
+  // Disable native scroll restoration & reset scroll position on mount
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -1034,12 +1043,9 @@ export default function Portfolio() {
     lenis.on('scroll', ScrollTrigger.update);
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     const rafId = requestAnimationFrame(raf);
+    lenis.scrollTo(0, { immediate: true });
     return () => { lenis.destroy(); cancelAnimationFrame(rafId); };
   }, []);
-
-
-
-
 
   // Scroll Progress
   useEffect(() => {
