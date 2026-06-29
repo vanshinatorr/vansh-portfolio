@@ -307,10 +307,11 @@ const FontLoader = () => (
     .about-cards { display:flex; flex-direction:column; gap:1rem; }
     /* 3D tilt cards */
     .about-card {
-      background:var(--surface); border:1px solid var(--border);
+      background: radial-gradient(180px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(167, 139, 250, 0.08) 0%, transparent 100%), var(--surface);
+      border:1px solid var(--border);
       border-radius:10px; padding:1.25rem 1.5rem;
       transform-style:preserve-3d; will-change:transform;
-      transition:border-color .3s, box-shadow .3s;
+      transition:border-color .3s, box-shadow .3s, transform .3s;
       position:relative; overflow:hidden;
     }
     .about-card-sheen {
@@ -361,10 +362,11 @@ const FontLoader = () => (
     /* ─── 3D TILT CARDS (ach) ────────────────────────────── */
     .ach-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
     .ach-card {
-      background:var(--surface); border:1px solid var(--border);
+      background: radial-gradient(180px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(167, 139, 250, 0.08) 0%, transparent 100%), var(--surface);
+      border:1px solid var(--border);
       border-radius:12px; padding:1.75rem;
       transform-style:preserve-3d; will-change:transform;
-      transition:border-color .3s, box-shadow .3s;
+      transition:border-color .3s, box-shadow .3s, transform .3s;
       position:relative; overflow:hidden;
       cursor:default;
     }
@@ -389,7 +391,12 @@ const FontLoader = () => (
       transition:border-color .2s, color .2s, transform .2s, box-shadow .2s;
       cursor:default; position:relative; overflow:hidden;
     }
-    .skill-chip::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at center,rgba(167,139,250,.15) 0%,transparent 70%); opacity:0; transition:opacity .3s; }
+    .skill-chip::after { 
+      content:''; position:absolute; inset:0; 
+      background:radial-gradient(45px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(167,139,250,.24) 0%, transparent 100%); 
+      opacity:0; transition:opacity .3s; 
+      pointer-events: none;
+    }
     .skill-chip:hover { border-color:var(--accent2); color:var(--accent2); transform:translateY(-2px); box-shadow:0 4px 12px rgba(167,139,250,.15); }
     .skill-chip:hover::after { opacity:1; }
     .skill-chip.primary { border-color:rgba(124,58,237,.4); color:var(--accent2); background:rgba(124,58,237,.08); }
@@ -428,8 +435,78 @@ const FontLoader = () => (
     .reveal { opacity:0; transform:translateY(28px); transition:opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1); }
     .reveal.visible { opacity:1; transform:translateY(0); }
 
+    /* ─── PROJECTS HOVER PORTAL ─── */
+    .project-preview-portal {
+      width: 240px; height: 160px;
+      perspective: 1000px;
+      will-change: transform;
+    }
+    .portal-inner {
+      width: 100%; height: 100%;
+      border-radius: 12px;
+      background: rgba(10, 10, 20, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      padding: 12px;
+      overflow: hidden;
+      transform: rotateX(8deg) rotateY(-8deg);
+      transform-origin: center;
+      transition: transform 0.3s ease;
+    }
+    .portal-mockup {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+    }
+    .mock-header {
+      display: flex; gap: 4px; margin-bottom: 8px;
+    }
+    .mock-header span {
+      width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2);
+    }
+    .mock-body {
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .mock-logo {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: #fff;
+    }
+    .mock-stat {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--accent2);
+    }
+    .mock-graph {
+      display: flex; gap: 6px; align-items: flex-end; height: 45px;
+    }
+    .mock-graph span {
+      flex: 1; background: linear-gradient(to top, var(--accent), var(--accent2)); border-radius: 2px;
+    }
+    
+    /* Chess Mock */
+    .mock-chess-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; height: 70px;
+    }
+    .mock-chess-grid div {
+      background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .piece { color: rgba(255,255,255,0.6); }
+    .piece.accent { color: var(--accent2); text-shadow: 0 0 10px var(--accent2); }
+    
+    /* Hotel Mock */
+    .mock-hotel-card {
+      background: rgba(255,255,255,0.02); border-radius: 6px; padding: 6px; border: 0.5px solid rgba(255,255,255,0.05);
+    }
+    .mock-img-placeholder {
+      height: 48px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-radius: 4px;
+      opacity: 0.15;
+    }
+    .mock-title {
+      font-size: 0.65rem; color: #cbd5e1; margin-top: 4px;
+    }
+
     /* ─── RESPONSIVE ─────────────────────────────────────── */
     @media(max-width:768px){
+      .project-preview-portal { display:none!important; }
       nav{padding:1rem 1.25rem;} .nav-links{display:none;}
       section{padding:5rem 1.25rem;} #hero{padding:7rem 1.25rem 3rem;}
       .about-grid,.contact-wrap{grid-template-columns:1fr;gap:3rem;}
@@ -936,15 +1013,40 @@ function IntroScreen({ onDone }) {
   );
 }
 
+function MagneticNavLink({ href, label, active }) {
+  const m = useMagnetic(0.28);
+  return (
+    <li>
+      <a href={href} className={active ? "active" : ""} {...m} style={{ display: 'inline-block' }}>
+        {label}
+      </a>
+    </li>
+  );
+}
+
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function Portfolio() {
   const [introDone, setIntroDone] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [hoveredProject, setHoveredProject] = useState(null);
   const m1 = useMagnetic(0.4);
   const m2 = useMagnetic(0.4);
+  const portalRef = useRef(null);
 
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
+
+  const handleProjectMouseMove = useCallback((e) => {
+    if (portalRef.current) {
+      gsap.to(portalRef.current, {
+        x: e.clientX + 22,
+        y: e.clientY + 22,
+        duration: 0.35,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      });
+    }
+  }, []);
 
   // Lenis smooth scroll
   useEffect(() => {
@@ -1046,9 +1148,12 @@ export default function Portfolio() {
         <a href="#hero" className="nav-logo">VV<span>.</span></a>
         <ul className="nav-links">
           {["About", "Projects", "Skills", "Contact"].map(l => (
-            <li key={l}>
-              <a href={`#${l.toLowerCase()}`} className={activeSection === l.toLowerCase() ? "active" : ""}>{l}</a>
-            </li>
+            <MagneticNavLink 
+              key={l}
+              href={`#${l.toLowerCase()}`} 
+              label={l} 
+              active={activeSection === l.toLowerCase()} 
+            />
           ))}
         </ul>
         <div className="nav-right">
@@ -1122,7 +1227,14 @@ export default function Portfolio() {
         <p className="section-label reveal">Projects</p>
         <div className="projects-list">
           {projects.map((p, i) => (
-            <div className="project-row reveal" key={p.idx} style={{ transitionDelay: `${i * 0.08}s` }}>
+            <div 
+              className="project-row reveal" 
+              key={p.idx} 
+              style={{ transitionDelay: `${i * 0.08}s` }}
+              onMouseEnter={() => setHoveredProject(p.idx)}
+              onMouseLeave={() => setHoveredProject(null)}
+              onMouseMove={handleProjectMouseMove}
+            >
               <div>
                 <div className="project-index">{p.idx}</div>
                 <div className="project-name">{p.name}</div>
@@ -1152,7 +1264,19 @@ export default function Portfolio() {
             <div key={g.title} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
               <div className="skill-group-title">{g.title}</div>
               <div className="skill-chips">
-                {g.items.map(s => <span key={s} className={`skill-chip${g.primary ? " primary" : ""}`}>{s}</span>)}
+                {g.items.map(s => (
+                  <span 
+                    key={s} 
+                    className={`skill-chip${g.primary ? " primary" : ""}`}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                      e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                    }}
+                  >
+                    {s}
+                  </span>
+                ))}
               </div>
             </div>
           ))}
@@ -1219,6 +1343,63 @@ export default function Portfolio() {
         <p className="footer-copy">Built by <span>Vansh Vijay</span> · 2026</p>
         <a href="#hero" className="footer-back">Back to top ↑</a>
       </footer>
+
+      {/* ── PROJECTS HOVER PORTAL ── */}
+      <div 
+        ref={portalRef} 
+        className="project-preview-portal" 
+        style={{ 
+          display: hoveredProject !== null ? 'block' : 'none',
+          position: 'fixed',
+          top: 0, left: 0,
+          pointerEvents: 'none',
+          zIndex: 1000,
+          transform: 'translate3d(-100px, -100px, 0)'
+        }}
+      >
+        <div className="portal-inner">
+          {hoveredProject === "01" && (
+            <div className="portal-mockup consistpay-mock">
+              <div className="mock-header"><span></span><span></span><span></span></div>
+              <div className="mock-body">
+                <div className="mock-logo">ConsistPay</div>
+                <div className="mock-stat">Streak: 12 days</div>
+                <div className="mock-graph">
+                  <span style={{height:'30%'}}></span>
+                  <span style={{height:'50%'}}></span>
+                  <span style={{height:'80%'}}></span>
+                  <span style={{height:'65%'}}></span>
+                </div>
+              </div>
+            </div>
+          )}
+          {hoveredProject === "02" && (
+            <div className="portal-mockup chess-mock">
+              <div className="mock-header"><span></span><span></span><span></span></div>
+              <div className="mock-body">
+                <div className="mock-logo">Chess Live</div>
+                <div className="mock-chess-grid">
+                  <div></div><div></div><div></div>
+                  <div></div><div className="piece">♟</div><div></div>
+                  <div></div><div></div><div className="piece accent">♞</div>
+                </div>
+              </div>
+            </div>
+          )}
+          {hoveredProject === "03" && (
+            <div className="portal-mockup hotel-mock">
+              <div className="mock-header"><span></span><span></span><span></span></div>
+              <div className="mock-body">
+                <div className="mock-logo">Luxury Stay</div>
+                <div className="mock-hotel-card">
+                  <div className="mock-img-placeholder"></div>
+                  <div className="mock-title">Suite Room</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 }
