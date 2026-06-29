@@ -988,14 +988,14 @@ export default function Portfolio() {
     const els = document.querySelectorAll(".reveal");
     els.forEach((el) => {
       gsap.fromTo(el,
-        { y: 38, opacity: 0 },
+        { y: 18, opacity: 0 },
         {
           y: 0, opacity: 1,
-          duration: 0.75,
+          duration: 0.52,
           ease: "power2.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 86%",
+            start: "top 94%",
             toggleActions: "play none none none"
           }
         }
