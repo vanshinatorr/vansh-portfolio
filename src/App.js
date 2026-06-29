@@ -438,127 +438,17 @@ const FontLoader = () => (
     .project-preview-portal {
       width: 240px; height: 160px;
       perspective: 1000px;
-      will-change: transform;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
     }
     .portal-inner {
       width: 100%; height: 100%;
       border-radius: 12px;
       background: #06060c;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      padding: 10px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(167, 139, 250, 0.12);
+      padding: 0;
       overflow: hidden;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .mock-header {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px;
-    }
-    .mock-dots { display: flex; gap: 4px; }
-    .mock-dots span {
-      width: 5px; height: 5px; border-radius: 50%;
-    }
-    .mock-dots span:nth-child(1) { background: #ff5f56; }
-    .mock-dots span:nth-child(2) { background: #ffbd2e; }
-    .mock-dots span:nth-child(3) { background: #27c93f; }
-    .mock-url {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; color: var(--muted);
-      opacity: 0.6; letter-spacing: 0.02em;
-    }
-    .mock-content {
-      flex: 1; display: flex; gap: 8px; align-items: stretch; overflow: hidden;
-    }
-    
-    /* ConsistPay UI */
-    .cp-card-left {
-      flex: 0.5; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 6px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .cp-pool-label { font-size: 0.45rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .cp-pool-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1; margin: 4px 0; }
-    .cp-pool-sub { font-size: 0.45rem; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 2px; }
-    .cp-card-right {
-      flex: 0.5; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;
-    }
-    .cp-stat-box {
-      background: rgba(167, 139, 250, 0.05); border: 1px solid rgba(167, 139, 250, 0.1);
-      border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .cp-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--accent2); }
-    .cp-stat-lbl { font-size: 0.45rem; color: var(--muted); text-transform: uppercase; }
-    .cp-streak-badge {
-      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15);
-      border-radius: 4px; padding: 4px; text-align: center; font-family: 'JetBrains Mono', monospace;
-      font-size: 0.45rem; color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-    }
-    
-    /* Chess Multiplayer UI */
-    .chess-left {
-      flex: 0.45; display: flex; flex-direction: column; justify-content: space-between; gap: 5px;
-    }
-    .chess-timer {
-      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 5px; padding: 5px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .chess-timer-label { font-size: 0.45rem; color: var(--muted); }
-    .chess-timer-val { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700; color: #f59e0b; }
-    .chess-timer.active { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.02); }
-    .chess-timer.active .chess-timer-val { color: #10b981; }
-    .chess-room-status {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; color: var(--muted);
-      opacity: 0.8; display: flex; align-items: center; gap: 3px;
-    }
-    .chess-room-dot { width: 4px; height: 4px; border-radius: 50%; background: #ef4444; animation: blink 1.2s infinite; }
-    .chess-board-grid {
-      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 5px; padding: 2px; aspect-ratio: 1;
-    }
-    .chess-tile {
-      aspect-ratio: 1; border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem;
-    }
-    .chess-tile.d { background: rgba(255,255,255,0.02); }
-    .chess-tile.l { background: rgba(255,255,255,0.06); }
-    .chess-tile.hl { background: rgba(167, 139, 250, 0.2); }
-    .chess-tile.active-piece { color: var(--accent2); text-shadow: 0 0 8px var(--accent2); }
-    
-    /* Hotel Landing Page UI */
-    .hotel-layout {
-      flex: 1; display: flex; gap: 8px; align-items: stretch; overflow: hidden;
-    }
-    .hotel-suite-card {
-      flex: 0.45; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
-      border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 6px;
-      padding: 6px; display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .hotel-suite-tag {
-      font-size: 0.4rem; font-weight: 700; color: #fbbf24; text-transform: uppercase;
-      background: rgba(251, 191, 36, 0.12); padding: 2px 4px; border-radius: 3px; width: fit-content;
-      letter-spacing: 0.05em;
-    }
-    .hotel-suite-spec {
-      font-size: 0.4rem; color: var(--muted); line-height: 1.2;
-    }
-    .hotel-details {
-      flex: 0.55; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 0;
-    }
-    .hotel-header-area {
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .hotel-brand {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 800; color: #fff;
-      letter-spacing: 0.04em;
-    }
-    .hotel-stars { font-size: 0.45rem; color: #fbbf24; }
-    .hotel-room-title { font-size: 0.58rem; font-weight: 600; color: #e2e8f0; margin-top: 2px; }
-    .hotel-price {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: #fbbf24; font-weight: 600;
-    }
-    .hotel-btn {
-      background: linear-gradient(90deg, #fbbf24, #f59e0b); border: none;
-      border-radius: 4px; padding: 5px; color: #0d0d0d; font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.48rem; font-weight: 700; text-align: center; text-transform: uppercase;
-      letter-spacing: 0.05em; transition: transform 0.2s;
     }
 
     /* ─── RESPONSIVE ─────────────────────────────────────── */
@@ -1074,41 +964,71 @@ function MagneticNavLink({ href, label, active }) {
   const m = useMagnetic(0.28);
   return (
     <li>
-      <a href={href} className={active ? "active" : ""} {...m} style={{ display: 'inline-block' }}>
+      <a href={href} className={active ? 'active' : ''} {...m} style={{ display: 'inline-block' }}>
         {label}
       </a>
     </li>
   );
 }
 
-// ── Main App ──────────────────────────────────────────────────────────────────
 export default function Portfolio() {
   const [introDone, setIntroDone] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState('hero');
   const [hoveredProject, setHoveredProject] = useState(null);
   const m1 = useMagnetic(0.4);
   const m2 = useMagnetic(0.4);
   const portalRef = useRef(null);
+  const lastMouse = useRef({ x: 0, y: 0 });
 
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
 
   const handleProjectMouseMove = useCallback((e) => {
     if (portalRef.current) {
+      const dx = e.clientX - lastMouse.current.x;
+      const dy = e.clientY - lastMouse.current.y;
+      lastMouse.current = { x: e.clientX, y: e.clientY };
+
+      const rotX = gsap.utils.clamp(-12, 12, -dy * 0.45);
+      const rotY = gsap.utils.clamp(-12, 12, dx * 0.45);
+
       gsap.to(portalRef.current, {
         x: e.clientX + 22,
         y: e.clientY + 22,
-        duration: 0.35,
+        rotateX: rotX,
+        rotateY: rotY,
+        duration: 0.42,
         ease: 'power3.out',
         overwrite: 'auto'
       });
     }
   }, []);
 
-  // Lenis smooth scroll
+  // Dynamic scale/opacity transitions for the project preview portal
+  useEffect(() => {
+    if (portalRef.current) {
+      if (hoveredProject !== null) {
+        gsap.to(portalRef.current, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.38,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      } else {
+        gsap.to(portalRef.current, {
+          opacity: 0,
+          scale: 0.82,
+          duration: 0.28,
+          ease: 'power3.inOut',
+          overwrite: 'auto'
+        });
+      }
+    }
+  }, [hoveredProject]);
+
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.85,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       wheelMultiplier: 1.18,
       smoothWheel: true,
