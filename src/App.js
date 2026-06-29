@@ -437,131 +437,131 @@ const FontLoader = () => (
 
     /* ─── PROJECTS HOVER PORTAL ─── */
     .project-preview-portal {
-      width: 290px; height: 190px;
+      width: 230px; height: 140px;
       perspective: 1000px;
       will-change: transform;
     }
     .portal-inner {
       width: 100%; height: 100%;
-      border-radius: 12px;
-      background: rgba(9, 9, 16, 0.9);
+      border-radius: 10px;
+      background: rgba(9, 9, 16, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      padding: 14px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      padding: 10px;
       overflow: hidden;
-      transform: rotateX(6deg) rotateY(-6deg);
+      transform: rotateX(5deg) rotateY(-5deg);
       transform-origin: center;
       transition: transform 0.3s ease;
     }
     .portal-mockup {
       width: 100%; height: 100%;
       display: flex; flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
     .mock-header {
       display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 5px;
     }
-    .mock-dots { display: flex; gap: 5px; }
+    .mock-dots { display: flex; gap: 4px; }
     .mock-dots span {
-      width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.15);
+      width: 5px; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.15);
     }
-    .mock-dots span:nth-child(1) { background: #ef4444; opacity: 0.8; }
-    .mock-dots span:nth-child(2) { background: #eab308; opacity: 0.8; }
-    .mock-dots span:nth-child(3) { background: #22c55e; opacity: 0.8; }
+    .mock-dots span:nth-child(1) { background: #ef4444; opacity: 0.85; }
+    .mock-dots span:nth-child(2) { background: #eab308; opacity: 0.85; }
+    .mock-dots span:nth-child(3) { background: #22c55e; opacity: 0.85; }
     .mock-url {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; color: var(--muted);
-      opacity: 0.6; letter-spacing: 0.02em;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.48rem; color: var(--muted);
+      opacity: 0.55; letter-spacing: 0.02em;
     }
     .mock-layout {
-      flex: 1; display: flex; gap: 12px; align-items: center; overflow: hidden;
+      flex: 1; display: flex; gap: 8px; align-items: center; overflow: hidden;
     }
     
     /* ConsistPay layout details */
     .cp-dashboard {
       flex: 0.45; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 8px; padding: 8px; height: 100%;
+      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 6px; padding: 6px; height: 100%;
     }
     .cp-ring {
-      position: relative; width: 46px; height: 46px; border-radius: 50%;
+      position: relative; width: 36px; height: 36px; border-radius: 50%;
       background: conic-gradient(var(--accent2) 0% 84%, rgba(255, 255, 255, 0.05) 84% 100%);
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 15px rgba(167, 139, 250, 0.25);
+      box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
     }
     .cp-ring::after {
-      content: '84%'; position: absolute; inset: 4px; border-radius: 50%;
+      content: '84%'; position: absolute; inset: 3px; border-radius: 50%;
       background: #090910; display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; font-weight: 700; color: #fff;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.55rem; font-weight: 700; color: #fff;
     }
     .cp-lbl {
-      font-size: 0.52rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-size: 0.46rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; text-transform: uppercase;
     }
     .cp-grid {
-      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px;
       height: 100%; align-content: center;
     }
     .cp-box {
-      aspect-ratio: 1; border-radius: 2px; background: rgba(255, 255, 255, 0.03);
-      border: 0.5px solid rgba(255, 255, 255, 0.05);
+      aspect-ratio: 1; border-radius: 1.5px; background: rgba(255, 255, 255, 0.02);
+      border: 0.5px solid rgba(255, 255, 255, 0.04);
     }
     .cp-box.g1 { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); }
-    .cp-box.g2 { background: rgba(34, 197, 94, 0.45); border-color: rgba(34, 197, 94, 0.7); }
-    .cp-box.p1 { background: rgba(167, 139, 250, 0.2); border-color: rgba(167, 139, 250, 0.4); }
-    .cp-box.p2 { background: rgba(167, 139, 250, 0.5); border-color: rgba(167, 139, 250, 0.8); }
+    .cp-box.g2 { background: rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.6); }
+    .cp-box.p1 { background: rgba(167, 139, 250, 0.18); border-color: rgba(167, 139, 250, 0.35); }
+    .cp-box.p2 { background: rgba(167, 139, 250, 0.45); border-color: rgba(167, 139, 250, 0.7); }
     
     /* Chess Multiplayer layout details */
     .chess-players {
-      flex: 0.4; display: flex; flex-direction: column; gap: 6px;
+      flex: 0.45; display: flex; flex-direction: column; gap: 4px;
     }
     .player-card {
-      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 2px;
+      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 1px;
     }
-    .player-card.active { border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.03); }
+    .player-card.active { border-color: rgba(167, 139, 250, 0.25); background: rgba(167, 139, 250, 0.02); }
     .player-name {
-      font-size: 0.58rem; font-weight: 600; color: #fff;
+      font-size: 0.5rem; font-weight: 600; color: #fff;
     }
     .player-elo {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.46rem; color: var(--accent2);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; color: var(--accent2);
     }
     .chess-board-mock {
-      flex: 0.6; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
-      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 6px; padding: 4px; aspect-ratio: 1; height: 100%;
+      flex: 0.55; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
+      background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 4px; padding: 3px; aspect-ratio: 1; height: 100%;
     }
     .chess-sq {
-      border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem;
+      border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.5rem;
     }
-    .chess-sq.dark { background: rgba(255, 255, 255, 0.03); }
-    .chess-sq.light { background: rgba(255, 255, 255, 0.08); }
-    .chess-sq.highlight { background: rgba(167, 139, 250, 0.25); box-shadow: 0 0 8px rgba(167, 139, 250, 0.4); }
+    .chess-sq.dark { background: rgba(255, 255, 255, 0.02); }
+    .chess-sq.light { background: rgba(255, 255, 255, 0.06); }
+    .chess-sq.highlight { background: rgba(167, 139, 250, 0.2); box-shadow: 0 0 5px rgba(167, 139, 250, 0.35); }
     .chess-p { color: rgba(255,255,255,0.7); }
     
     /* Hotel landing page layout details */
     .hotel-hero-mock {
       flex: 1; display: flex; flex-direction: column; justify-content: space-between;
-      height: 100%; padding: 4px 0;
+      height: 100%; padding: 2px 0;
     }
     .hotel-title {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700;
-      color: #fff; line-height: 1.2; letter-spacing: -0.01em;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.72rem; font-weight: 700;
+      color: #fff; line-height: 1.1; letter-spacing: -0.01em;
     }
     .hotel-title span {
       background: linear-gradient(90deg, #fbbf24, #f59e0b);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .hotel-sub {
-      font-size: 0.55rem; color: var(--muted); opacity: 0.7; line-height: 1.3;
+      font-size: 0.48rem; color: var(--muted); opacity: 0.65; line-height: 1.2;
     }
     .hotel-preview-img {
-      width: 100%; height: 38px; border-radius: 6px;
-      background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
-      border: 1px dashed rgba(251, 191, 36, 0.2);
+      width: 100%; height: 30px; border-radius: 4px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%);
+      border: 1px dashed rgba(251, 191, 36, 0.15);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.5rem; color: #fbbf24; letter-spacing: 0.05em; text-transform: uppercase;
+      font-size: 0.42rem; color: #fbbf24; letter-spacing: 0.04em; text-transform: uppercase;
     }
 
     /* ─── RESPONSIVE ─────────────────────────────────────── */
