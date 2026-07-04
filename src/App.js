@@ -167,8 +167,8 @@ const FontLoader = () => (
       transition:border-color .4s, background .4s, padding .4s;
     }
     nav.scrolled {
-      background:rgba(8,8,16,.82);
-      backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+      background:rgba(8,8,16,.9);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
       border-color:var(--border); padding:.9rem 2.5rem;
     }
     .nav-logo {
@@ -526,7 +526,7 @@ const FontLoader = () => (
     /* ─── RESPONSIVE ─────────────────────────────────────── */
     @media(max-width:768px){
       .project-preview-portal { display:none!important; }
-      nav{padding:1rem 1rem;} .nav-links{display:none;}
+      nav{padding:1rem 1rem;} nav.scrolled{padding:0.8rem 1rem;} .nav-links{display:none;}
       .nav-right { gap: 0.5rem; }
       .nav-resume { font-size: 0.72rem; padding: 0.4rem 0.8rem; }
       .nav-cta { font-size: 0.72rem; padding: 0.4rem 0.9rem; }
@@ -535,7 +535,7 @@ const FontLoader = () => (
       .skills-grid{grid-template-columns:1fr;} .ach-grid{grid-template-columns:1fr;}
       .project-row{grid-template-columns:1fr; padding: 1.5rem 1rem; gap: 1rem; }
       .project-links{align-items:flex-start;flex-direction:row; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.5rem; }
-      .hero-stats{gap:2rem; margin-top: 3.5rem; }
+      .hero-stats{display:grid; grid-template-columns:repeat(2,1fr); gap:2rem 1.5rem; margin-top: 3.5rem;}
       footer{flex-direction:column;gap:1rem;text-align:center; padding: 2rem 1rem;}
     }
 
