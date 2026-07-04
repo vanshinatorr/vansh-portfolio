@@ -225,7 +225,12 @@ const FontLoader = () => (
     #hero {
       min-height:100vh; display:flex; flex-direction:column;
       justify-content:center; padding-top:8rem; padding-bottom:4rem;
-      max-width:1100px; margin:0 auto; overflow:hidden;
+      max-width:1100px; margin:0 auto;
+    }
+    .hero-bg-wrapper {
+      position:absolute; inset:0; left:50%; transform:translateX(-50%);
+      width:100vw; height:100%; pointer-events:none; overflow:hidden;
+      z-index:0;
     }
     .hero-eyebrow {
       font-family:'JetBrains Mono',monospace;
@@ -356,6 +361,68 @@ const FontLoader = () => (
     .proj-link:hover { color:var(--text); gap:.5rem; }
     .proj-live-badge { display:inline-flex; align-items:center; gap:.4rem; font-size:.68rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:.3rem .75rem; border-radius:99px; background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.3); color:var(--accent2); }
     .live-dot { width:5px; height:5px; border-radius:50%; background:var(--green); animation:pulseRing 2.5s infinite; display:inline-block; }
+
+    /* Locked Project Overlay styles */
+    .project-row-locked {
+      position: relative;
+      user-select: none;
+    }
+    .project-row-locked:hover {
+      background: rgba(19, 19, 31, 0.4) !important;
+      border-radius: 10px;
+      border-color: rgba(167, 139, 250, 0.1);
+    }
+    .project-locked-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 18, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      cursor: not-allowed;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+    .project-locked-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(20, 20, 30, 0.85);
+      border: 1px solid rgba(167, 139, 250, 0.25);
+      padding: 0.75rem 1.5rem;
+      border-radius: 99px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(167, 139, 250, 0.15);
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .project-row-locked:hover .project-locked-content {
+      background: rgba(124, 58, 237, 0.15);
+      border-color: rgba(167, 139, 250, 0.5);
+      transform: scale(1.05);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 25px rgba(167, 139, 250, 0.25);
+    }
+    .lock-icon {
+      color: var(--accent2);
+      animation: lockPulse 2s infinite ease-in-out;
+      transition: transform 0.3s;
+    }
+    .project-row-locked:hover .lock-icon {
+      transform: rotate(-10deg) scale(1.1);
+    }
+    .lock-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    @keyframes lockPulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
 
     /* ─── 3D TILT CARDS (ach) ────────────────────────────── */
     .ach-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
@@ -1102,7 +1169,7 @@ export default function Portfolio() {
   }, [introDone]);
 
   const projects = [
-    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "60+ users" },
+    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "60+ users", comingSoon: true },
     { idx: "02", name: "Chess Multiplayer", desc: "Real-time multiplayer chess platform. Room-based matchmaking, live move sync across clients, turn management, and game timers — all over WebSockets.", tags: ["Socket.IO", "Node.js", "WebSockets", "JavaScript"], live: "https://chess-multiplayer-y54n.onrender.com", repo: "https://github.com/vanshinatorr/chess-multiplayer", badge: "Live" },
     { idx: "03", name: "Hotel Landing Page", desc: "Modern responsive hotel booking website with room showcase and booking form. Focused on clean UI, responsive layouts, and visual design — demonstrating frontend fundamentals done right.", tags: ["HTML", "CSS", "Responsive Design", "UI/UX"], repo: "https://github.com/vanshinatorr/hotel-landing-page-01", badge: "Frontend" },
   ];
@@ -1156,10 +1223,12 @@ export default function Portfolio() {
 
       {/* ── HERO ── */}
       <section id="hero" className="noise" style={{ position: "relative" }}>
-        <div className="orb orb-1" />
-        <div className="orb orb-2" />
-        <div className="orb orb-3" />
-        <ParticleCanvas />
+        <div className="hero-bg-wrapper">
+          <div className="orb orb-1" />
+          <div className="orb orb-2" />
+          <div className="orb orb-3" />
+          <ParticleCanvas />
+        </div>
 
         <p className="hero-eyebrow" style={{ position: "relative", zIndex: 1 }}>vansh vijay — full stack developer</p>
         <h1 className="hero-name" style={{ position: "relative", zIndex: 1 }}>
@@ -1220,12 +1289,12 @@ export default function Portfolio() {
         <div className="projects-list">
           {projects.map((p, i) => (
             <div 
-              className="project-row reveal" 
+              className={`project-row reveal ${p.comingSoon ? 'project-row-locked' : ''}`} 
               key={p.idx} 
               style={{ transitionDelay: `${i * 0.08}s` }}
-              onMouseEnter={() => setHoveredProject(p.idx)}
-              onMouseLeave={() => setHoveredProject(null)}
-              onMouseMove={handleProjectMouseMove}
+              onMouseEnter={() => !p.comingSoon && setHoveredProject(p.idx)}
+              onMouseLeave={() => !p.comingSoon && setHoveredProject(null)}
+              onMouseMove={!p.comingSoon ? handleProjectMouseMove : undefined}
             >
               <div>
                 <div className="project-index">{p.idx}</div>
@@ -1237,10 +1306,45 @@ export default function Portfolio() {
               </div>
               <div />
               <div className="project-links">
-                <span className="proj-live-badge"><span className="live-dot" />{p.badge}</span>
-                {p.live && <a href={p.live} target="_blank" rel="noreferrer" className="proj-link">Live Demo ↗</a>}
-                <a href={p.repo} target="_blank" rel="noreferrer" className="proj-link">GitHub ↗</a>
+                <span className="proj-live-badge">
+                  {p.comingSoon ? (
+                    <>
+                      <span className="live-dot" style={{ backgroundColor: "#ef4444", animation: "none" }} />
+                      Coming Soon
+                    </>
+                  ) : (
+                    <>
+                      <span className="live-dot" />
+                      {p.badge}
+                    </>
+                  )}
+                </span>
+                {p.live && (
+                  p.comingSoon ? (
+                    <span className="proj-link" style={{ opacity: 0.5, cursor: "not-allowed" }}>Live Demo ↗</span>
+                  ) : (
+                    <a href={p.live} target="_blank" rel="noreferrer" className="proj-link">Live Demo ↗</a>
+                  )
+                )}
+                {p.repo && (
+                  p.comingSoon ? (
+                    <span className="proj-link" style={{ opacity: 0.5, cursor: "not-allowed" }}>GitHub ↗</span>
+                  ) : (
+                    <a href={p.repo} target="_blank" rel="noreferrer" className="proj-link">GitHub ↗</a>
+                  )
+                )}
               </div>
+              {p.comingSoon && (
+                <div className="project-locked-overlay">
+                  <div className="project-locked-content">
+                    <svg className="lock-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span className="lock-text">Coming Soon</span>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
