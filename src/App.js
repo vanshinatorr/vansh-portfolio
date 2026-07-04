@@ -1204,7 +1204,6 @@ export default function Portfolio() {
 
       {/* ── NAV ── */}
       <nav className={scrolled ? "scrolled" : ""}>
-        <a href="#hero" className="nav-logo">VV<span>.</span></a>
         <ul className="nav-links">
           {["About", "Projects", "Skills", "Contact"].map(l => (
             <MagneticNavLink 
