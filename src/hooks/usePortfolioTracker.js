@@ -32,7 +32,7 @@ export const usePortfolioTracker = () => {
   const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
-  const isExternalProtocol = useRef(false); // Flag to temporarily ignore unloads on mailto/tel triggers
+  const isExternalTransition = useRef(false); // Flag to temporarily ignore hidden states during external page navigation/clicks
 
   // Helper to send data to Discord Webhook
   const sendToDiscord = (title, fields, color = 3066993) => {
@@ -83,11 +83,6 @@ export const usePortfolioTracker = () => {
 
     // Send session summary function
     const handleUnload = () => {
-      // If user clicked mailto: or tel:, do not fire unload summary yet
-      if (isExternalProtocol.current) {
-        return;
-      }
-
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
@@ -175,6 +170,12 @@ export const usePortfolioTracker = () => {
           lastActiveStamp.current = null;
         }
         
+        // If the tab went hidden because they are transitioning to an external link (like Resume or GitHub),
+        // do not send the unload summary. The session is still active in the background.
+        if (isExternalTransition.current) {
+          return;
+        }
+
         // CRITICAL FIX FOR IN-APP WEBVIEWS (Instagram, LinkedIn, etc.):
         // In-app browsers often kill the process immediately on close without firing beforeunload/pagehide.
         // Firing the summary here ensures we catch the end of the session before the process is destroyed.
@@ -183,8 +184,8 @@ export const usePortfolioTracker = () => {
         // Tab became visible again
         lastActiveStamp.current = Date.now();
         
-        // If we already sent the summary (because they backgrounded the tab) but they came back,
-        // reset the state and session timing so we can log their resumed session as a new sub-session.
+        // If we already sent the summary (because they backgrounded the tab without external link click)
+        // but they came back, reset the state and session timing so we can log their resumed session.
         if (hasSentSummary.current) {
           hasSentSummary.current = false;
           startTime.current = Date.now();
@@ -198,14 +199,23 @@ export const usePortfolioTracker = () => {
 
     // 3. Track clicks using event delegation
     const handleDocumentClick = (e) => {
+      // Check if click was on a mailto:, tel:, sms:, or external HTTP link (opening in new tab/app)
       const anchor = e.target.closest('a');
       if (anchor) {
         const href = anchor.getAttribute('href');
-        if (href && (href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('sms:'))) {
-          isExternalProtocol.current = true;
-          setTimeout(() => {
-            isExternalProtocol.current = false;
-          }, 2000);
+        if (href) {
+          const isExternal = href.startsWith('mailto:') || 
+                             href.startsWith('tel:') || 
+                             href.startsWith('sms:') ||
+                             (href.startsWith('http') && !href.includes(window.location.hostname));
+                             
+          if (isExternal) {
+            isExternalTransition.current = true;
+            // Reset the flag after 2 seconds
+            setTimeout(() => {
+              isExternalTransition.current = false;
+            }, 2000);
+          }
         }
       }
 
