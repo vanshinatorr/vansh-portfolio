@@ -81,6 +81,47 @@ export const usePortfolioTracker = () => {
   useEffect(() => {
     let isMounted = true;
 
+    // Send session summary function
+    const handleUnload = () => {
+      // If user clicked mailto: or tel:, do not fire unload summary yet
+      if (isExternalProtocol.current) {
+        return;
+      }
+
+      if (hasSentSummary.current) return;
+      hasSentSummary.current = true;
+
+      // Calculate final active time
+      let finalActiveTime = activeTime.current;
+      if (lastActiveStamp.current) {
+        finalActiveTime += Date.now() - lastActiveStamp.current;
+      }
+      const totalTimeOpen = Date.now() - startTime.current;
+
+      const locationStr = visitorInfo.current
+        ? `${visitorInfo.current.city || ''}, ${visitorInfo.current.region || ''}, ${visitorInfo.current.country_name || ''}`
+        : 'Unknown Location';
+
+      // Format click lists cleanly with counters: e.g., "• Resume Clicked (2x)"
+      const clicksArray = Object.entries(clickCounts.current);
+      const clickSummary = clicksArray.length > 0
+        ? clicksArray.map(([item, count]) => `• ${item} (${count}x)`).join('\n')
+        : 'No clicks recorded (just browsed)';
+
+      const fields = [
+        { name: 'Location', value: locationStr, inline: true },
+        { name: 'Active Duration', value: formatDuration(finalActiveTime), inline: true },
+        { name: 'Total Tab Duration', value: formatDuration(totalTimeOpen), inline: true },
+        {
+          name: 'Interactions / Clicks',
+          value: clickSummary.length > 1024 ? clickSummary.substring(0, 1000) + '...' : clickSummary,
+          inline: false
+        }
+      ];
+
+      sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
+    };
+
     // 1. Fetch Location/IP details on mount
     const fetchLocationAndStart = async () => {
       let locationStr = 'Unknown Location';
@@ -128,12 +169,28 @@ export const usePortfolioTracker = () => {
     // 2. Track Page active duration (handling tab focus/blur)
     const handleVisibilityChange = () => {
       if (document.hidden) {
+        // Tab is backgrounded or browser is closed
         if (lastActiveStamp.current) {
           activeTime.current += Date.now() - lastActiveStamp.current;
           lastActiveStamp.current = null;
         }
+        
+        // CRITICAL FIX FOR IN-APP WEBVIEWS (Instagram, LinkedIn, etc.):
+        // In-app browsers often kill the process immediately on close without firing beforeunload/pagehide.
+        // Firing the summary here ensures we catch the end of the session before the process is destroyed.
+        handleUnload();
       } else {
+        // Tab became visible again
         lastActiveStamp.current = Date.now();
+        
+        // If we already sent the summary (because they backgrounded the tab) but they came back,
+        // reset the state and session timing so we can log their resumed session as a new sub-session.
+        if (hasSentSummary.current) {
+          hasSentSummary.current = false;
+          startTime.current = Date.now();
+          clickCounts.current = {};
+          sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
+        }
       }
     };
 
@@ -141,13 +198,11 @@ export const usePortfolioTracker = () => {
 
     // 3. Track clicks using event delegation
     const handleDocumentClick = (e) => {
-      // Check if click was on a mailto:, tel:, or sms: link to prevent false session close events
       const anchor = e.target.closest('a');
       if (anchor) {
         const href = anchor.getAttribute('href');
         if (href && (href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('sms:'))) {
           isExternalProtocol.current = true;
-          // Reset the flag after 2 seconds
           setTimeout(() => {
             isExternalProtocol.current = false;
           }, 2000);
@@ -166,45 +221,8 @@ export const usePortfolioTracker = () => {
     document.addEventListener('click', handleDocumentClick);
 
     // 4. Send session summary on unload
-    const handleUnload = () => {
-      // If user clicked mailto: or tel:, do not fire unload summary yet
-      if (isExternalProtocol.current) {
-        return;
-      }
-
-      if (hasSentSummary.current) return;
-      hasSentSummary.current = true;
-
-      // Calculate final active time
-      let finalActiveTime = activeTime.current;
-      if (lastActiveStamp.current) {
-        finalActiveTime += Date.now() - lastActiveStamp.current;
-      }
-      const totalTimeOpen = Date.now() - startTime.current;
-
-      const locationStr = visitorInfo.current
-        ? `${visitorInfo.current.city || ''}, ${visitorInfo.current.region || ''}, ${visitorInfo.current.country_name || ''}`
-        : 'Unknown Location';
-
-      // Format click lists cleanly with counters: e.g., "• Resume Clicked (2x)"
-      const clicksArray = Object.entries(clickCounts.current);
-      const clickSummary = clicksArray.length > 0
-        ? clicksArray.map(([item, count]) => `• ${item} (${count}x)`).join('\n')
-        : 'No clicks recorded (just browsed)';
-
-      const fields = [
-        { name: 'Location', value: locationStr, inline: true },
-        { name: 'Active Duration', value: formatDuration(finalActiveTime), inline: true },
-        { name: 'Total Tab Duration', value: formatDuration(totalTimeOpen), inline: true },
-        {
-          name: 'Interactions / Clicks',
-          value: clickSummary.length > 1024 ? clickSummary.substring(0, 1000) + '...' : clickSummary,
-          inline: false
-        }
-      ];
-
-      sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
-    };
+    window.addEventListener('beforeunload', handleUnload);
+    window.addEventListener('pagehide', handleUnload);
 
     // Handle Back-Forward cache restores cleanly
     const handlePageShow = (e) => {
@@ -216,9 +234,6 @@ export const usePortfolioTracker = () => {
         sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
       }
     };
-
-    window.addEventListener('beforeunload', handleUnload);
-    window.addEventListener('pagehide', handleUnload);
     window.addEventListener('pageshow', handlePageShow);
 
     return () => {
