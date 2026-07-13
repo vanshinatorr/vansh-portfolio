@@ -91,6 +91,7 @@ export const usePortfolioTracker = () => {
   const refName = useRef(getRefParameter());
   const isExternalTransition = useRef(false); // Flag to temporarily ignore unloads on mailto/tel/external link triggers
   const deviceName = useRef(getDeviceDetails());
+  const transitionTimeout = useRef(null);
 
   // Helper to send data to Discord Webhook
   const sendToDiscord = (title, fields, color = 3066993) => {
@@ -254,9 +255,8 @@ export const usePortfolioTracker = () => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // 3. Track clicks using event delegation
-    const handleDocumentClick = (e) => {
-      // Check if click was on a mailto:, tel:, sms:, or external HTTP link (opening in new tab/app)
+    // Instant touch/mousedown interception to bypass transition timing race conditions
+    const handleTrigger = (e) => {
       const anchor = e.target.closest('a');
       if (anchor) {
         const href = anchor.getAttribute('href');
@@ -268,14 +268,23 @@ export const usePortfolioTracker = () => {
                              
           if (isExternal) {
             isExternalTransition.current = true;
-            // Reset the flag after 2 seconds
-            setTimeout(() => {
+            if (transitionTimeout.current) {
+              clearTimeout(transitionTimeout.current);
+            }
+            // Hold flag as true for 3 seconds to be safe on slower intents
+            transitionTimeout.current = setTimeout(() => {
               isExternalTransition.current = false;
-            }, 2000);
+            }, 3000);
           }
         }
       }
+    };
 
+    document.addEventListener('touchstart', handleTrigger, { capture: true, passive: true });
+    document.addEventListener('mousedown', handleTrigger, { capture: true, passive: true });
+
+    // 3. Track clicks using event delegation (for telemetry logs)
+    const handleDocumentClick = (e) => {
       const trackEl = e.target.closest('[data-track]');
       if (trackEl) {
         const itemName = trackEl.getAttribute('data-track');
@@ -307,10 +316,15 @@ export const usePortfolioTracker = () => {
     return () => {
       isMounted = false;
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('touchstart', handleTrigger, { capture: true });
+      document.removeEventListener('mousedown', handleTrigger, { capture: true });
       document.removeEventListener('click', handleDocumentClick);
       window.removeEventListener('beforeunload', handleUnload);
       window.removeEventListener('pagehide', handleUnload);
       window.removeEventListener('pageshow', handlePageShow);
+      if (transitionTimeout.current) {
+        clearTimeout(transitionTimeout.current);
+      }
     };
   }, []);
 
