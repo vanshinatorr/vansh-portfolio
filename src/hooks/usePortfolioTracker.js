@@ -1,0 +1,211 @@
+import { useEffect, useRef } from 'react';
+
+const DISCORD_WEBHOOK_URL = process.env.REACT_APP_DISCORD_WEBHOOK_URL;
+
+// Helper to format milliseconds to readable format (e.g., 2m 15s)
+const formatDuration = (ms) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  if (minutes > 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+  return `${seconds}s`;
+};
+
+// Helper to get query parameters (e.g. ?ref=Google)
+const getRefParameter = () => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('ref') || params.get('name') || params.get('from') || 'Direct Visit';
+  } catch (e) {
+    return 'Direct Visit';
+  }
+};
+
+export const usePortfolioTracker = () => {
+  const startTime = useRef(Date.now());
+  const activeTime = useRef(0);
+  const lastActiveStamp = useRef(Date.now());
+  const clickCounts = useRef({}); // Tracks click frequencies { 'Resume Clicked': 3 }
+  const visitorInfo = useRef(null);
+  const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
+  const hasSentSummary = useRef(false);
+  const refName = useRef(getRefParameter());
+
+  // Helper to send data to Discord Webhook
+  const sendToDiscord = (title, fields, color = 3066993) => {
+    if (!DISCORD_WEBHOOK_URL) {
+      return; // Silently ignore if webhook is not configured
+    }
+
+    const payload = {
+      username: 'Portfolio Tracker',
+      avatar_url: 'https://i.imgur.com/gS84yWw.png', // Radar icon
+      embeds: [
+        {
+          title,
+          color,
+          fields: [
+            { name: 'Session ID', value: sessionId.current, inline: true },
+            { name: 'Viewer Ref / Target', value: refName.current, inline: true },
+            ...fields
+          ],
+          timestamp: new Date().toISOString(),
+        }
+      ]
+    };
+
+    const bodyData = JSON.stringify(payload);
+
+    // Use keepalive: true fetch as the primary modern way to send telemetry on page close
+    fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: bodyData,
+      keepalive: true,
+    }).catch((err) => {
+      // Fallback to sendBeacon if fetch fails or is unsupported
+      if (navigator.sendBeacon) {
+        const blob = new Blob([bodyData], { type: 'application/json' });
+        navigator.sendBeacon(DISCORD_WEBHOOK_URL, blob);
+      } else {
+        console.error("Error sending analytics to Discord:", err);
+      }
+    });
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    // 1. Fetch Location/IP details on mount
+    const fetchLocationAndStart = async () => {
+      let locationStr = 'Unknown Location';
+      let ipStr = 'Unknown IP';
+      let orgStr = 'Unknown ISP';
+
+      try {
+        // Fetch location with a timeout/abort controller to prevent slow API response blocking alerts
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 sec timeout
+
+        const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          const data = await response.json();
+          if (isMounted) {
+            visitorInfo.current = data;
+            ipStr = data.ip || ipStr;
+            locationStr = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`;
+            orgStr = data.org || orgStr;
+          }
+        }
+      } catch (error) {
+        console.warn("Failed to fetch location info (using fallbacks):", error.message);
+      }
+
+      if (!isMounted) return;
+
+      // Send Session Started notification
+      sendToDiscord(
+        '📥 Portfolio Opened 🚀',
+        [
+          { name: 'Location', value: locationStr, inline: true },
+          { name: 'IP Address', value: ipStr, inline: true },
+          { name: 'ISP / Provider', value: orgStr, inline: false },
+          { name: 'Referrer', value: document.referrer || 'Direct / None', inline: true },
+          { name: 'Browser / Device', value: navigator.userAgent.substring(0, 80) + '...', inline: false }
+        ],
+        3066993 // Green / Teal
+      );
+    };
+
+    fetchLocationAndStart();
+
+    // 2. Track Page active duration (handling tab focus/blur)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (lastActiveStamp.current) {
+          activeTime.current += Date.now() - lastActiveStamp.current;
+          lastActiveStamp.current = null;
+        }
+      } else {
+        lastActiveStamp.current = Date.now();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 3. Track clicks using event delegation
+    const handleDocumentClick = (e) => {
+      const trackEl = e.target.closest('[data-track]');
+      if (trackEl) {
+        const itemName = trackEl.getAttribute('data-track');
+        if (itemName) {
+          clickCounts.current[itemName] = (clickCounts.current[itemName] || 0) + 1;
+        }
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    // 4. Send session summary on unload
+    const handleUnload = () => {
+      if (hasSentSummary.current) return;
+      hasSentSummary.current = true;
+
+      // Calculate final active time
+      let finalActiveTime = activeTime.current;
+      if (lastActiveStamp.current) {
+        finalActiveTime += Date.now() - lastActiveStamp.current;
+      }
+      const totalTimeOpen = Date.now() - startTime.current;
+
+      const locationStr = visitorInfo.current
+        ? `${visitorInfo.current.city || ''}, ${visitorInfo.current.region || ''}, ${visitorInfo.current.country_name || ''}`
+        : 'Unknown Location';
+
+      // Format click lists cleanly with counters: e.g., "• Resume Clicked (2x)"
+      const clicksArray = Object.entries(clickCounts.current);
+      const clickSummary = clicksArray.length > 0
+        ? clicksArray.map(([item, count]) => `• ${item} (${count}x)`).join('\n')
+        : 'No clicks recorded (just browsed)';
+
+      const fields = [
+        { name: 'Location', value: locationStr, inline: true },
+        { name: 'Active Duration', value: formatDuration(finalActiveTime), inline: true },
+        { name: 'Total Tab Duration', value: formatDuration(totalTimeOpen), inline: true },
+        {
+          name: 'Interactions / Clicks',
+          value: clickSummary.length > 1024 ? clickSummary.substring(0, 1000) + '...' : clickSummary,
+          inline: false
+        }
+      ];
+
+      sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+    window.addEventListener('pagehide', handleUnload);
+
+    return () => {
+      isMounted = false;
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('click', handleDocumentClick);
+      window.removeEventListener('beforeunload', handleUnload);
+      window.removeEventListener('pagehide', handleUnload);
+    };
+  }, []);
+
+  // Expose trackClick manually in case they need it
+  const trackClick = (name) => {
+    if (name) {
+      clickCounts.current[name] = (clickCounts.current[name] || 0) + 1;
+    }
+  };
+
+  return { trackClick };
+};

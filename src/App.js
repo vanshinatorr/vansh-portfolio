@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { usePortfolioTracker } from "./hooks/usePortfolioTracker";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1048,6 +1049,7 @@ function MagneticNavLink({ href, label, active }) {
 }
 
 export default function Portfolio() {
+  usePortfolioTracker();
   const [introDone, setIntroDone] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -1215,8 +1217,8 @@ export default function Portfolio() {
           ))}
         </ul>
         <div className="nav-right">
-          <a href="https://drive.google.com/file/d/1GyHChavEDZVK24a2ADnrQPKTnfp3HYp6/view?usp=sharing" target="_blank" rel="noreferrer" className="nav-resume">↓ Resume</a>
-          <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta">Hire Me</a>
+          <a href="https://drive.google.com/file/d/1GyHChavEDZVK24a2ADnrQPKTnfp3HYp6/view?usp=sharing" target="_blank" rel="noreferrer" className="nav-resume" data-track="Resume Clicked">↓ Resume</a>
+          <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta" data-track="Hire Me Clicked">Hire Me</a>
         </div>
       </nav>
 
@@ -1241,7 +1243,7 @@ export default function Portfolio() {
         </p>
         <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
           <a href="#projects" className="btn-primary" {...m1}>View Projects ↓</a>
-          <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" {...m2}>GitHub →</a>
+          <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" {...m2} data-track="GitHub (Hero)">GitHub →</a>
         </div>
         <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
           {[{ to: 60, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: 204, suffix: "", label: "GitHub Contributions" }].map(s => (
@@ -1322,14 +1324,14 @@ export default function Portfolio() {
                   p.comingSoon ? (
                     <span className="proj-link" style={{ opacity: 0.5, cursor: "not-allowed" }}>Live Demo ↗</span>
                   ) : (
-                    <a href={p.live} target="_blank" rel="noreferrer" className="proj-link">Live Demo ↗</a>
+                    <a href={p.live} target="_blank" rel="noreferrer" className="proj-link" data-track={`Live Demo: ${p.name}`}>Live Demo ↗</a>
                   )
                 )}
                 {p.repo && (
                   p.comingSoon ? (
                     <span className="proj-link" style={{ opacity: 0.5, cursor: "not-allowed" }}>GitHub ↗</span>
                   ) : (
-                    <a href={p.repo} target="_blank" rel="noreferrer" className="proj-link">GitHub ↗</a>
+                    <a href={p.repo} target="_blank" rel="noreferrer" className="proj-link" data-track={`GitHub Repo: ${p.name}`}>GitHub ↗</a>
                   )
                 )}
               </div>
@@ -1412,7 +1414,7 @@ export default function Portfolio() {
                 { icon: "🐦", label: "x.com/vanshvijay9", href: "https://x.com/vanshvijay9" },
                 { icon: "🪐", label: "instagram.com/vansh_vj", href: "https://instagram.com/vansh_vj" },
               ].map(l => (
-                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="contact-link">
+                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="contact-link" data-track={`Contact: ${l.label}`}>
                   <span className="contact-link-icon">{l.icon}</span>{l.label}
                 </a>
               ))}

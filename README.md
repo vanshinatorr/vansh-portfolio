@@ -68,3 +68,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+---
+
+## 📊 Custom Visitor Analytics & Discord Alerts
+
+This portfolio includes a lightweight, custom visitor analytics tracker ([src/hooks/usePortfolioTracker.js](file:///Users/vansh/Desktop/Projects/vansh-portfolio/src/hooks/usePortfolioTracker.js)) that notifies your Discord server via Webhook.
+
+### Features
+- **Real-Time Alerts**: Sends a Discord embed message when the portfolio is opened and another summary when the user closes the tab.
+- **Location & ISP Details**: Uses a secure call to `ipapi.co` to show general city, region, country, and ISP info.
+- **Active Duration Tracking**: Tracks the exact active time spent on the page (automatically pauses if they switch tabs).
+- **Interactions Logging**: Keeps track of button/link clicks (Resume, GitHub, Live Demo, Contact).
+- **Targeted Tracking**: Add URL query parameters (e.g. `?ref=Google_HR`) to identify specific visitors/recruiters.
+
+### Setup
+1. Create a `.env.local` file in the root.
+2. Add your Discord Webhook URL:
+   ```env
+   REACT_APP_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+   ```
+3. For hosting platforms (Vercel, Netlify, etc.), add `REACT_APP_DISCORD_WEBHOOK_URL` as an Environment Variable in their dashboard settings.
+
