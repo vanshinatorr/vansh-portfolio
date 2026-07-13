@@ -204,6 +204,11 @@ export const usePortfolioTracker = () => {
 
     // Send session summary function
     const handleUnload = () => {
+      // CRITICAL FIX: If the user clicked an external link, do not run unload logic.
+      if (isExternalTransition.current) {
+        return;
+      }
+
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
