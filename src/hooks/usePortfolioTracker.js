@@ -47,6 +47,11 @@ const getDeviceDetails = () => {
         if (parts.length >= 3) {
           const rawModel = parts[2].trim().split('Build/')[0].trim();
           
+          // Specific device mappings for your device
+          if (rawModel === 'CPH2381') {
+            return `OnePlus Nord CE 2 Lite (${rawModel})`;
+          }
+          
           // Brand detection mappings based on common model prefixes
           if (/^SM-/i.test(rawModel)) {
             return `Samsung (${rawModel})`;
