@@ -79,7 +79,7 @@ const DEVICE_DATABASE = {
   'SM-F346B': 'Samsung Galaxy F34 5G',
 };
 
-// Helper to extract clean OS and brand/device model from User Agent
+// Helper to extract clean OS and brand/device model from User Agent (fallback)
 const getDeviceDetails = () => {
   try {
     const ua = navigator.userAgent;
@@ -103,12 +103,9 @@ const getDeviceDetails = () => {
         if (parts.length >= 3) {
           const rawModel = parts[2].trim().split('Build/')[0].trim();
           
-          // Check explicit model database first
           if (DEVICE_DATABASE[rawModel]) {
             return `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
           }
-          
-          // Brand detection fallback based on common model prefixes
           if (/^SM-/i.test(rawModel)) {
             return `Samsung (${rawModel})`;
           }
@@ -151,7 +148,7 @@ export const usePortfolioTracker = () => {
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
   const isExternalTransition = useRef(false); // Flag to temporarily ignore unloads on mailto/tel/external link triggers
-  const deviceName = useRef(getDeviceDetails());
+  const deviceName = useRef('Parsing Device...');
   const transitionTimeout = useRef(null);
 
   // Helper to send data to Discord Webhook
@@ -243,31 +240,72 @@ export const usePortfolioTracker = () => {
       sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
     };
 
-    // 1. Fetch Location/IP details on mount
+    // 1. Parallel Asynchronous Fetch: Location and Device Model (Client Hints)
     const fetchLocationAndStart = async () => {
       let locationStr = 'Unknown Location';
       let ipStr = 'Unknown IP';
       let orgStr = 'Unknown ISP';
 
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 sec timeout
+      // Promise A: Location Fetch
+      const locationPromise = (async () => {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 sec timeout
+          const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+          clearTimeout(timeoutId);
 
-        const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          if (isMounted) {
+          if (response.ok) {
+            const data = await response.json();
             visitorInfo.current = data;
             ipStr = data.ip || ipStr;
             locationStr = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`;
             orgStr = data.org || orgStr;
           }
+        } catch (error) {
+          console.warn("Failed to fetch location info:", error.message);
         }
-      } catch (error) {
-        console.warn("Failed to fetch location info (using fallbacks):", error.message);
-      }
+      })();
+
+      // Promise B: Device Details (resolving User Agent Reduction using Client Hints)
+      const devicePromise = (async () => {
+        let details = getDeviceDetails(); // Initial sync fallback
+
+        try {
+          if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
+            const entropy = await navigator.userAgentData.getHighEntropyValues(['model']);
+            if (entropy.model) {
+              const rawModel = entropy.model;
+              // If model returned is not generic 'K' or 'U'
+              if (rawModel && rawModel !== 'K' && rawModel !== 'U') {
+                if (DEVICE_DATABASE[rawModel]) {
+                  details = `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
+                } else if (/^SM-/i.test(rawModel)) {
+                  details = `Samsung (${rawModel})`;
+                } else if (/^CPH|^OP4|^OPD/i.test(rawModel)) {
+                  details = `OnePlus/Oppo (${rawModel})`;
+                } else if (/^RMX/i.test(rawModel)) {
+                  details = `Realme (${rawModel})`;
+                } else if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) {
+                  details = `Vivo (${rawModel})`;
+                } else if (/Pixel/i.test(rawModel)) {
+                  details = `Google ${rawModel}`;
+                } else if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) {
+                  details = `Xiaomi/Redmi (${rawModel})`;
+                } else {
+                  details = `Android (${rawModel})`;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("Client Hints lookup failed:", e);
+        }
+
+        deviceName.current = details;
+      })();
+
+      // Wait for both asynchronous tasks to resolve in parallel
+      await Promise.all([locationPromise, devicePromise]);
 
       if (!isMounted) return;
 
