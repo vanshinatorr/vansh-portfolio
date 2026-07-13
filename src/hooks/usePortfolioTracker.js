@@ -32,7 +32,7 @@ export const usePortfolioTracker = () => {
   const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
-  const isExternalTransition = useRef(false); // Flag to temporarily ignore hidden states during external page navigation/clicks
+  const isExternalTransition = useRef(false); // Flag to temporarily ignore unloads on mailto/tel/external link triggers
 
   // Helper to send data to Discord Webhook
   const sendToDiscord = (title, fields, color = 3066993) => {
@@ -83,6 +83,10 @@ export const usePortfolioTracker = () => {
 
     // Send session summary function
     const handleUnload = () => {
+      if (isExternalTransition.current) {
+        return; // Ignore if navigating to external links (Resume, GitHub, etc.)
+      }
+
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
@@ -164,34 +168,14 @@ export const usePortfolioTracker = () => {
     // 2. Track Page active duration (handling tab focus/blur)
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Tab is backgrounded or browser is closed
+        // Tab is backgrounded (accumulate active time spent so far)
         if (lastActiveStamp.current) {
           activeTime.current += Date.now() - lastActiveStamp.current;
           lastActiveStamp.current = null;
         }
-        
-        // If the tab went hidden because they are transitioning to an external link (like Resume or GitHub),
-        // do not send the unload summary. The session is still active in the background.
-        if (isExternalTransition.current) {
-          return;
-        }
-
-        // CRITICAL FIX FOR IN-APP WEBVIEWS (Instagram, LinkedIn, etc.):
-        // In-app browsers often kill the process immediately on close without firing beforeunload/pagehide.
-        // Firing the summary here ensures we catch the end of the session before the process is destroyed.
-        handleUnload();
       } else {
         // Tab became visible again
         lastActiveStamp.current = Date.now();
-        
-        // If we already sent the summary (because they backgrounded the tab without external link click)
-        // but they came back, reset the state and session timing so we can log their resumed session.
-        if (hasSentSummary.current) {
-          hasSentSummary.current = false;
-          startTime.current = Date.now();
-          clickCounts.current = {};
-          sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
-        }
       }
     };
 
@@ -230,15 +214,16 @@ export const usePortfolioTracker = () => {
 
     document.addEventListener('click', handleDocumentClick);
 
-    // 4. Send session summary on unload
+    // 4. Send session summary on actual page unload/exits (supported in webviews as well)
     window.addEventListener('beforeunload', handleUnload);
     window.addEventListener('pagehide', handleUnload);
 
-    // Handle Back-Forward cache restores cleanly
+    // Handle Back-Forward cache restores cleanly (resets timing states)
     const handlePageShow = (e) => {
       if (e.persisted) {
         hasSentSummary.current = false;
         startTime.current = Date.now();
+        activeTime.current = 0; // Fix: Reset active duration to 0 on new sessions
         lastActiveStamp.current = Date.now();
         clickCounts.current = {};
         sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
