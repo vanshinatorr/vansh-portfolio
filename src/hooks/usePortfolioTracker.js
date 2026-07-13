@@ -23,6 +23,40 @@ const getRefParameter = () => {
   }
 };
 
+// Helper to extract clean OS and device model from User Agent
+const getDeviceDetails = () => {
+  try {
+    const ua = navigator.userAgent;
+    let os = 'Unknown Device';
+    let model = '';
+
+    if (/Windows/i.test(ua)) {
+      os = 'Windows PC';
+    } else if (/Macintosh/i.test(ua)) {
+      os = 'Mac';
+    } else if (/iPhone/i.test(ua)) {
+      os = 'iPhone';
+    } else if (/iPad/i.test(ua)) {
+      os = 'iPad';
+    } else if (/Android/i.test(ua)) {
+      os = 'Android';
+      const match = ua.match(/\(([^)]+)\)/);
+      if (match && match[1]) {
+        const parts = match[1].split(';');
+        if (parts.length >= 3) {
+          model = parts[2].trim().split('Build/')[0].trim();
+        }
+      }
+    } else if (/Linux/i.test(ua)) {
+      os = 'Linux PC';
+    }
+
+    return model ? `${os} (${model})` : os;
+  } catch (e) {
+    return 'Unknown Device';
+  }
+};
+
 export const usePortfolioTracker = () => {
   const startTime = useRef(Date.now());
   const activeTime = useRef(0);
@@ -33,6 +67,7 @@ export const usePortfolioTracker = () => {
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
   const isExternalTransition = useRef(false); // Flag to temporarily ignore unloads on mailto/tel/external link triggers
+  const deviceName = useRef(getDeviceDetails());
 
   // Helper to send data to Discord Webhook
   const sendToDiscord = (title, fields, color = 3066993) => {
@@ -50,6 +85,7 @@ export const usePortfolioTracker = () => {
           fields: [
             { name: 'Session ID', value: sessionId.current, inline: true },
             { name: 'Viewer Ref / Target', value: refName.current, inline: true },
+            { name: 'Device / Model', value: deviceName.current, inline: true },
             ...fields
           ],
           timestamp: new Date().toISOString(),
