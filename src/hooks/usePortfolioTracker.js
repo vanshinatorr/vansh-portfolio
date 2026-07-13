@@ -23,35 +23,58 @@ const getRefParameter = () => {
   }
 };
 
-// Helper to extract clean OS and device model from User Agent
+// Helper to extract clean OS and brand/device model from User Agent
 const getDeviceDetails = () => {
   try {
     const ua = navigator.userAgent;
-    let os = 'Unknown Device';
-    let model = '';
-
+    
     if (/Windows/i.test(ua)) {
-      os = 'Windows PC';
-    } else if (/Macintosh/i.test(ua)) {
-      os = 'Mac';
-    } else if (/iPhone/i.test(ua)) {
-      os = 'iPhone';
-    } else if (/iPad/i.test(ua)) {
-      os = 'iPad';
-    } else if (/Android/i.test(ua)) {
-      os = 'Android';
+      return 'Windows PC';
+    }
+    if (/Macintosh/i.test(ua)) {
+      return 'Mac';
+    }
+    if (/iPhone/i.test(ua)) {
+      return 'iPhone';
+    }
+    if (/iPad/i.test(ua)) {
+      return 'iPad';
+    }
+    if (/Android/i.test(ua)) {
       const match = ua.match(/\(([^)]+)\)/);
       if (match && match[1]) {
         const parts = match[1].split(';');
         if (parts.length >= 3) {
-          model = parts[2].trim().split('Build/')[0].trim();
+          const rawModel = parts[2].trim().split('Build/')[0].trim();
+          
+          // Brand detection mappings based on common model prefixes
+          if (/^SM-/i.test(rawModel)) {
+            return `Samsung (${rawModel})`;
+          }
+          if (/^CPH|^OP4|^OPD/i.test(rawModel)) {
+            return `OnePlus/Oppo (${rawModel})`;
+          }
+          if (/^RMX/i.test(rawModel)) {
+            return `Realme (${rawModel})`;
+          }
+          if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) {
+            return `Vivo (${rawModel})`;
+          }
+          if (/Pixel/i.test(rawModel)) {
+            return `Google ${rawModel}`;
+          }
+          if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) {
+            return `Xiaomi/Redmi (${rawModel})`;
+          }
+          return `Android (${rawModel})`;
         }
       }
-    } else if (/Linux/i.test(ua)) {
-      os = 'Linux PC';
+      return 'Android Device';
     }
-
-    return model ? `${os} (${model})` : os;
+    if (/Linux/i.test(ua)) {
+      return 'Linux PC';
+    }
+    return 'Unknown Device';
   } catch (e) {
     return 'Unknown Device';
   }
