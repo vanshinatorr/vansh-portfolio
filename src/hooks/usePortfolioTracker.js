@@ -32,6 +32,7 @@ export const usePortfolioTracker = () => {
   const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
+  const isExternalProtocol = useRef(false); // Flag to temporarily ignore unloads on mailto/tel triggers
 
   // Helper to send data to Discord Webhook
   const sendToDiscord = (title, fields, color = 3066993) => {
@@ -87,7 +88,6 @@ export const usePortfolioTracker = () => {
       let orgStr = 'Unknown ISP';
 
       try {
-        // Fetch location with a timeout/abort controller to prevent slow API response blocking alerts
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 sec timeout
 
@@ -141,6 +141,19 @@ export const usePortfolioTracker = () => {
 
     // 3. Track clicks using event delegation
     const handleDocumentClick = (e) => {
+      // Check if click was on a mailto:, tel:, or sms: link to prevent false session close events
+      const anchor = e.target.closest('a');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if (href && (href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('sms:'))) {
+          isExternalProtocol.current = true;
+          // Reset the flag after 2 seconds
+          setTimeout(() => {
+            isExternalProtocol.current = false;
+          }, 2000);
+        }
+      }
+
       const trackEl = e.target.closest('[data-track]');
       if (trackEl) {
         const itemName = trackEl.getAttribute('data-track');
@@ -154,6 +167,11 @@ export const usePortfolioTracker = () => {
 
     // 4. Send session summary on unload
     const handleUnload = () => {
+      // If user clicked mailto: or tel:, do not fire unload summary yet
+      if (isExternalProtocol.current) {
+        return;
+      }
+
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
@@ -188,8 +206,20 @@ export const usePortfolioTracker = () => {
       sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
     };
 
+    // Handle Back-Forward cache restores cleanly
+    const handlePageShow = (e) => {
+      if (e.persisted) {
+        hasSentSummary.current = false;
+        startTime.current = Date.now();
+        lastActiveStamp.current = Date.now();
+        clickCounts.current = {};
+        sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
+      }
+    };
+
     window.addEventListener('beforeunload', handleUnload);
     window.addEventListener('pagehide', handleUnload);
+    window.addEventListener('pageshow', handlePageShow);
 
     return () => {
       isMounted = false;
@@ -197,6 +227,7 @@ export const usePortfolioTracker = () => {
       document.removeEventListener('click', handleDocumentClick);
       window.removeEventListener('beforeunload', handleUnload);
       window.removeEventListener('pagehide', handleUnload);
+      window.removeEventListener('pageshow', handlePageShow);
     };
   }, []);
 
