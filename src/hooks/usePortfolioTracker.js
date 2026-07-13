@@ -23,6 +23,62 @@ const getRefParameter = () => {
   }
 };
 
+// Dictionary database of the most popular Samsung, OnePlus, and Vivo devices in India
+const DEVICE_DATABASE = {
+  // OnePlus
+  'CPH2381': 'OnePlus Nord CE 2 Lite',
+  'CPH2467': 'OnePlus Nord CE 3 Lite',
+  'CPH2569': 'OnePlus Nord CE 4',
+  'CPH2609': 'OnePlus Nord CE 4 Lite',
+  'CPH2447': 'OnePlus 11',
+  'CPH2581': 'OnePlus 12',
+  'CPH2573': 'OnePlus 12R',
+  'CPH2409': 'OnePlus 10R',
+  'CPH2411': 'OnePlus 10 Pro',
+  'CPH2263': 'OnePlus Nord 2',
+  'CPH2401': 'OnePlus Nord 2T',
+  'CPH2307': 'OnePlus Nord CE 2',
+  
+  // Vivo
+  'V2246': 'Vivo V27',
+  'V2303': 'Vivo V29',
+  'V2318': 'Vivo V30',
+  'V2350': 'Vivo V30 Pro',
+  'V2109': 'Vivo Y21',
+  'V2111': 'Vivo Y21s',
+  'V2204': 'Vivo Y22',
+  'V2205': 'Vivo Y16',
+  'V2312': 'Vivo T2 5G',
+  'V2336': 'Vivo T3 5G',
+  
+  // Samsung Galaxy S & Z Series
+  'SM-S901B': 'Samsung Galaxy S22',
+  'SM-S906B': 'Samsung Galaxy S22+',
+  'SM-S908B': 'Samsung Galaxy S22 Ultra',
+  'SM-S911B': 'Samsung Galaxy S23',
+  'SM-S916B': 'Samsung Galaxy S23+',
+  'SM-S918B': 'Samsung Galaxy S23 Ultra',
+  'SM-S921B': 'Samsung Galaxy S24',
+  'SM-S926B': 'Samsung Galaxy S24+',
+  'SM-S928B': 'Samsung Galaxy S24 Ultra',
+  'SM-F711B': 'Samsung Galaxy Z Flip 3',
+  'SM-F721B': 'Samsung Galaxy Z Flip 4',
+  'SM-F731B': 'Samsung Galaxy Z Flip 5',
+  'SM-F926B': 'Samsung Galaxy Z Fold 3',
+  'SM-F936B': 'Samsung Galaxy Z Fold 4',
+  'SM-F946B': 'Samsung Galaxy Z Fold 5',
+  
+  // Samsung A / M / F Series
+  'SM-A546B': 'Samsung Galaxy A54 5G',
+  'SM-A346B': 'Samsung Galaxy A34 5G',
+  'SM-A146B': 'Samsung Galaxy A14 5G',
+  'SM-A536B': 'Samsung Galaxy A53 5G',
+  'SM-A336B': 'Samsung Galaxy A33 5G',
+  'SM-M346B': 'Samsung Galaxy M34 5G',
+  'SM-M546B': 'Samsung Galaxy M54 5G',
+  'SM-F346B': 'Samsung Galaxy F34 5G',
+};
+
 // Helper to extract clean OS and brand/device model from User Agent
 const getDeviceDetails = () => {
   try {
@@ -47,12 +103,12 @@ const getDeviceDetails = () => {
         if (parts.length >= 3) {
           const rawModel = parts[2].trim().split('Build/')[0].trim();
           
-          // Specific device mappings for your device
-          if (rawModel === 'CPH2381') {
-            return `OnePlus Nord CE 2 Lite (${rawModel})`;
+          // Check explicit model database first
+          if (DEVICE_DATABASE[rawModel]) {
+            return `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
           }
           
-          // Brand detection mappings based on common model prefixes
+          // Brand detection fallback based on common model prefixes
           if (/^SM-/i.test(rawModel)) {
             return `Samsung (${rawModel})`;
           }
