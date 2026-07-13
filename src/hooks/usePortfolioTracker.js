@@ -83,10 +83,6 @@ export const usePortfolioTracker = () => {
 
     // Send session summary function
     const handleUnload = () => {
-      if (isExternalTransition.current) {
-        return; // Ignore if navigating to external links (Resume, GitHub, etc.)
-      }
-
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
@@ -173,9 +169,27 @@ export const usePortfolioTracker = () => {
           activeTime.current += Date.now() - lastActiveStamp.current;
           lastActiveStamp.current = null;
         }
+
+        // If the tab went hidden because they clicked an external link, bypass this trigger
+        if (isExternalTransition.current) {
+          return;
+        }
+
+        // Trigger unload report immediately for normal closes / WebView exits
+        handleUnload();
       } else {
         // Tab became visible again
         lastActiveStamp.current = Date.now();
+        
+        // If we already sent the summary (because they closed/minimized) but returned,
+        // reset the state and session timing so we can log their resumed session.
+        if (hasSentSummary.current) {
+          hasSentSummary.current = false;
+          startTime.current = Date.now();
+          activeTime.current = 0;
+          clickCounts.current = {};
+          sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
+        }
       }
     };
 
@@ -214,16 +228,16 @@ export const usePortfolioTracker = () => {
 
     document.addEventListener('click', handleDocumentClick);
 
-    // 4. Send session summary on actual page unload/exits (supported in webviews as well)
+    // 4. Send session summary on actual page unload/exits
     window.addEventListener('beforeunload', handleUnload);
     window.addEventListener('pagehide', handleUnload);
 
-    // Handle Back-Forward cache restores cleanly (resets timing states)
+    // Handle Back-Forward cache restores cleanly
     const handlePageShow = (e) => {
       if (e.persisted) {
         hasSentSummary.current = false;
         startTime.current = Date.now();
-        activeTime.current = 0; // Fix: Reset active duration to 0 on new sessions
+        activeTime.current = 0;
         lastActiveStamp.current = Date.now();
         clickCounts.current = {};
         sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
