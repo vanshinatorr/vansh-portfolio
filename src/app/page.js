@@ -537,6 +537,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredProject, setHoveredProject] = useState(null);
+  const [githubContributions, setGithubContributions] = useState(204);
   
   const m1 = useMagnetic(0.4);
   const m2 = useMagnetic(0.4);
@@ -544,6 +545,20 @@ export default function Home() {
   const lastMouse = useRef({ x: 0, y: 0 });
 
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
+
+  useEffect(() => {
+    fetch("https://github-contributions.vercel.app/api/v1/vanshinatorr")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.years && data.years.length > 0) {
+          const currentYearTotal = data.years[0].total;
+          if (typeof currentYearTotal === 'number' && currentYearTotal > 0) {
+            setGithubContributions(currentYearTotal);
+          }
+        }
+      })
+      .catch(err => console.warn("Failed to fetch Github contributions:", err));
+  }, []);
 
   const handleProjectMouseMove = useCallback((e) => {
     if (portalRef.current) {
@@ -740,7 +755,7 @@ export default function Home() {
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" data-track="GitHub (Hero)">GitHub →</a>
         </div>
         <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
-          {[{ to: 60, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: 204, suffix: "", label: "GitHub Contributions" }].map(s => (
+          {[{ to: 60, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: githubContributions, suffix: "", label: "GitHub Contributions" }].map(s => (
             <div className="stat-item" key={s.label}>
               <span className="stat-num"><Counter to={s.to} suffix={s.suffix} /></span>
               <span className="stat-label">{s.label}</span>
