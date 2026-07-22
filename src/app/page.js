@@ -689,7 +689,7 @@ export default function Home() {
   ];
 
   const achievements = [
-    { icon: "🥇", title: "Top 50 on Codolio", sub: "Ranked among top 50 coding profiles out of 2000+ students at JECRC University" },
+    { icon: "🥇", title: "Top 30 on Codolio", sub: "Ranked among top 30 coding profiles out of 2000+ students at JECRC University" },
     { icon: "♟️", title: "District Chess Champion", sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com — strategic thinker on and off the board." },
     { icon: "🧩", title: "300+ DSA Problems", sub: "Solved across LeetCode & GFG — arrays, trees, DP, hashing, recursion, graphs." },
     { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul to Sep 2025. Real-world MERN development." },
