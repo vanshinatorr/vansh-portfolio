@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { logSessionStart, logSessionEnd } from '@/app/actions';
 
-const DISCORD_WEBHOOK_URL = process.env.REACT_APP_DISCORD_WEBHOOK_URL;
-
-// Helper to format milliseconds to readable format (e.g., 2m 15s)
+// Helper to format milliseconds to readable format
 const formatDuration = (ms) => {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
@@ -13,7 +12,7 @@ const formatDuration = (ms) => {
   return `${seconds}s`;
 };
 
-// Helper to get query parameters (e.g. ?ref=Google)
+// Helper to get query parameters
 const getRefParameter = () => {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -23,9 +22,7 @@ const getRefParameter = () => {
   }
 };
 
-// Dictionary database of the most popular Samsung, OnePlus, and Vivo devices in India
 const DEVICE_DATABASE = {
-  // OnePlus
   'CPH2381': 'OnePlus Nord CE 2 Lite',
   'CPH2467': 'OnePlus Nord CE 3 Lite',
   'CPH2569': 'OnePlus Nord CE 4',
@@ -38,8 +35,6 @@ const DEVICE_DATABASE = {
   'CPH2263': 'OnePlus Nord 2',
   'CPH2401': 'OnePlus Nord 2T',
   'CPH2307': 'OnePlus Nord CE 2',
-  
-  // Vivo
   'V2246': 'Vivo V27',
   'V2303': 'Vivo V29',
   'V2318': 'Vivo V30',
@@ -50,8 +45,6 @@ const DEVICE_DATABASE = {
   'V2205': 'Vivo Y16',
   'V2312': 'Vivo T2 5G',
   'V2336': 'Vivo T3 5G',
-  
-  // Samsung Galaxy S & Z Series
   'SM-S901B': 'Samsung Galaxy S22',
   'SM-S906B': 'Samsung Galaxy S22+',
   'SM-S908B': 'Samsung Galaxy S22 Ultra',
@@ -67,8 +60,6 @@ const DEVICE_DATABASE = {
   'SM-F926B': 'Samsung Galaxy Z Fold 3',
   'SM-F936B': 'Samsung Galaxy Z Fold 4',
   'SM-F946B': 'Samsung Galaxy Z Fold 5',
-  
-  // Samsung A / M / F Series
   'SM-A546B': 'Samsung Galaxy A54 5G',
   'SM-A346B': 'Samsung Galaxy A34 5G',
   'SM-A146B': 'Samsung Galaxy A14 5G',
@@ -79,59 +70,32 @@ const DEVICE_DATABASE = {
   'SM-F346B': 'Samsung Galaxy F34 5G',
 };
 
-// Helper to extract clean OS and brand/device model from User Agent (fallback)
 const getDeviceDetails = () => {
   try {
     const ua = navigator.userAgent;
-    
-    if (/Windows/i.test(ua)) {
-      return 'Windows PC';
-    }
-    if (/Macintosh/i.test(ua)) {
-      return 'Mac';
-    }
-    if (/iPhone/i.test(ua)) {
-      return 'iPhone';
-    }
-    if (/iPad/i.test(ua)) {
-      return 'iPad';
-    }
+    if (/Windows/i.test(ua)) return 'Windows PC';
+    if (/Macintosh/i.test(ua)) return 'Mac';
+    if (/iPhone/i.test(ua)) return 'iPhone';
+    if (/iPad/i.test(ua)) return 'iPad';
     if (/Android/i.test(ua)) {
       const match = ua.match(/\(([^)]+)\)/);
       if (match && match[1]) {
         const parts = match[1].split(';');
         if (parts.length >= 3) {
           const rawModel = parts[2].trim().split('Build/')[0].trim();
-          
-          if (DEVICE_DATABASE[rawModel]) {
-            return `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
-          }
-          if (/^SM-/i.test(rawModel)) {
-            return `Samsung (${rawModel})`;
-          }
-          if (/^CPH|^OP4|^OPD/i.test(rawModel)) {
-            return `OnePlus/Oppo (${rawModel})`;
-          }
-          if (/^RMX/i.test(rawModel)) {
-            return `Realme (${rawModel})`;
-          }
-          if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) {
-            return `Vivo (${rawModel})`;
-          }
-          if (/Pixel/i.test(rawModel)) {
-            return `Google ${rawModel}`;
-          }
-          if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) {
-            return `Xiaomi/Redmi (${rawModel})`;
-          }
+          if (DEVICE_DATABASE[rawModel]) return `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
+          if (/^SM-/i.test(rawModel)) return `Samsung (${rawModel})`;
+          if (/^CPH|^OP4|^OPD/i.test(rawModel)) return `OnePlus/Oppo (${rawModel})`;
+          if (/^RMX/i.test(rawModel)) return `Realme (${rawModel})`;
+          if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) return `Vivo (${rawModel})`;
+          if (/Pixel/i.test(rawModel)) return `Google ${rawModel}`;
+          if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) return `Xiaomi/Redmi (${rawModel})`;
           return `Android (${rawModel})`;
         }
       }
       return 'Android Device';
     }
-    if (/Linux/i.test(ua)) {
-      return 'Linux PC';
-    }
+    if (/Linux/i.test(ua)) return 'Linux PC';
     return 'Unknown Device';
   } catch (e) {
     return 'Unknown Device';
@@ -142,211 +106,91 @@ export const usePortfolioTracker = () => {
   const startTime = useRef(Date.now());
   const activeTime = useRef(0);
   const lastActiveStamp = useRef(Date.now());
-  const clickCounts = useRef({}); // Tracks click frequencies { 'Resume Clicked': 3 }
-  const visitorInfo = useRef(null);
+  const clickCounts = useRef({});
   const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
   const hasSentSummary = useRef(false);
   const refName = useRef(getRefParameter());
-  const isExternalTransition = useRef(false); // Flag to temporarily ignore unloads on mailto/tel/external link triggers
+  const isExternalTransition = useRef(false);
   const deviceName = useRef('Parsing Device...');
   const transitionTimeout = useRef(null);
-
-  // Helper to send data to Discord Webhook
-  const sendToDiscord = (title, fields, color = 3066993) => {
-    if (!DISCORD_WEBHOOK_URL) {
-      return; // Silently ignore if webhook is not configured
-    }
-
-    const payload = {
-      username: 'Portfolio Tracker',
-      avatar_url: 'https://i.imgur.com/gS84yWw.png', // Radar icon
-      embeds: [
-        {
-          title,
-          color,
-          fields: [
-            { name: 'Session ID', value: sessionId.current, inline: true },
-            { name: 'Viewer Ref / Target', value: refName.current, inline: true },
-            { name: 'Device / Model', value: deviceName.current, inline: true },
-            ...fields
-          ],
-          timestamp: new Date().toISOString(),
-        }
-      ]
-    };
-
-    const bodyData = JSON.stringify(payload);
-
-    // Use keepalive: true fetch as the primary modern way to send telemetry on page close
-    fetch(DISCORD_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: bodyData,
-      keepalive: true,
-    }).catch((err) => {
-      // Fallback to sendBeacon if fetch fails or is unsupported
-      if (navigator.sendBeacon) {
-        const blob = new Blob([bodyData], { type: 'application/json' });
-        navigator.sendBeacon(DISCORD_WEBHOOK_URL, blob);
-      } else {
-        console.error("Error sending analytics to Discord:", err);
-      }
-    });
-  };
 
   useEffect(() => {
     let isMounted = true;
 
-    // Send session summary function
     const handleUnload = () => {
-      // CRITICAL FIX: If the user clicked an external link, do not run unload logic.
-      if (isExternalTransition.current) {
-        return;
-      }
-
+      if (isExternalTransition.current) return;
       if (hasSentSummary.current) return;
       hasSentSummary.current = true;
 
-      // Calculate final active time
       let finalActiveTime = activeTime.current;
       if (lastActiveStamp.current) {
         finalActiveTime += Date.now() - lastActiveStamp.current;
       }
       const totalTimeOpen = Date.now() - startTime.current;
 
-      const locationStr = visitorInfo.current
-        ? `${visitorInfo.current.city || ''}, ${visitorInfo.current.region || ''}, ${visitorInfo.current.country_name || ''}`
-        : 'Unknown Location';
-
-      // Format click lists cleanly with counters: e.g., "• Resume Clicked (2x)"
       const clicksArray = Object.entries(clickCounts.current);
       const clickSummary = clicksArray.length > 0
         ? clicksArray.map(([item, count]) => `• ${item} (${count}x)`).join('\n')
-        : 'No clicks recorded (just browsed)';
+        : 'No clicks recorded';
 
-      const fields = [
-        { name: 'Location', value: locationStr, inline: true },
-        { name: 'Active Duration', value: formatDuration(finalActiveTime), inline: true },
-        { name: 'Total Tab Duration', value: formatDuration(totalTimeOpen), inline: true },
-        {
-          name: 'Interactions / Clicks',
-          value: clickSummary.length > 1024 ? clickSummary.substring(0, 1000) + '...' : clickSummary,
-          inline: false
-        }
-      ];
-
-      sendToDiscord('📤 Portfolio Session Ended ⏳', fields, 15158332); // Red / Orange
+      // Send to server-side logging action
+      logSessionEnd({
+        sessionId: sessionId.current,
+        refName: refName.current,
+        deviceName: deviceName.current,
+        finalActiveTime: formatDuration(finalActiveTime),
+        totalTimeOpen: formatDuration(totalTimeOpen),
+        clickSummary
+      });
     };
 
-    // 1. Parallel Asynchronous Fetch: Location and Device Model (Client Hints)
-    const fetchLocationAndStart = async () => {
-      let locationStr = 'Unknown Location';
-      let ipStr = 'Unknown IP';
-      let orgStr = 'Unknown ISP';
-
-      // Promise A: Location Fetch
-      const locationPromise = (async () => {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 sec timeout
-          const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-          clearTimeout(timeoutId);
-
-          if (response.ok) {
-            const data = await response.json();
-            visitorInfo.current = data;
-            ipStr = data.ip || ipStr;
-            locationStr = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`;
-            orgStr = data.org || orgStr;
-          }
-        } catch (error) {
-          console.warn("Failed to fetch location info:", error.message);
-        }
-      })();
-
-      // Promise B: Device Details (resolving User Agent Reduction using Client Hints)
-      const devicePromise = (async () => {
-        let details = getDeviceDetails(); // Initial sync fallback
-
-        try {
-          if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
-            const entropy = await navigator.userAgentData.getHighEntropyValues(['model']);
-            if (entropy.model) {
-              const rawModel = entropy.model;
-              // If model returned is not generic 'K' or 'U'
-              if (rawModel && rawModel !== 'K' && rawModel !== 'U') {
-                if (DEVICE_DATABASE[rawModel]) {
-                  details = `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
-                } else if (/^SM-/i.test(rawModel)) {
-                  details = `Samsung (${rawModel})`;
-                } else if (/^CPH|^OP4|^OPD/i.test(rawModel)) {
-                  details = `OnePlus/Oppo (${rawModel})`;
-                } else if (/^RMX/i.test(rawModel)) {
-                  details = `Realme (${rawModel})`;
-                } else if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) {
-                  details = `Vivo (${rawModel})`;
-                } else if (/Pixel/i.test(rawModel)) {
-                  details = `Google ${rawModel}`;
-                } else if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) {
-                  details = `Xiaomi/Redmi (${rawModel})`;
-                } else {
-                  details = `Android (${rawModel})`;
-                }
-              }
+    const fetchDeviceAndStart = async () => {
+      let details = getDeviceDetails();
+      try {
+        if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
+          const entropy = await navigator.userAgentData.getHighEntropyValues(['model']);
+          if (entropy.model) {
+            const rawModel = entropy.model;
+            if (rawModel && rawModel !== 'K' && rawModel !== 'U') {
+              if (DEVICE_DATABASE[rawModel]) details = `${DEVICE_DATABASE[rawModel]} (${rawModel})`;
+              else if (/^SM-/i.test(rawModel)) details = `Samsung (${rawModel})`;
+              else if (/^CPH|^OP4|^OPD/i.test(rawModel)) details = `OnePlus/Oppo (${rawModel})`;
+              else if (/^RMX/i.test(rawModel)) details = `Realme (${rawModel})`;
+              else if (/^V[0-9]{4}/i.test(rawModel) || /^VIVO/i.test(rawModel)) details = `Vivo (${rawModel})`;
+              else if (/Pixel/i.test(rawModel)) details = `Google ${rawModel}`;
+              else if (/POCO|Redmi|Xiaomi|Mi\s/i.test(rawModel)) details = `Xiaomi/Redmi (${rawModel})`;
+              else details = `Android (${rawModel})`;
             }
           }
-        } catch (e) {
-          console.warn("Client Hints lookup failed:", e);
         }
+      } catch (e) {
+        console.warn("Client Hints lookup failed:", e);
+      }
 
-        deviceName.current = details;
-      })();
-
-      // Wait for both asynchronous tasks to resolve in parallel
-      await Promise.all([locationPromise, devicePromise]);
+      deviceName.current = details;
 
       if (!isMounted) return;
 
-      // Send Session Started notification
-      sendToDiscord(
-        '📥 Portfolio Opened 🚀',
-        [
-          { name: 'Location', value: locationStr, inline: true },
-          { name: 'IP Address', value: ipStr, inline: true },
-          { name: 'ISP / Provider', value: orgStr, inline: false },
-          { name: 'Referrer', value: document.referrer || 'Direct / None', inline: true },
-          { name: 'Browser / Device', value: navigator.userAgent.substring(0, 80) + '...', inline: false }
-        ],
-        3066993 // Green / Teal
-      );
+      logSessionStart({
+        sessionId: sessionId.current,
+        refName: refName.current,
+        deviceName: deviceName.current,
+        clientReferrer: document.referrer || 'Direct / None'
+      });
     };
 
-    fetchLocationAndStart();
+    fetchDeviceAndStart();
 
-    // 2. Track Page active duration (handling tab focus/blur)
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Tab is backgrounded (accumulate active time spent so far)
         if (lastActiveStamp.current) {
           activeTime.current += Date.now() - lastActiveStamp.current;
           lastActiveStamp.current = null;
         }
-
-        // If the tab went hidden because they clicked an external link, bypass this trigger
-        if (isExternalTransition.current) {
-          return;
-        }
-
-        // Trigger unload report immediately for normal closes / WebView exits
+        if (isExternalTransition.current) return;
         handleUnload();
       } else {
-        // Tab became visible again
         lastActiveStamp.current = Date.now();
-        
-        // If we already sent the summary (because they closed/minimized) but returned,
-        // reset the state and session timing so we can log their resumed session.
         if (hasSentSummary.current) {
           hasSentSummary.current = false;
           startTime.current = Date.now();
@@ -359,7 +203,6 @@ export const usePortfolioTracker = () => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Instant touch/mousedown interception to bypass transition timing race conditions
     const handleTrigger = (e) => {
       const anchor = e.target.closest('a');
       if (anchor) {
@@ -372,10 +215,7 @@ export const usePortfolioTracker = () => {
                              
           if (isExternal) {
             isExternalTransition.current = true;
-            if (transitionTimeout.current) {
-              clearTimeout(transitionTimeout.current);
-            }
-            // Hold flag as true for 3 seconds to be safe on slower intents
+            if (transitionTimeout.current) clearTimeout(transitionTimeout.current);
             transitionTimeout.current = setTimeout(() => {
               isExternalTransition.current = false;
             }, 3000);
@@ -387,7 +227,6 @@ export const usePortfolioTracker = () => {
     document.addEventListener('touchstart', handleTrigger, { capture: true, passive: true });
     document.addEventListener('mousedown', handleTrigger, { capture: true, passive: true });
 
-    // 3. Track clicks using event delegation (for telemetry logs)
     const handleDocumentClick = (e) => {
       const trackEl = e.target.closest('[data-track]');
       if (trackEl) {
@@ -400,11 +239,9 @@ export const usePortfolioTracker = () => {
 
     document.addEventListener('click', handleDocumentClick);
 
-    // 4. Send session summary on actual page unload/exits
     window.addEventListener('beforeunload', handleUnload);
     window.addEventListener('pagehide', handleUnload);
 
-    // Handle Back-Forward cache restores cleanly
     const handlePageShow = (e) => {
       if (e.persisted) {
         hasSentSummary.current = false;
@@ -426,13 +263,10 @@ export const usePortfolioTracker = () => {
       window.removeEventListener('beforeunload', handleUnload);
       window.removeEventListener('pagehide', handleUnload);
       window.removeEventListener('pageshow', handlePageShow);
-      if (transitionTimeout.current) {
-        clearTimeout(transitionTimeout.current);
-      }
+      if (transitionTimeout.current) clearTimeout(transitionTimeout.current);
     };
   }, []);
 
-  // Expose trackClick manually in case they need it
   const trackClick = (name) => {
     if (name) {
       clickCounts.current[name] = (clickCounts.current[name] || 0) + 1;
