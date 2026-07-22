@@ -122,3 +122,23 @@ export async function logSessionEnd({ sessionId, refName, deviceName, finalActiv
     return { success: false };
   }
 }
+
+export async function fetchGithubContributions() {
+  try {
+    const res = await fetch("https://github-contributions.vercel.app/api/v1/vanshinatorr", {
+      next: { revalidate: 3600 }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.years && data.years.length > 0) {
+        const total = data.years[0].total;
+        if (typeof total === 'number' && total > 0) {
+          return total;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Server action failed to fetch Github contributions:", e.message);
+  }
+  return 204;
+}

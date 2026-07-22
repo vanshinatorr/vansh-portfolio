@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { usePortfolioTracker } from "@/hooks/usePortfolioTracker";
+import { fetchGithubContributions } from "@/app/actions";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -547,17 +548,13 @@ export default function Home() {
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
 
   useEffect(() => {
-    fetch("https://github-contributions.vercel.app/api/v1/vanshinatorr")
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.years && data.years.length > 0) {
-          const currentYearTotal = data.years[0].total;
-          if (typeof currentYearTotal === 'number' && currentYearTotal > 0) {
-            setGithubContributions(currentYearTotal);
-          }
+    fetchGithubContributions()
+      .then(total => {
+        if (total > 0) {
+          setGithubContributions(total);
         }
       })
-      .catch(err => console.warn("Failed to fetch Github contributions:", err));
+      .catch(err => console.warn("Failed to fetch Github contributions via Server Action:", err));
   }, []);
 
   const handleProjectMouseMove = useCallback((e) => {
