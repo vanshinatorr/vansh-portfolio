@@ -587,11 +587,11 @@ const INITIAL_CHESS_BOARD = [
   [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
   [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
   [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♕' }],
+  [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♛' }],
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
-  [null, null, { type: 'b', color: 'w', label: '♗' }, null, null, null, null, null],
-  [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♔' }, null]
+  [null, null, { type: 'b', color: 'w', label: '♝' }, null, null, null, null, null],
+  [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
 ];
 
 function ChessPuzzle() {
@@ -1265,7 +1265,7 @@ export default function Home() {
           <div className="bento-card bento-bio reveal">
             <h2 className="bento-headline">Who is Vansh?</h2>
             <div className="bento-body">
-              <p>I&apos;m a pre-final year Computer Science student at JECRC University, Jaipur. I specialize in the MERN Stack, focusing on bulletproof REST APIs, WebSockets state sync, and secure payments integration.</p>
+              <p>I&apos;m a final year Computer Science student at JECRC University, Jaipur. I specialize in the MERN Stack, focusing on bulletproof REST APIs, WebSockets state sync, and secure payments integration.</p>
               <p>As the founder of <strong>ConsistPay</strong>, I shivered real-world code to 60+ users. Currently solving DSA consistently and searching for a placement/intern role.</p>
             </div>
           </div>

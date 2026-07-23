@@ -622,44 +622,61 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   width: 100%;
   display: flex;
   justify-content: center;
+  margin: 1rem 0;
 }
 .chess-board-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
   width: 100%;
-  max-width: 250px;
+  max-width: 290px;
   aspect-ratio: 1;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.6);
 }
 .chess-square {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.75rem;
   cursor: pointer;
   user-select: none;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
-.chess-square.light { background: #1b1b28; }
-.chess-square.dark { background: #0b0b12; }
-.chess-square:hover { background: rgba(124, 58, 237, 0.25); }
-.chess-square.selected { background: rgba(167, 139, 250, 0.35) !important; }
+.chess-square.light { 
+  background: rgba(255, 255, 255, 0.04); 
+}
+.chess-square.dark { 
+  background: rgba(10, 10, 18, 0.72); 
+}
+.chess-square:hover { 
+  background: rgba(167, 139, 250, 0.22) !important; 
+}
+.chess-square.selected { 
+  background: rgba(167, 139, 250, 0.38) !important; 
+  box-shadow: inset 0 0 8px rgba(167, 139, 250, 0.4);
+}
 .chess-square.target-hint {
-  background: rgba(34, 197, 94, 0.18) !important;
-  border: 1.2px dashed var(--green);
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1.5px dashed rgba(16, 185, 129, 0.55);
 }
 .chess-piece {
   display: inline-block;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.chess-square:hover .chess-piece {
+  transform: scale(1.1);
 }
 .white-piece {
-  color: #f8fafc;
-  text-shadow: 0 0 6px rgba(167, 139, 250, 0.85);
+  color: #c084fc;
+  filter: drop-shadow(0 0 5px rgba(192, 132, 252, 0.85));
 }
 .black-piece {
-  color: #575775;
+  color: #f43f5e;
+  filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.75));
 }
 .chess-feedback {
   font-family: 'JetBrains Mono', monospace;
