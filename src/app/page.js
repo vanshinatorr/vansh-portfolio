@@ -1510,8 +1510,9 @@ export default function Home() {
   ];
 
   const skills = [
-    { title: "Backend", items: ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Socket.IO", "Razorpay", "Gemini AI"], primary: true },
-    { title: "Frontend", items: ["React.js", "JavaScript", "Tailwind CSS", "HTML / CSS"] },
+    { title: "Backend Development", items: ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Socket.IO", "Razorpay", "Gemini AI"], primary: true },
+    { title: "Frontend Engineering", items: ["React.js", "JavaScript", "Tailwind CSS", "HTML / CSS"] },
+    { title: "UI/UX & Prototyping", items: ["Figma (Layout & Prototyping)", "User Interface Design", "Wireframing & Typography", "Component Systems", "Bento Grid Layouts"], primary: true },
     { title: "Database & Tools", items: ["MongoDB", "Mongoose", "Postman", "Git", "Vercel", "Render", "VS Code"] },
     { title: "CS Fundamentals", items: ["DSA — 300+ problems", "OOPs", "DBMS", "Operating Systems"] },
   ];
@@ -1570,15 +1571,15 @@ export default function Home() {
           <ParticleCanvas />
         </div>
 
-        <p className="hero-eyebrow" style={{ position: "relative", zIndex: 1 }}>vansh vijay — full stack developer</p>
+        <p className="hero-eyebrow" style={{ position: "relative", zIndex: 1 }}>vansh vijay — developer & ui/ux designer</p>
         <h1 className="hero-name" style={{ position: "relative", zIndex: 1 }}>
           <ScrambleText text="Building" delay={100} /><br />
           <span className="accent-line"><ScrambleText text="products," delay={400} /></span>
           <ScrambleText text=" not projects." delay={700} />
         </h1>
         <p className="hero-statement" style={{ position: "relative", zIndex: 1 }}>
-          <strong>MERN stack developer & founder of ConsistPay</strong> — a real platform used by 60+ students with live Razorpay payments and Gemini AI.{" "}
-          <Typewriter lines={["Final year CSE @ JECRC.", "Open to SDE internships.", "Shipping real things."]} />
+          <strong>Developer & Designer, founder of ConsistPay</strong> — a real platform used by 60+ students. Blending high-performance systems engineering with pixel-perfect Figma layouts.{" "}
+          <Typewriter lines={["Full Stack & UI/UX Design.", "Designing in Figma.", "Final year CSE @ JECRC.", "Shipping real products."]} />
         </p>
         <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
           <a href="#projects" className="btn-primary magnetic" data-strength="0.4">View Projects ↓</a>
@@ -1604,8 +1605,9 @@ export default function Home() {
           <div className="bento-card bento-bio reveal">
             <h2 className="bento-headline">Who is Vansh?</h2>
             <div className="bento-body">
-              <p>I&apos;m a final year Computer Science student at JECRC University, Jaipur. I specialize in the MERN Stack, focusing on bulletproof REST APIs, WebSockets state sync, and secure payments integration.</p>
-              <p>As the founder of <strong>ConsistPay</strong>, I shivered real-world code to 60+ users. Currently solving DSA consistently and searching for a placement/intern role.</p>
+              <p>I&apos;m a final year Computer Science student at JECRC University, Jaipur. I operate at the intersection of robust backend engineering and high-fidelity user interface design.</p>
+              <p>I specialize in building full-stack products with the MERN Stack while simultaneously crafting pixel-perfect, modern component design systems in Figma.</p>
+              <p>As the founder of <strong>ConsistPay</strong>, I shipped real-world code to 60+ users. Currently solving DSA consistently and looking for opportunities to design and build premium digital platforms.</p>
             </div>
           </div>
 
