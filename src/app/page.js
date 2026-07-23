@@ -13,10 +13,20 @@ gsap.registerPlugin(ScrollTrigger);
 // ── Audio Engine (HTML5 Background Music & Fades) ──────────────────────────────
 let bgAudio = null;
 let fadeInterval = null;
+let isMutedGlobal = false;
+
+const setAudioMuteState = (muted) => {
+  isMutedGlobal = muted;
+  if (muted) {
+    stopAmbientDrone();
+  } else {
+    startAmbientDrone();
+  }
+};
 
 const startAmbientDrone = () => {
   try {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || isMutedGlobal) return;
     if (!bgAudio) {
       bgAudio = new Audio('/intro.mp3');
       bgAudio.loop = true;
@@ -24,12 +34,24 @@ const startAmbientDrone = () => {
     }
     
     if (fadeInterval) clearInterval(fadeInterval);
+    bgAudio.muted = false;
     
     bgAudio.play().then(() => {
+      if (isMutedGlobal) {
+        bgAudio.pause();
+        bgAudio.muted = true;
+        bgAudio.volume = 0;
+        return;
+      }
       // Fade in to 0.28 volume over 1.5 seconds
       const targetVol = 0.28;
       const step = targetVol / 15;
       fadeInterval = setInterval(() => {
+        if (!bgAudio || isMutedGlobal) {
+          if (fadeInterval) clearInterval(fadeInterval);
+          if (bgAudio) { bgAudio.pause(); bgAudio.muted = true; bgAudio.volume = 0; }
+          return;
+        }
         if (bgAudio.volume < targetVol) {
           bgAudio.volume = Math.min(targetVol, bgAudio.volume + step);
         } else {
@@ -46,28 +68,22 @@ const startAmbientDrone = () => {
 
 const stopAmbientDrone = () => {
   try {
-    if (!bgAudio) return;
+    isMutedGlobal = true;
     if (fadeInterval) clearInterval(fadeInterval);
-    
-    // Fade out to 0 volume over 800ms
-    const step = bgAudio.volume / 8;
-    fadeInterval = setInterval(() => {
-      if (bgAudio.volume > 0.04) {
-        bgAudio.volume = Math.max(0, bgAudio.volume - step);
-      } else {
-        bgAudio.pause();
-        bgAudio.volume = 0;
-        clearInterval(fadeInterval);
-      }
-    }, 100);
+    if (bgAudio) {
+      bgAudio.pause();
+      bgAudio.muted = true;
+      bgAudio.volume = 0;
+      bgAudio.currentTime = 0;
+    }
   } catch (e) {
     console.warn("Audio stop error:", e);
   }
 };
 
-
 const playSynthSFX = (type) => {
   try {
+    if (isMutedGlobal) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
     
@@ -1278,20 +1294,32 @@ export default function Home() {
 
   const toggleSound = () => {
     if (soundEnabled) {
-      stopAmbientDrone();
+      setAudioMuteState(true);
       setSoundEnabled(false);
+      try { localStorage.setItem('portfolio_sound_enabled', 'false'); } catch (e) {}
     } else {
-      startAmbientDrone();
+      setAudioMuteState(false);
       setSoundEnabled(true);
+      try { localStorage.setItem('portfolio_sound_enabled', 'true'); } catch (e) {}
       playSynthSFX('impact');
     }
   };
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_sound_enabled');
+      if (saved === 'false') {
+        setSoundEnabled(false);
+        setAudioMuteState(true);
+      }
+    } catch (e) {}
+
     let triggered = false;
     const handleFirstInteraction = () => {
       if (triggered) return;
-      startAmbientDrone();
+      if (!isMutedGlobal) {
+        startAmbientDrone();
+      }
       triggered = true;
       document.removeEventListener('click', handleFirstInteraction);
       document.removeEventListener('touchstart', handleFirstInteraction);
