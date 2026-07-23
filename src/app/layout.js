@@ -32,7 +32,6 @@ export default function RootLayout({ children }) {
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-[#030308] text-[#f8fafc] noise-overlay relative">
-        <div id="scroll-progress" />
         {children}
       </body>
     </html>

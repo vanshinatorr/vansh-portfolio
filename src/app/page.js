@@ -1651,8 +1651,6 @@ export default function Home() {
     <>
       <IntroScreen onDone={handleIntroDone} />
 
-      <div id="scroll-progress" />
-
       {/* ── NAV ── */}
       <nav className={scrolled ? "scrolled" : ""}>
         <a href="#hero" className="nav-logo">
