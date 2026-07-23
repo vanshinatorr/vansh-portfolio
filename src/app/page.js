@@ -1336,26 +1336,30 @@ export default function Home() {
     let ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(min-width: 769px)", () => {
-        const scrollWidth = track.scrollWidth;
-        const windowWidth = window.innerWidth;
-        const amountToScroll = scrollWidth - windowWidth + 80;
-
         gsap.to(track, {
-          x: -amountToScroll,
+          x: () => -(track.scrollWidth - window.innerWidth + 240),
           ease: "none",
           scrollTrigger: {
             trigger: section,
             pin: true,
             scrub: 0.8,
             start: "top top",
-            end: () => `+=${amountToScroll}`,
+            end: () => `+=${track.scrollWidth - window.innerWidth + 240}`,
             invalidateOnRefresh: true,
           }
         });
       });
     });
 
-    return () => ctx.revert();
+    // Safeguard: Refresh ScrollTrigger after Next.js layout has stabilized
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+    };
   }, [introDone]);
 
   // Attach magnetic animations on mount
