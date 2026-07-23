@@ -652,7 +652,7 @@ const CHESS_PUZZLES = [
     eloGain: 20,
     board: [
       [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
-      [null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }, null],
+      [null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, null, null],
       [null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -1111,6 +1111,10 @@ function CliTerminal() {
 function StreakTracker() {
   const [contributions, setContributions] = useState(254);
   const [activeTooltip, setActiveTooltip] = useState(null);
+  const [commitLogs, setCommitLogs] = useState([
+    "> git status: active development tracked on ConsistPay repo",
+    "> hover squares to browse milestones, click to push commits"
+  ]);
   
   // Create 112 squares (16 weeks x 7 days)
   const [squares, setSquares] = useState(() => {
@@ -1151,6 +1155,11 @@ function StreakTracker() {
       next[index].isClickedGreen = true;
       setSquares(next);
       setContributions(prev => prev + 1);
+      
+      const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const newLog = `> git commit -m \"Pushed updates to Day ${index + 1} milestone\" [${timeString}]`;
+      setCommitLogs(prev => [newLog, prev[0]]);
+      
       playSynthSFX('tick');
     }
   };
@@ -1190,7 +1199,25 @@ function StreakTracker() {
           </div>
         )}
       </div>
-      <div className="streak-footer-hint">Hover squares to explore daily milestones. Click to commit updates.</div>
+
+      <div className="streak-commit-terminal">
+        {commitLogs.map((log, idx) => (
+          <div key={idx} className="streak-terminal-line">{log}</div>
+        ))}
+      </div>
+
+      <div className="streak-footer-row">
+        <div className="streak-footer-hint">Click squares to push live updates.</div>
+        <div className="streak-legend">
+          <span>Less</span>
+          <span className="legend-sq level-0"></span>
+          <span className="legend-sq level-1"></span>
+          <span className="legend-sq level-2"></span>
+          <span className="legend-sq level-3"></span>
+          <span className="legend-sq level-4"></span>
+          <span>More</span>
+        </div>
+      </div>
     </div>
   );
 }

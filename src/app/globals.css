@@ -900,7 +900,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .streak-tooltip {
   position: absolute;
   background: rgba(6, 6, 12, 0.95);
-  border: 1px solid rgba(167, 139, 250, 0.35);
+  border: 1px solid rgba(240, 194, 123, 0.35);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
   color: #f1f5f9;
   font-family: 'JetBrains Mono', monospace;
@@ -913,12 +913,68 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   transform: translateX(-50%);
   will-change: left, top;
 }
+.streak-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.15rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
 .streak-footer-hint {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   color: var(--muted);
-  text-align: center;
 }
+.streak-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.legend-sq {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+.legend-sq.level-0 { background: #18181f; }
+.legend-sq.level-1 { background: rgba(223, 178, 110, 0.12); }
+.legend-sq.level-2 { background: rgba(223, 178, 110, 0.32); }
+.legend-sq.level-3 { background: rgba(223, 178, 110, 0.6); }
+.legend-sq.level-4 { background: var(--accent2); }
+
+.streak-commit-terminal {
+  background: rgba(8, 8, 12, 0.72);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  margin-top: 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  color: var(--accent2);
+  min-height: 2.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.streak-terminal-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.88;
+}
+.streak-terminal-line:first-child {
+  color: var(--accent2);
+  font-weight: 500;
+  opacity: 1;
+}
+.streak-terminal-line:last-child {
+  opacity: 0.45;
+}
+
 
 /* ─── SOUND CONTROLLER ──────────────────────────────── */
 .sound-toggle-btn {
