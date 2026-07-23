@@ -733,7 +733,7 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
   width: 32px;
   height: 32px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--cat-border, rgba(255, 255, 255, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   flex-shrink: 0;
 }
@@ -741,10 +741,10 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 .skill-group-title {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.74rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--cat-accent, #ffffff);
+  color: var(--text, #f0f0f5);
   margin-bottom: 0 !important;
   line-height: 1;
 }
@@ -980,14 +980,18 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 
 /* ─── SKILLS INTERACTIVE ADDITIONS ─── */
 .skills-scroll-track .skill-group-card {
-  border-top: 2px solid var(--cat-accent, #38bdf8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(12, 12, 18, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .skills-scroll-track .skill-group-card:hover {
   transform: translateY(-6px) !important;
-  border-color: var(--cat-border, rgba(255, 255, 255, 0.25)) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--cat-glow, rgba(255, 255, 255, 0.1)) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 255, 255, 0.05) !important;
 }
 
 
