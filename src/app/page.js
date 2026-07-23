@@ -807,10 +807,13 @@ function ChessPuzzle() {
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>{vibeState === 'ready' ? "♟️ Friendship Qualifier" : "♟️ Top Hobby: Chess"}</span>
-        <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
-          {elo} ELO
-        </span>
+        {solved ? (
+          <div className="chess-certified-top-banner">
+            Eligibility Confirmed! Certified Friend of Vansh ⚡
+          </div>
+        ) : (
+          <span className="chess-widget-title">Friendship Qualifier</span>
+        )}
       </div>
 
       {vibeState === 'init' && (
