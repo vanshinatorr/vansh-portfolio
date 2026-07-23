@@ -1683,12 +1683,12 @@ export default function Home() {
           <div ref={skillsTrackRef} className="skills-scroll-track">
             {/* Title Card */}
             <div className="project-title-card">
-              <h2 className="project-title-heading" style={{ fontSize: "2rem" }}>Technical Intel</h2>
+              <h2 className="project-title-heading" style={{ fontSize: "2rem" }}>Technical<br /><span className="text-gradient">Intel.</span></h2>
               <p className="project-title-desc" style={{ marginTop: "0.5rem" }}>
-                Hover over chips to activate interactive diagnostic overlays below.
+                A visual index of my core technologies, languages, and structural engineering tools.
               </p>
               <div className="project-scroll-guide">
-                Scroll to slide skills →
+                Scroll to explore →
               </div>
             </div>
 
@@ -1751,15 +1751,6 @@ export default function Home() {
           </div>
         </div>
 
-        {activeSkill && skillLore[activeSkill] && (
-          <div className="skills-console-sticky reveal">
-            <div className="skills-console-wrapper" style={{ marginTop: 0 }}>
-              <div className="console-indicator">SYSTEM STATUS: INTEL ONLINE</div>
-              <div className="console-skill-title">[ INTEL: {activeSkill} ]</div>
-              <div className="console-skill-desc">{skillLore[activeSkill]}</div>
-            </div>
-          </div>
-        )}
       </section>
 
       <div className="divider" />
