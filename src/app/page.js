@@ -820,7 +820,7 @@ function ChessPuzzle() {
         <div className="vibe-scanner-panel">
           <div className="vibe-scanner-orb"></div>
           <h3>Friendship Check</h3>
-          <p>Scan your tactical frequency to check if you are eligible to be Vansh&apos;s friend.</p>
+          <p>Check if you are eligible to be Vansh&apos;s friend.</p>
           <button className="vibe-scan-btn" onClick={startVibeCheck}>
             Scan Eligibility
           </button>
