@@ -1572,7 +1572,7 @@ export default function Home() {
     { title: "UI/UX & Prototyping", items: ["Figma (Layout & Prototyping)", "User Interface Design", "Wireframing & Typography", "Component Systems", "Bento Grid Layouts"], primary: true },
     { title: "Database & Tools", items: ["MongoDB", "Mongoose", "Postman", "Git", "Vercel", "Render", "VS Code"] },
     { title: "CS Fundamentals", items: ["OOPs", "DBMS", "Operating Systems"] },
-    { title: "Creative Editing", items: ["Canva", "CapCut", "Premiere Pro", "DaVinci Resolve", "After Effects", "Lightroom"] },
+    { title: "Editing", items: ["Canva", "CapCut", "Premiere Pro", "DaVinci Resolve", "After Effects", "Lightroom"] },
   ];
 
   const skillLore = {
