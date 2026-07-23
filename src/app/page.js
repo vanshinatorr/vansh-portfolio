@@ -877,16 +877,20 @@ function ChessPuzzle() {
               {/* CHECKMATE POPUP OVERLAY */}
               {solved && (
                 <div className="chess-board-overlay">
-                  <div className="checkmate-banner">
-                    <span style={{ color: '#fbbf24' }}>🏆</span>
-                    <span>CHECKMATE</span>
+                  <div className="victory-card">
+                    <div className="victory-top-tag">
+                      <span className="trophy-bounce">🏆</span>
+                      <span>VICTORY</span>
+                    </div>
+                    <div className="checkmate-title">CHECKMATE</div>
+                    <div className="victory-subtext">1 - 0 • Smothered Mate</div>
                   </div>
                   <div className="confetti-container">
-                    {Array.from({ length: 32 }).map((_, idx) => {
+                    {Array.from({ length: 42 }).map((_, idx) => {
                       const size = Math.random() * 8 + 4;
-                      const delay = Math.random() * 0.4;
+                      const delay = Math.random() * 0.45;
                       const x = Math.random() * 100;
-                      const color = ['#c084fc', '#f43f5e', '#bbcb2b', '#60a5fa', '#f59e0b'][Math.floor(Math.random() * 5)];
+                      const color = ['#f59e0b', '#fbbf24', '#22c55e', '#38bdf8', '#a855f7'][Math.floor(Math.random() * 5)];
                       return (
                         <div 
                           key={idx}
@@ -897,8 +901,8 @@ function ChessPuzzle() {
                             height: `${size}px`,
                             background: color,
                             animationDelay: `${delay}s`,
-                            '--dx': `${(Math.random() - 0.5) * 160}px`,
-                            '--dy': `${-Math.random() * 180 - 80}px`,
+                            '--dx': `${(Math.random() - 0.5) * 200}px`,
+                            '--dy': `${-Math.random() * 220 - 90}px`,
                             '--rot': `${Math.random() * 360}deg`
                           }}
                         />
