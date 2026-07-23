@@ -1249,11 +1249,11 @@ const SKILL_ICONS = {
 
   // Creative Editing
   "Canva": { type: "devicon", class: "devicon-canva-original colored", color: "#00c4cc" },
-  "CapCut": { type: "img", src: "https://cdn.simpleicons.org/capcut/ffffff", color: "#ffffff" },
-  "Premiere Pro": { type: "img", src: "https://cdn.simpleicons.org/adobepremierepro/9999ff", color: "#9999ff" },
+  "CapCut": { type: "img", src: "https://api.iconify.design/hugeicons:capcut.svg?color=%23ffffff", color: "#ffffff" },
+  "Premiere Pro": { type: "img", src: "https://api.iconify.design/logos:adobe-premiere.svg", color: "#9999ff" },
   "DaVinci Resolve": { type: "img", src: "https://cdn.simpleicons.org/davinciresolve/f4a300", color: "#f4a300" },
-  "After Effects": { type: "img", src: "https://cdn.simpleicons.org/adobeaftereffects/9c91e4", color: "#9c91e4" },
-  "Lightroom": { type: "img", src: "https://cdn.simpleicons.org/adobelightroom/31a8ff", color: "#31a8ff" }
+  "After Effects": { type: "img", src: "https://api.iconify.design/logos:adobe-after-effects.svg", color: "#9c91e4" },
+  "Lightroom": { type: "img", src: "https://api.iconify.design/logos:adobe-lightroom.svg", color: "#31a8ff" }
 };
 
 export default function Home() {
