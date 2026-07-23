@@ -632,7 +632,7 @@ function MagneticNavLink({ href, label, active }) {
 const CHESS_PUZZLES = [
   {
     name: "Philidor's Sacrifice",
-    instructions: "White to play: Deliver checkmate in 2 moves to pass vibe check.",
+    instructions: "White to play: Deliver checkmate in 2 moves.",
     eloGain: 25,
     board: [
       [null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, null, { type: 'k', color: 'b', label: '♚' }],
