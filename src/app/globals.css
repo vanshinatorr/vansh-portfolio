@@ -823,7 +823,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .terminal-line { margin-bottom: 0.25rem; }
 .terminal-line.output {
   color: var(--accent2);
-  text-shadow: 0 0 5px rgba(167, 139, 250, 0.25);
+  text-shadow: 0 0 5px rgba(255, 107, 0, 0.25);
 }
 .terminal-prompt {
   color: #34d399;

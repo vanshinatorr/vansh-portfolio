@@ -939,7 +939,7 @@ function MatrixRain() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#a78bfa'; // Purple matrix rain
+      ctx.fillStyle = '#ff6b00'; // Solar Orange matrix rain
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
