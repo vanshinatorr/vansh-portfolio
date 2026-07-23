@@ -1162,15 +1162,18 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   max-width: 310px;
   margin-top: 0.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
   animation: fadeUp 0.3s ease-out;
 }
 .discord-form-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   font-weight: 600;
@@ -1179,12 +1182,26 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   text-transform: uppercase;
   margin-bottom: 0.1rem;
 }
+.dispatch-online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff6b00;
+  box-shadow: 0 0 8px #ff6b00;
+  animation: pulseGreenDot 2s infinite ease-in-out;
+}
+.discord-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
 .discord-input {
   width: 100%;
-  background: rgba(6, 6, 10, 0.8);
+  background: rgba(6, 6, 10, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 2.2rem 0.55rem 0.85rem;
   color: var(--text);
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
@@ -1199,6 +1216,19 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   border-color: var(--accent);
   box-shadow: 0 0 12px rgba(255, 107, 0, 0.25);
 }
+.enter-kbd-hint {
+  position: absolute;
+  right: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.08rem 0.4rem;
+  border-radius: 4px;
+  pointer-events: none;
+  line-height: 1;
+}
 .discord-form-buttons {
   display: flex;
   gap: 0.5rem;
@@ -1207,6 +1237,10 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 }
 .discord-submit-btn {
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
   color: #050508;
   font-family: 'Space Grotesk', sans-serif;
@@ -1220,9 +1254,15 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   letter-spacing: 0.03em;
   box-shadow: 0 4px 16px rgba(255, 107, 0, 0.35);
 }
+.btn-arrow {
+  transition: transform 0.2s ease;
+}
 .discord-submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+}
+.discord-submit-btn:hover:not(:disabled) .btn-arrow {
+  transform: translateX(3px);
 }
 .discord-submit-btn:disabled {
   opacity: 0.6;
@@ -1277,8 +1317,8 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   justify-content: center;
   z-index: 100;
   border-radius: 6px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   animation: overlayFade 0.3s forwards cubic-bezier(.22,1,.36,1);
 }
 @keyframes overlayFade {
@@ -1287,13 +1327,22 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 }
 .checkmate-banner {
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 900;
-  font-size: 1.85rem;
-  color: #bbcb2b;
-  text-shadow: 0 0 15px rgba(187, 203, 43, 0.85), 0 0 30px rgba(187, 203, 43, 0.45);
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #ffffff;
+  background: rgba(10, 10, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.55rem 1.5rem;
+  border-radius: 100px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 25px rgba(251, 191, 36, 0.25);
   letter-spacing: 0.12em;
   transform: scale(0.6);
-  animation: bannerPop 0.55s 0.05s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: bannerPop 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 @keyframes bannerPop {
   to { transform: scale(1); }

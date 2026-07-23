@@ -877,7 +877,10 @@ function ChessPuzzle() {
               {/* CHECKMATE POPUP OVERLAY */}
               {solved && (
                 <div className="chess-board-overlay">
-                  <div className="checkmate-banner">CHECKMATE</div>
+                  <div className="checkmate-banner">
+                    <span style={{ color: '#fbbf24' }}>🏆</span>
+                    <span>CHECKMATE</span>
+                  </div>
                   <div className="confetti-container">
                     {Array.from({ length: 32 }).map((_, idx) => {
                       const size = Math.random() * 8 + 4;
@@ -908,33 +911,38 @@ function ChessPuzzle() {
           </div>
           {!solved && <div className="chess-feedback">{feedback}</div>}
           {solved && (
-            <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem', width: '100%' }}>
+            <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '0.75rem', width: '100%' }}>
               {discordSent ? (
                 <div className="discord-success-card">
                   <div className="discord-success-badge">MESSAGE DELIVERED</div>
                   <p className="discord-success-sub">Dispatched directly to Vansh's Discord.</p>
                   <button onClick={handleReset} className="chess-reset-btn">
-                    Play Again
+                    Play Again ↺
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleDiscordSend} className="discord-ping-form">
                   <div className="discord-form-header">
-                    <span>SEND A DIRECT MESSAGE</span>
+                    <span className="dispatch-online-dot" />
+                    <span>DIRECT DISPATCH TO VANSH</span>
                   </div>
-                  <input 
-                    type="text" 
-                    className="discord-input" 
-                    placeholder="Hey Vansh, I am..." 
-                    value={discordMsg} 
-                    onChange={(e) => setDiscordMsg(e.target.value)}
-                  />
+                  <div className="discord-input-wrapper">
+                    <input 
+                      type="text" 
+                      className="discord-input" 
+                      placeholder="Hey Vansh, I am..." 
+                      value={discordMsg} 
+                      onChange={(e) => setDiscordMsg(e.target.value)}
+                    />
+                    <span className="enter-kbd-hint">↵</span>
+                  </div>
                   <div className="discord-form-buttons">
                     <button type="submit" disabled={sending} className="discord-submit-btn">
-                      {sending ? "Sending..." : "Send"}
+                      <span>{sending ? "Dispatching..." : "Send Message"}</span>
+                      <span className="btn-arrow">→</span>
                     </button>
                     <button type="button" onClick={handleReset} className="chess-reset-btn">
-                      Reset
+                      Reset ↺
                     </button>
                   </div>
                 </form>
