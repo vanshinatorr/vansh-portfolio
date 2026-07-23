@@ -2005,7 +2005,7 @@ export default function Home() {
               return (
                 <div 
                   key={g.title} 
-                  className={`skill-group-card ${gridClass} ${g.primary ? "primary" : ""} reveal`} 
+                  className={`skill-group-card ${gridClass} reveal`} 
                   style={{ transitionDelay: `${i * 0.05}s` }}
                 >
                   <div className="skill-group-header">
@@ -2020,7 +2020,7 @@ export default function Home() {
                       return (
                         <span 
                           key={s} 
-                          className={`skill-chip ${g.primary ? "primary" : ""}`}
+                          className="skill-chip"
                           data-tooltip={s}
                           style={{ "--brand-color": iconInfo?.color }}
                           onMouseMove={(e) => {
