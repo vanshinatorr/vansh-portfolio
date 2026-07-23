@@ -1131,10 +1131,7 @@ function StreakTracker() {
         {/* Right Column: Mini Terminal & Stats Dashboard */}
         <div className="streak-details-panel">
           <div className="streak-stats-row">
-            <div className="streak-stat-card">
-              <span className="stat-label">CURRENT STREAK</span>
-              <span className="stat-value text-orange">18 Days 🔥</span>
-            </div>
+            <CliTerminal />
 
             <div className="streak-commit-terminal">
               <div className="terminal-header">
@@ -1625,10 +1622,7 @@ export default function Home() {
             <StreakTracker />
           </div>
 
-          {/* Box 4: Terminal Command Line (Spans 2 columns) */}
-          <div className="bento-card bento-terminal reveal">
-            <CliTerminal />
-          </div>
+
         </div>
       </section>
 
