@@ -1613,10 +1613,10 @@ export default function Home() {
   };
 
   const achievements = [
-    { icon: "🥇", title: "Top 30 on Codolio", sub: "Top 30 out of 2000+ students at JECRC University." },
-    { icon: "♟️", title: "District Chess Champion", sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com." },
-    { icon: "⚽", title: "District Football Player", sub: "Represented district competitively — discipline, teamwork & pressure on the field." },
-    { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul–Sep 2025. Real-world MERN development." },
+    { icon: "🥇", title: "Top 30 on Codolio", sub: "Top 30 out of 2000+ students at JECRC University.", color: "#fbbf24", glow: "rgba(251,191,36,0.12)" },
+    { icon: "♟️", title: "District Chess Champion", sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com.", color: "#a78bfa", glow: "rgba(167,139,250,0.12)" },
+    { icon: "⚽", title: "District Football Player", sub: "Represented district competitively — discipline, teamwork & pressure on the field.", color: "#34d399", glow: "rgba(52,211,153,0.12)" },
+    { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul–Sep 2025. Real-world MERN development.", color: "#22d3ee", glow: "rgba(34,211,238,0.12)" },
   ];
 
   return (
@@ -1866,8 +1866,8 @@ export default function Home() {
         <p className="section-label reveal">Achievements</p>
         <div className="ach-grid">
           {achievements.map((a, i) => (
-            <TiltCard key={a.title} className="ach-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-              <div className="ach-card-sheen" />
+            <TiltCard key={a.title} className="ach-card reveal" style={{ '--card-accent': a.color, '--card-glow': a.glow, transitionDelay: `${i * 0.1}s` }}>
+              <div className="ach-card-sheen" style={{ background: `radial-gradient(ellipse at top, ${a.glow} 0%, transparent 65%)` }} />
               <div className="ach-icon">{a.icon}</div>
               <div className="ach-title">{a.title}</div>
               <div className="ach-sub">{a.sub}</div>
