@@ -1448,20 +1448,17 @@ export default function Home() {
     if (!section || !track) return;
 
     let ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 769px)", () => {
-        gsap.to(track, {
-          x: () => -(track.scrollWidth - window.innerWidth + 240),
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            pin: true,
-            scrub: 0.8,
-            start: "top top",
-            end: () => `+=${track.scrollWidth - window.innerWidth + 240}`,
-            invalidateOnRefresh: true,
-          }
-        });
+      gsap.to(track, {
+        x: () => -(track.scrollWidth - window.innerWidth + 240),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          scrub: 0.8,
+          start: "top top",
+          end: () => `+=${track.scrollWidth - window.innerWidth + 240}`,
+          invalidateOnRefresh: true,
+        }
       });
     });
 

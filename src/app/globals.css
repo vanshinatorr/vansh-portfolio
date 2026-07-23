@@ -1526,43 +1526,34 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   }
   
   .projects-horizontal-section {
-    padding: 4.5rem 0;
+    padding: 6rem 0 !important;
     overflow: hidden;
   }
   .projects-scroll-track-wrapper {
     width: 100%;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 0 1.25rem;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .projects-scroll-track-wrapper::-webkit-scrollbar {
-    display: none;
+    overflow: hidden !important;
+    padding: 0;
   }
   .projects-scroll-track {
     display: flex !important;
     flex-direction: row !important;
     width: max-content !important;
-    transform: none !important;
-    gap: 1.25rem !important;
-    padding: 1rem 0 !important;
+    gap: 1.5rem !important;
+    padding: 1.5rem 1.25rem !important;
   }
   .project-title-card {
-    width: 260px !important;
+    width: 280px !important;
     flex-shrink: 0 !important;
     padding-right: 1.5rem;
     margin-bottom: 0 !important;
-    scroll-snap-align: start;
   }
   .project-scroll-guide {
     display: block !important;
     margin-top: 0.5rem;
   }
   .project-card {
-    width: 290px !important;
+    width: 310px !important;
     flex-shrink: 0 !important;
-    scroll-snap-align: start;
   }
   .project-card-desc {
     min-height: auto;
