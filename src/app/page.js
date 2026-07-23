@@ -1682,26 +1682,54 @@ export default function Home() {
       <section id="skills">
         <p className="section-label reveal">Skills</p>
         <div className="skills-grid">
-          {skills.map((g, i) => (
-            <div key={g.title} className="reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-              <div className="skill-group-title">{g.title}</div>
-              <div className="skill-chips">
-                {g.items.map(s => (
-                  <span 
-                    key={s} 
-                    className={`skill-chip${g.primary ? " primary" : ""}`}
-                    onMouseMove={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                      e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                    }}
-                  >
-                    {s}
-                  </span>
-                ))}
+          {skills.map((g, i) => {
+            let gridClass = "";
+            let icon = "⚙️";
+            if (g.title.includes("Backend")) {
+              gridClass = "skill-card-backend";
+              icon = "🖥️";
+            } else if (g.title.includes("Frontend")) {
+              gridClass = "skill-card-frontend";
+              icon = "💻";
+            } else if (g.title.includes("UI/UX")) {
+              gridClass = "skill-card-uiux";
+              icon = "🎨";
+            } else if (g.title.includes("Database")) {
+              gridClass = "skill-card-database";
+              icon = "🔧";
+            } else if (g.title.includes("Fundamentals")) {
+              gridClass = "skill-card-cs";
+              icon = "🧩";
+            }
+
+            return (
+              <div 
+                key={g.title} 
+                className={`skill-group-card ${gridClass} ${g.primary ? "primary" : ""} reveal`} 
+                style={{ transitionDelay: `${i * 0.1}s` }}
+              >
+                <div className="skill-group-header">
+                  <span className="skill-group-icon">{icon}</span>
+                  <div className="skill-group-title">{g.title}</div>
+                </div>
+                <div className="skill-chips">
+                  {g.items.map(s => (
+                    <span 
+                      key={s} 
+                      className={`skill-chip${g.primary ? " primary" : ""}`}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                      }}
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
