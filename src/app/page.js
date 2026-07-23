@@ -1140,35 +1140,35 @@ function StreakTracker() {
 
 const SKILL_ICONS = {
   // Backend
-  "Node.js": { type: "devicon", class: "devicon-nodejs-plain colored" },
-  "Express.js": { type: "devicon", class: "devicon-express-original" },
+  "Node.js": { type: "devicon", class: "devicon-nodejs-plain colored", color: "#339933" },
+  "Express.js": { type: "devicon", class: "devicon-express-original", color: "#ffffff" },
   "REST APIs": { type: "lucide", name: "Network", color: "#00f0ff" },
   "JWT Auth": { type: "lucide", name: "ShieldCheck", color: "#ff007f" },
-  "Socket.IO": { type: "devicon", class: "devicon-socketio-original colored" },
+  "Socket.IO": { type: "devicon", class: "devicon-socketio-original colored", color: "#ffffff" },
   "Razorpay": { type: "lucide", name: "CreditCard", color: "#008cff" },
   "Gemini AI": { type: "lucide", name: "Cpu", color: "#9c3fe6" },
 
   // Frontend
-  "React.js": { type: "devicon", class: "devicon-react-original colored" },
-  "JavaScript": { type: "devicon", class: "devicon-javascript-plain colored" },
-  "Tailwind CSS": { type: "devicon", class: "devicon-tailwindcss-plain colored" },
-  "HTML / CSS": { type: "devicon", class: "devicon-html5-plain colored" },
+  "React.js": { type: "devicon", class: "devicon-react-original colored", color: "#61dafb" },
+  "JavaScript": { type: "devicon", class: "devicon-javascript-plain colored", color: "#f7df1e" },
+  "Tailwind CSS": { type: "devicon", class: "devicon-tailwindcss-plain colored", color: "#06b6d4" },
+  "HTML / CSS": { type: "devicon", class: "devicon-html5-plain colored", color: "#e34f26" },
 
   // UI/UX
-  "Figma (Layout & Prototyping)": { type: "devicon", class: "devicon-figma-plain colored" },
+  "Figma (Layout & Prototyping)": { type: "devicon", class: "devicon-figma-plain colored", color: "#f24e1e" },
   "User Interface Design": { type: "lucide", name: "Palette", color: "#ffaa00" },
   "Wireframing & Typography": { type: "lucide", name: "Type", color: "#ffd600" },
   "Component Systems": { type: "lucide", name: "Layers", color: "#00ff66" },
   "Bento Grid Layouts": { type: "lucide", name: "LayoutGrid", color: "#ff5b00" },
 
   // Database
-  "MongoDB": { type: "devicon", class: "devicon-mongodb-plain colored" },
+  "MongoDB": { type: "devicon", class: "devicon-mongodb-plain colored", color: "#47a248" },
   "Mongoose": { type: "lucide", name: "Database", color: "#800000" },
-  "Postman": { type: "devicon", class: "devicon-postman-plain colored" },
-  "Git": { type: "devicon", class: "devicon-git-plain colored" },
-  "Vercel": { type: "devicon", class: "devicon-vercel-original colored" },
+  "Postman": { type: "devicon", class: "devicon-postman-plain colored", color: "#ff6c37" },
+  "Git": { type: "devicon", class: "devicon-git-plain colored", color: "#f05032" },
+  "Vercel": { type: "devicon", class: "devicon-vercel-original colored", color: "#ffffff" },
   "Render": { type: "lucide", name: "Cloud", color: "#4682b4" },
-  "VS Code": { type: "devicon", class: "devicon-vscode-plain colored" },
+  "VS Code": { type: "devicon", class: "devicon-vscode-plain colored", color: "#007acc" },
 
   // CS Fundamentals
   "DSA — 300+ problems": { type: "lucide", name: "Binary", color: "#00ff66" },
@@ -1728,6 +1728,7 @@ export default function Home() {
                           key={s} 
                           className={`skill-chip ${g.primary ? "primary" : ""}`}
                           data-tooltip={s}
+                          style={{ "--brand-color": iconInfo?.color }}
                           onMouseMove={(e) => {
                             const rect = e.currentTarget.getBoundingClientRect();
                             e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
