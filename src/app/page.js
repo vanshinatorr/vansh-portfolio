@@ -1193,7 +1193,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredProject, setHoveredProject] = useState(null);
   const [githubContributions, setGithubContributions] = useState(204);
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [activeSkill, setActiveSkill] = useState("Figma (Layout & Prototyping)");
   
   const portalRef = useRef(null);
@@ -1216,6 +1216,28 @@ export default function Home() {
       playSynthSFX('impact');
     }
   };
+
+  useEffect(() => {
+    let triggered = false;
+    const handleFirstInteraction = () => {
+      if (triggered) return;
+      startAmbientDrone();
+      triggered = true;
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     fetchGithubContributions()
@@ -1542,16 +1564,7 @@ export default function Home() {
         </ul>
         <div className="nav-right">
           <button onClick={toggleSound} className={`sound-toggle-btn ${soundEnabled ? 'active' : ''}`} title="Toggle ambient music">
-            {soundEnabled ? (
-              <span className="sound-waves">
-                <span className="sound-wave wave-1" />
-                <span className="sound-wave wave-2" />
-                <span className="sound-wave wave-3" />
-              </span>
-            ) : (
-              <span style={{ marginRight: '4px' }}>🔇</span>
-            )}
-            Sound
+            {soundEnabled ? '🔊' : '🔇'}
           </button>
           <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta magnetic" data-strength="0.4" data-track="Hire Me Clicked">Hire Me</a>
         </div>
