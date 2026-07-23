@@ -1794,6 +1794,8 @@ export default function Home() {
                   <div className="skill-chips">
                     {g.items.map(s => {
                       const iconInfo = SKILL_ICONS[s];
+                      // Short label: trim long names for display under icon
+                      const shortLabel = s.replace(' (Layout & Prototyping)', '').replace(' / CSS', '/CSS').replace(' Auth', '').replace('JavaScript', 'JS').replace('Tailwind CSS', 'Tailwind').replace('Operating Systems', 'OS').replace('Wireframing & Typography', 'Wireframe').replace('Component Systems', 'Components').replace('Bento Grid Layouts', 'Bento').replace('User Interface Design', 'UI Design').replace('REST APIs', 'REST').replace('Gemini AI', 'Gemini').replace('Razorpay', 'Razorpay');
                       return (
                         <span 
                           key={s} 
@@ -1811,16 +1813,17 @@ export default function Home() {
                         >
                           {iconInfo ? (
                             iconInfo.type === "devicon" ? (
-                              <i className={`${iconInfo.class} skill-chip-icon`} />
+                              <span className="skill-chip-icon"><i className={`${iconInfo.class}`} /></span>
                             ) : (
                               (() => {
                                 const Component = Lucide[iconInfo.name];
-                                return Component ? <Component className="skill-chip-icon" size={30} style={{ color: iconInfo.color, fill: iconInfo.name === "Triangle" ? iconInfo.color : "none" }} /> : <span>{s}</span>;
+                                return Component ? <span className="skill-chip-icon"><Component size={26} style={{ color: iconInfo.color, fill: iconInfo.name === "Triangle" ? iconInfo.color : "none" }} /></span> : <span className="skill-chip-icon"><span style={{fontSize:'0.65rem',color:'#aaa'}}>{s}</span></span>;
                               })()
                             )
                           ) : (
-                            <span>{s}</span>
+                            <span className="skill-chip-icon"><span style={{fontSize:'0.6rem',color:'#aaa',textAlign:'center'}}>{shortLabel}</span></span>
                           )}
+                          <span className="skill-chip-label">{shortLabel}</span>
                         </span>
                       );
                     })}
