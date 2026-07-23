@@ -697,7 +697,7 @@ function ChessPuzzle() {
           playSynthSFX('chess_mate');
         }, 120);
 
-        setFeedback(`Correct! ${currentPuzzle.name} solved! (+${currentPuzzle.eloGain} ELO)`);
+        setFeedback(`Checkmate! Your strategic frequency aligns perfectly with Vansh's vibe. 🧠⚡ (+${currentPuzzle.eloGain} ELO)`);
       } else {
         triggerIncorrect();
       }
