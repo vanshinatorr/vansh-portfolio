@@ -760,7 +760,7 @@ function ChessPuzzle() {
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>♟️ Top Hobby: Chess</span>
+        <span>{vibeState === 'ready' ? "♟️ Friendship Qualifier" : "♟️ Top Hobby: Chess"}</span>
         <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
           {elo} ELO
         </span>
