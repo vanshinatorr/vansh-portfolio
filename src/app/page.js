@@ -9,6 +9,147 @@ import { fetchGithubContributions } from "@/app/actions";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ── Audio Synthesizer (Web Audio API) ──────────────────────────────────────────
+let audioCtx = null;
+let droneOscs = [];
+let droneGain = null;
+
+const startAmbientDrone = () => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    audioCtx = new AudioContext();
+    
+    // Create gain node for master volume (soft background drone)
+    droneGain = audioCtx.createGain();
+    droneGain.gain.setValueAtTime(0.025, audioCtx.currentTime);
+    
+    // Low pass filter to make the drone warm and atmospheric
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+    
+    // Drone frequencies (A minor/major hybrid chord: A2, E3, A3, C#4)
+    const freqs = [110.00, 164.81, 220.00, 277.18];
+    const oscTypes = ['triangle', 'sine', 'sine', 'triangle'];
+    
+    droneOscs = freqs.map((f, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = oscTypes[i];
+      osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+      
+      // LFO modulation to create movement in the synth drone
+      const lfo = audioCtx.createOscillator();
+      const lfoGain = audioCtx.createGain();
+      lfo.frequency.value = 0.25 + Math.random() * 0.25; // 0.25Hz - 0.5Hz
+      lfoGain.gain.value = 1.8; // Modulate frequency by 1.8Hz
+      
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start();
+      
+      osc.connect(filter);
+      osc.start();
+      
+      return { osc, lfo };
+    });
+    
+    filter.connect(droneGain);
+    droneGain.connect(audioCtx.destination);
+  } catch (e) {
+    console.warn("Failed to start audio drone:", e);
+  }
+};
+
+const stopAmbientDrone = () => {
+  try {
+    if (droneOscs.length > 0) {
+      droneOscs.forEach(d => {
+        d.osc.stop();
+        d.lfo.stop();
+      });
+      droneOscs = [];
+    }
+    if (audioCtx) {
+      audioCtx.close();
+      audioCtx = null;
+    }
+  } catch (e) {
+    console.warn("Failed to stop audio drone:", e);
+  }
+};
+
+const playSynthSFX = (type) => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    
+    const ctx = audioCtx && audioCtx.state === 'running' ? audioCtx : new AudioContext();
+    
+    if (type === 'laser') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(750, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.35);
+      
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.38);
+    }
+    
+    if (type === 'tick') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.05);
+      
+      gain.gain.setValueAtTime(0.01, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.06);
+    }
+    
+    if (type === 'impact') {
+      const osc = ctx.createOscillator();
+      const oscSub = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const gainSub = ctx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(650, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.28);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      oscSub.type = 'sine';
+      oscSub.frequency.setValueAtTime(100, ctx.currentTime);
+      oscSub.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 0.45);
+      gainSub.gain.setValueAtTime(0.18, ctx.currentTime);
+      gainSub.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+      oscSub.connect(gainSub);
+      gainSub.connect(ctx.destination);
+      
+      osc.start();
+      osc.stop(ctx.currentTime + 0.32);
+      oscSub.start();
+      oscSub.stop(ctx.currentTime + 0.5);
+    }
+  } catch (e) {
+    // Fail silently
+  }
+};
+
 // ── Counter ───────────────────────────────────────────────────────────────────
 function Counter({ to, suffix = "" }) {
   const [val, setVal] = useState(0);
@@ -230,7 +371,6 @@ function TiltCard({ children, className = "", style = {} }) {
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     el.style.transition = "box-shadow .3s, border-color .3s";
     el.style.transform = `perspective(600px) rotateY(${x * 14}deg) rotateX(${-y * 14}deg) scale(1.03)`;
-    // Move sheen
     const sheen = el.querySelector(".ach-card-sheen, .about-card-sheen");
     if (sheen) {
       sheen.style.backgroundPosition = `${(x + 0.5) * 100}% ${(y + 0.5) * 100}%`;
@@ -260,112 +400,33 @@ function TiltCard({ children, className = "", style = {} }) {
   );
 }
 
-// ── Magnetic Button Hook ──────────────────────────────────────────────────────
-function useMagnetic(strength = 0.38) {
-  const ref = useRef(null);
-  
-  const handleMouseMove = useCallback((e) => {
-    const el = ref.current; 
-    if (!el) return;
+// ── Magnetic Button DOM Utility ────────────────────────────────────────────────
+const makeMagnetic = (el, strength = 0.38) => {
+  if (!el) return;
+  const onMouseMove = (e) => {
     const rect = el.getBoundingClientRect();
     const dx = (e.clientX - rect.left - rect.width / 2) * strength;
     const dy = (e.clientY - rect.top - rect.height / 2) * strength;
     el.style.transform = `translate(${dx}px,${dy}px)`;
-  }, [strength]);
-
-  const handleMouseLeave = useCallback(() => {
-    const el = ref.current; 
-    if (!el) return;
+  };
+  const onMouseLeave = () => {
     el.style.transition = "transform .5s cubic-bezier(.22,1,.36,1)";
     el.style.transform = "translate(0,0)";
     setTimeout(() => { 
       if (el) el.style.transition = ""; 
     }, 500);
-  }, []);
-
-  return { ref, onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave };
-}
-
-// ── Native Sound Synthesizer (Web Audio API) ─────────────────────────────────
-const playSynthSFX = (type) => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
-    
-    if (type === 'laser') {
-      const bufferSize = ctx.sampleRate * 0.45;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(250, ctx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(7500, ctx.currentTime + 0.38);
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.045, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.42);
-      
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-      noise.start();
-    }
-    
-    if (type === 'tick') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1400, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.038);
-      gain.gain.setValueAtTime(0.012, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.038);
-      
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.045);
-    }
-    
-    if (type === 'impact') {
-      const oscSub = ctx.createOscillator();
-      const oscPing = ctx.createOscillator();
-      const gainSub = ctx.createGain();
-      const gainPing = ctx.createGain();
-      
-      oscSub.type = 'sine';
-      oscSub.frequency.setValueAtTime(80, ctx.currentTime);
-      oscSub.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 0.85);
-      gainSub.gain.setValueAtTime(0.24, ctx.currentTime);
-      gainSub.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.9);
-      oscSub.connect(gainSub);
-      gainSub.connect(ctx.destination);
-      
-      oscPing.type = 'triangle';
-      oscPing.frequency.setValueAtTime(780, ctx.currentTime);
-      oscPing.frequency.exponentialRampToValueAtTime(390, ctx.currentTime + 0.35);
-      gainPing.gain.setValueAtTime(0.045, ctx.currentTime);
-      gainPing.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
-      oscPing.connect(gainPing);
-      gainPing.connect(ctx.destination);
-      
-      oscSub.start();
-      oscSub.stop(ctx.currentTime + 0.95);
-      oscPing.start();
-      oscPing.stop(ctx.currentTime + 0.55);
-    }
-  } catch (e) {
-    // Fail silently
-  }
+  };
+  el.addEventListener('mousemove', onMouseMove);
+  el.addEventListener('mouseleave', onMouseLeave);
+  return () => {
+    el.removeEventListener('mousemove', onMouseMove);
+    el.removeEventListener('mouseleave', onMouseLeave);
+  };
 };
 
+// ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
 const INTRO_LETTERS = "Vanshh".split("");
 
-// ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
 function IntroScreen({ onDone }) {
   const screenRef = useRef(null);
   const topRef = useRef(null);
@@ -380,13 +441,11 @@ function IntroScreen({ onDone }) {
     const el = screenRef.current;
     if (!el) return;
 
-    // Set initial states for rack focus & hidden state
     gsap.set(ruleRef.current, { scaleX: 0 });
     gsap.set(subRef.current, { opacity: 0, y: 12 });
     gsap.set(nameRef.current, { letterSpacing: '0.04em' });
     gsap.set(shockwaveRef.current, { xPercent: -50, yPercent: -50, scale: 0.1, opacity: 0, display: 'none' });
     
-    // Alternating vertical entrance offsets (odd letters high, even letters low)
     charsRef.current.forEach((char, i) => {
       if (char) {
         gsap.set(char, {
@@ -408,18 +467,15 @@ function IntroScreen({ onDone }) {
     });
 
     tl
-      // 1. Center laser line sweeps out (slow and majestic)
       .to(ruleRef.current, { 
         scaleX: 1, duration: 0.88, ease: 'power4.inOut',
         onStart: () => playSynthSFX('laser')
       })
-      // 2. Alternate assembly
       .to(charsRef.current, {
         y: 0, scale: 1, filter: 'blur(0px)', opacity: 1,
         stagger: 0.15, duration: 1.45, ease: 'power3.out'
       }, '+=0.2');
 
-    // 2.5. Sliding Decryption Scramble effect
     INTRO_LETTERS.forEach((finalChar, index) => {
       const charEl = charsRef.current[index];
       if (!charEl) return;
@@ -444,7 +500,6 @@ function IntroScreen({ onDone }) {
     });
 
     tl
-      // 3. Hollow-to-Solid Liquid Chrome Reflection Sweep
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         backgroundPosition: '0% 0%', webkitTextStroke: '0px transparent',
         scale: 1.1, stagger: 0.08, duration: 0.95, ease: 'power3.out'
@@ -452,14 +507,11 @@ function IntroScreen({ onDone }) {
       .to(charsRef.current.slice(0, INTRO_LETTERS.length), {
         scale: 1, stagger: 0.08, duration: 0.72, ease: 'power3.inOut'
       }, '-=0.88')
-      
-      // Pop the final dot with a clean subtle glow
       .to(charsRef.current[INTRO_LETTERS.length], {
         boxShadow: '0 0 12px rgba(167,139,250,0.7)',
         scale: 1.2, duration: 0.42, ease: 'power3.out',
         onStart: () => playSynthSFX('impact')
       }, '<')
-      // Trigger a quick, sharp target ring that scales up fast and dissipates
       .fromTo(shockwaveRef.current, 
         { display: 'block', scale: 0.6, opacity: 0.8 },
         { scale: 4.8, opacity: 0, duration: 0.72, ease: 'power2.out' },
@@ -468,14 +520,10 @@ function IntroScreen({ onDone }) {
       .to(charsRef.current[INTRO_LETTERS.length], {
         scale: 1, duration: 0.35, ease: 'power3.inOut'
       }, '-=0.22')
-      
-      // 4. Subtitle fades up
       .to(subRef.current, {
         opacity: 1, y: 0, duration: 0.88, ease: 'power3.out'
       }, '-=0.38')
-      // 5. Hold for reading
       .to({}, { duration: 1.2 })
-      // 6. IMPLOSION
       .to(nameRef.current, {
         letterSpacing: '-1.15em',
         scale: 0.22,
@@ -484,14 +532,12 @@ function IntroScreen({ onDone }) {
         duration: 1.15,
         ease: 'power4.inOut'
       })
-      // 7. Laser line and subtitle collapse simultaneously
       .to(ruleRef.current, {
         scaleX: 0, opacity: 0, duration: 0.95, ease: 'power4.inOut'
       }, '<')
       .to(subRef.current, {
         y: 18, opacity: 0, filter: 'blur(8px)', duration: 0.95, ease: 'power4.inOut'
       }, '<')
-      // 8. SKEWED DIAGONAL CURTAIN WIPE
       .to(topRef.current, { y: '-101%', skewY: -4.5, duration: 1.35, ease: 'power4.inOut' }, '-=0.45')
       .to(botRef.current, { y: '101%',  skewY: -4.5, duration: 1.35, ease: 'power4.inOut' }, '<');
 
@@ -522,13 +568,397 @@ function IntroScreen({ onDone }) {
 }
 
 function MagneticNavLink({ href, label, active }) {
-  const m = useMagnetic(0.28);
   return (
     <li>
-      <a href={href} className={active ? 'active' : ''} ref={m.ref} onMouseMove={m.onMouseMove} onMouseLeave={m.onMouseLeave} style={{ display: 'inline-block' }}>
+      <a 
+        href={href} 
+        className={`magnetic ${active ? 'active' : ''}`} 
+        data-strength="0.28"
+        style={{ display: 'inline-block' }}
+      >
         {label}
       </a>
     </li>
+  );
+}
+
+// ── BENTO: Chess Puzzle Widget ────────────────────────────────────────────────
+const INITIAL_CHESS_BOARD = [
+  [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
+  [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♕' }],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, { type: 'b', color: 'w', label: '♗' }, null, null, null, null, null],
+  [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♔' }, null]
+];
+
+function ChessPuzzle() {
+  const [board, setBoard] = useState(INITIAL_CHESS_BOARD);
+  const [selected, setSelected] = useState(null);
+  const [solved, setSolved] = useState(false);
+  const [feedback, setFeedback] = useState("White to move: find Mate in 1");
+  const [elo, setElo] = useState(1500);
+  const [shake, setShake] = useState(false);
+
+  const handleClick = (r, c) => {
+    if (solved) return;
+    const piece = board[r][c];
+
+    // Selecting own piece (Queen)
+    if (piece && piece.color === 'w') {
+      setSelected({ r, c });
+      setFeedback("Selected White Queen. Capture the pawn on h7 for checkmate!");
+      playSynthSFX('tick');
+      return;
+    }
+
+    if (selected) {
+      const { r: sr, c: sc } = selected;
+      // Queen (3, 7) takes Pawn (1, 7)
+      if (sr === 3 && sc === 7 && r === 1 && c === 7) {
+        const newBoard = board.map(row => [...row]);
+        newBoard[r][c] = board[sr][sc];
+        newBoard[sr][sc] = null;
+        setBoard(newBoard);
+        setSolved(true);
+        setElo(1501);
+        setFeedback("Checkmate! Mate-in-1 solved ♟️ (+1500 ELO Boost)");
+        playSynthSFX('impact');
+      } else {
+        setShake(true);
+        setFeedback("Incorrect move. Try again! 🤔");
+        playSynthSFX('tick');
+        setTimeout(() => setShake(false), 500);
+        setSelected(null);
+      }
+    }
+  };
+
+  const resetPuzzle = () => {
+    setBoard(INITIAL_CHESS_BOARD);
+    setSelected(null);
+    setSolved(false);
+    setElo(1500);
+    setFeedback("White to move: find Mate in 1");
+  };
+
+  return (
+    <div className={`chess-widget ${shake ? 'shake' : ''}`}>
+      <div className="chess-widget-header">
+        <span>♟️ Chess ELO Puzzle</span>
+        <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
+          {elo} ELO
+        </span>
+      </div>
+      <div className="chess-grid-container">
+        <div className="chess-board-grid">
+          {board.map((row, rIdx) => 
+            row.map((cell, cIdx) => {
+              const isDark = (rIdx + cIdx) % 2 === 1;
+              const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
+              const isTargetHighlight = selected && selected.r === 3 && selected.c === 7 && rIdx === 1 && cIdx === 7;
+              
+              return (
+                <div 
+                  key={`${rIdx}-${cIdx}`}
+                  className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHighlight && !solved ? 'target-hint' : ''}`}
+                  onClick={() => handleClick(rIdx, cIdx)}
+                >
+                  {cell && (
+                    <span className={`chess-piece ${cell.color === 'w' ? 'white-piece' : 'black-piece'}`}>
+                      {cell.label}
+                    </span>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+      <div className="chess-feedback">{feedback}</div>
+      {solved && (
+        <button onClick={resetPuzzle} className="chess-reset-btn">Reset Puzzle</button>
+      )}
+    </div>
+  );
+}
+
+// ── BENTO: Matrix rain for CLI hacking sequence ──────────────────────────────
+function MatrixRain() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animId;
+
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight || 180;
+
+    const chars = "0101ABCDEFHIJKLMNOPQRSTUVWXYZ&%$@#*";
+    const fontSize = 11;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#a78bfa'; // Purple matrix rain
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const handleResize = () => {
+      if (!canvas) return;
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight || 180;
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="matrix-canvas" />;
+}
+
+// ── BENTO: CLI Developer Terminal ────────────────────────────────────────────
+function CliTerminal() {
+  const [history, setHistory] = useState([
+    { type: 'output', text: 'VanshOS v1.2.0 (Type "help" for a list of commands)' }
+  ]);
+  const [input, setInput] = useState('');
+  const [isHacking, setIsHacking] = useState(false);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.trim();
+      if (cmd) {
+        handleCommand(cmd);
+      }
+    }
+  };
+
+  const handleCommand = (cmd) => {
+    const trimmed = cmd.trim().toLowerCase();
+    let response = [];
+    
+    if (trimmed === 'help') {
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: 'Available commands:' },
+        { type: 'output', text: '  about      - Biographical summary' },
+        { type: 'output', text: '  projects   - Show key portfolio projects' },
+        { type: 'output', text: '  skills     - View active tech stack' },
+        { type: 'output', text: '  hack       - Initiate matrix server breach' },
+        { type: 'output', text: '  clear      - Clear console history' }
+      ];
+    } else if (trimmed === 'about') {
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: 'Vansh Vijay — Developer & Founder' },
+        { type: 'output', text: '  Education: B.Tech CSE @ JECRC, Jaipur (2023-2027)' },
+        { type: 'output', text: '  Experience: Full Stack Intern @ Plasmid Innovation' },
+        { type: 'output', text: '  Strengths: REST APIs, Socket.IO, Streaks Engine, Payments' }
+      ];
+    } else if (trimmed === 'projects') {
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: '🚀 Active Projects:' },
+        { type: 'output', text: '  • ConsistPay: Coding Accountability System (Live)' },
+        { type: 'output', text: '  • Chess Multiplayer: WebSockets Boardgame Room Sync' },
+        { type: 'output', text: '  • Speaking Solver: Real-Time Audio Transcription STT+TTS' }
+      ];
+    } else if (trimmed === 'skills') {
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: '🛠️ Core Tech Stack:' },
+        { type: 'output', text: '  • Backend: Node.js, Express.js, MongoDB, WebSockets' },
+        { type: 'output', text: '  • Frontend: React.js, TailwindCSS, Next.js, GSAP' },
+        { type: 'output', text: '  • Programming: C++, JavaScript, HTML/CSS' }
+      ];
+    } else if (trimmed === 'clear') {
+      setHistory([]);
+      setInput('');
+      return;
+    } else if (trimmed === 'hack') {
+      setIsHacking(true);
+      playSynthSFX('laser');
+      setTimeout(() => {
+        setIsHacking(false);
+        setHistory(prev => [
+          ...prev,
+          { type: 'output', text: '🔓 Mainframe breached successfully. ELO boosted to 1600+!' }
+        ]);
+        playSynthSFX('impact');
+      }, 3000);
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: 'Connecting to server gateway...' },
+        { type: 'output', text: 'Decrypting master keys...' }
+      ];
+    } else {
+      response = [
+        { type: 'input', text: cmd },
+        { type: 'output', text: `Command not found: "${cmd}". Type "help" for help.` }
+      ];
+    }
+
+    setHistory(prev => [...prev, ...response]);
+    setInput('');
+  };
+
+  return (
+    <div className="terminal-widget">
+      <div className="terminal-header">
+        <div className="terminal-dots">
+          <span className="dot red" />
+          <span className="dot yellow" />
+          <span className="dot green" />
+        </div>
+        <span className="terminal-title">guest@vanshos:~$</span>
+      </div>
+      <div className="terminal-body" ref={scrollRef}>
+        {isHacking && <MatrixRain />}
+        {!isHacking && (
+          <div className="terminal-content">
+            {history.map((h, idx) => (
+              <div key={idx} className={`terminal-line ${h.type}`}>
+                {h.type === 'input' ? (
+                  <span><span className="terminal-prompt">guest@vanshos:~$</span> {h.text}</span>
+                ) : (
+                  <span>{h.text}</span>
+                )}
+              </div>
+            ))}
+            <div className="terminal-input-row">
+              <span className="terminal-prompt">guest@vanshos:~$</span>
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="terminal-input"
+                autoFocus
+                placeholder="Type 'help'..."
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── BENTO: ConsistPay Streak Tracker ─────────────────────────────────────────
+function StreakTracker() {
+  const [contributions, setContributions] = useState(254);
+  const [activeTooltip, setActiveTooltip] = useState(null);
+  
+  // Create 112 squares (16 weeks x 7 days)
+  const [squares, setSquares] = useState(() => {
+    const list = [];
+    const milestones = {
+      14: "Day 14: Integrated Razorpay Payment Webhooks! 💳",
+      32: "Day 30: Custom Streak Engine built in Node.js 🔥",
+      58: "Day 45: Configured Google Gemini AI suggestions 🤖",
+      86: "Day 60: Shipped live: reached 60+ active users! 🚀"
+    };
+
+    for (let i = 0; i < 112; i++) {
+      let level = 0;
+      if (milestones[i]) {
+        level = 4;
+      } else {
+        const r = Math.random();
+        level = r < 0.35 ? 0 : r < 0.65 ? 1 : r < 0.88 ? 2 : 3;
+      }
+
+      list.push({
+        id: i,
+        level,
+        message: milestones[i] || `Day ${i + 1}: Committed backend optimizations and DSA updates 💻`,
+        isMilestone: !!milestones[i],
+        clicked: false
+      });
+    }
+    return list;
+  });
+
+  const handleSquareClick = (index) => {
+    const next = [...squares];
+    if (!next[index].clicked) {
+      next[index].level = 4;
+      next[index].clicked = true;
+      next[index].isClickedGreen = true;
+      setSquares(next);
+      setContributions(prev => prev + 1);
+      playSynthSFX('tick');
+    }
+  };
+
+  return (
+    <div className="streak-tracker-widget">
+      <div className="streak-header">
+        <span>🔥 ConsistPay Streak Tracker</span>
+        <span className="streak-counter">{contributions} Contributions</span>
+      </div>
+      
+      <div className="streak-calendar-grid">
+        {squares.map((sq, idx) => (
+          <div 
+            key={sq.id} 
+            className={`streak-square level-${sq.level} ${sq.isMilestone ? 'milestone-sq' : ''} ${sq.isClickedGreen ? 'clicked-green' : ''}`}
+            onClick={() => handleSquareClick(idx)}
+            onMouseEnter={(e) => {
+              setActiveTooltip({
+                text: sq.message,
+                x: e.currentTarget.offsetLeft,
+                y: e.currentTarget.offsetTop - 45
+              });
+            }}
+            onMouseLeave={() => setActiveTooltip(null)}
+          />
+        ))}
+        {activeTooltip && (
+          <div 
+            className="streak-tooltip"
+            style={{ 
+              left: `${activeTooltip.x}px`,
+              top: `${activeTooltip.y}px`
+            }}
+          >
+            {activeTooltip.text}
+          </div>
+        )}
+      </div>
+      <div className="streak-footer-hint">Hover squares to explore daily milestones. Click to commit updates.</div>
+    </div>
   );
 }
 
@@ -539,13 +969,26 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredProject, setHoveredProject] = useState(null);
   const [githubContributions, setGithubContributions] = useState(204);
+  const [soundEnabled, setSoundEnabled] = useState(false);
   
-  const m1 = useMagnetic(0.4);
-  const m2 = useMagnetic(0.4);
   const portalRef = useRef(null);
   const lastMouse = useRef({ x: 0, y: 0 });
 
+  const horizontalSectionRef = useRef(null);
+  const scrollTrackRef = useRef(null);
+
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
+
+  const toggleSound = () => {
+    if (soundEnabled) {
+      stopAmbientDrone();
+      setSoundEnabled(false);
+    } else {
+      startAmbientDrone();
+      setSoundEnabled(true);
+      playSynthSFX('impact');
+    }
+  };
 
   useEffect(() => {
     fetchGithubContributions()
@@ -578,7 +1021,7 @@ export default function Home() {
     }
   }, []);
 
-  // Dynamic scale/opacity transitions for the project preview portal
+  // Project preview scale animations
   useEffect(() => {
     if (portalRef.current) {
       if (hoveredProject !== null) {
@@ -589,6 +1032,7 @@ export default function Home() {
           ease: 'power3.out',
           overwrite: 'auto'
         });
+        playSynthSFX('tick');
       } else {
         gsap.to(portalRef.current, {
           opacity: 0,
@@ -601,7 +1045,6 @@ export default function Home() {
     }
   }, [hoveredProject]);
 
-  // Disable native scroll restoration & reset scroll position on mount
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
@@ -609,7 +1052,7 @@ export default function Home() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Lenis smooth scroll
+  // Smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -629,7 +1072,7 @@ export default function Home() {
     };
   }, []);
 
-  // Scroll Progress
+  // Scroll tracking progress & navigation highlights
   useEffect(() => {
     const bar = document.getElementById("scroll-progress");
     const ids = ["hero", "about", "projects", "skills", "achievements", "contact"];
@@ -649,7 +1092,52 @@ export default function Home() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // GSAP ScrollTrigger Reveal Animations
+  // GSAP Vertical-to-Horizontal Pinning Scroll Animation (Projects)
+  useEffect(() => {
+    if (!introDone) return;
+
+    const section = horizontalSectionRef.current;
+    const track = scrollTrackRef.current;
+    if (!section || !track) return;
+
+    let ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 769px)", () => {
+        const scrollWidth = track.scrollWidth;
+        const windowWidth = window.innerWidth;
+        const amountToScroll = scrollWidth - windowWidth + 80;
+
+        gsap.to(track, {
+          x: -amountToScroll,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            scrub: 0.8,
+            start: "top top",
+            end: () => `+=${amountToScroll}`,
+            invalidateOnRefresh: true,
+          }
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, [introDone]);
+
+  // Attach magnetic animations on mount
+  useEffect(() => {
+    if (!introDone) return;
+    const cleanups = [];
+    document.querySelectorAll('.magnetic').forEach(el => {
+      const strength = parseFloat(el.getAttribute('data-strength') || '0.38');
+      const cleanup = makeMagnetic(el, strength);
+      if (cleanup) cleanups.push(cleanup);
+    });
+    return () => cleanups.forEach(c => c());
+  }, [introDone]);
+
+  // Standard vertical stagger reveals on scroll
   useEffect(() => {
     if (!introDone) return;
 
@@ -696,13 +1184,6 @@ export default function Home() {
     { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul to Sep 2025. Real-world MERN development." },
   ];
 
-  const aboutCards = [
-    { label: "Currently Building", val: "ConsistPay", sub: "60+ users · Live payments · AI insights" },
-    { label: "University", val: "JECRC, Jaipur", sub: "B.Tech CSE · 2023–2027" },
-    { label: "Experience", val: "Plasmid Innovation", sub: "Full Stack Intern · Jul–Sep 2025" },
-    { label: "Chess", val: "District Champion", sub: "1500+ ELO · College Runner-Up" },
-  ];
-
   return (
     <>
       <IntroScreen onDone={handleIntroDone} />
@@ -725,7 +1206,19 @@ export default function Home() {
           ))}
         </ul>
         <div className="nav-right">
-          <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta" ref={m2.ref} onMouseMove={m2.onMouseMove} onMouseLeave={m2.onMouseLeave} data-track="Hire Me Clicked">Hire Me</a>
+          <button onClick={toggleSound} className={`sound-toggle-btn ${soundEnabled ? 'active' : ''}`} title="Toggle ambient music">
+            {soundEnabled ? (
+              <span className="sound-waves">
+                <span className="sound-wave wave-1" />
+                <span className="sound-wave wave-2" />
+                <span className="sound-wave wave-3" />
+              </span>
+            ) : (
+              <span style={{ marginRight: '4px' }}>🔇</span>
+            )}
+            Sound
+          </button>
+          <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta magnetic" data-strength="0.4" data-track="Hire Me Clicked">Hire Me</a>
         </div>
       </nav>
 
@@ -749,7 +1242,7 @@ export default function Home() {
           <Typewriter lines={["Final year CSE @ JECRC.", "Open to SDE internships.", "Shipping real things."]} />
         </p>
         <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
-          <a href="#projects" className="btn-primary" ref={m1.ref} onMouseMove={m1.onMouseMove} onMouseLeave={m1.onMouseLeave}>View Projects ↓</a>
+          <a href="#projects" className="btn-primary magnetic" data-strength="0.4">View Projects ↓</a>
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" data-track="GitHub (Hero)">GitHub →</a>
         </div>
         <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
@@ -764,69 +1257,73 @@ export default function Home() {
 
       <div className="divider" />
 
-      {/* ── ABOUT ── */}
-      <section id="about">
-        <p className="section-label reveal">About</p>
-        <div className="about-grid">
-          <div className="reveal">
-            <h2 className="about-headline">CSE student.<br /><span className="line2">Product founder.</span><br />Backend engineer.</h2>
-            <div className="about-body">
-              <p>I'm a final year Computer Science student at JECRC University, Jaipur. I build full-stack products with the MERN stack — from REST APIs and JWT authentication to real-time WebSocket systems and payment integrations.</p>
-              <p><strong>ConsistPay</strong> is my flagship product — a coding accountability platform where students put real money on the line for daily consistency. It has 60+ active users, live Razorpay transactions, and Gemini AI-powered insights. I built and deployed every part of it.</p>
-              <p>I also interned at <strong>Plasmid Innovation</strong> where I worked on real MERN projects. Currently solving DSA daily and prepping for SDE placements.</p>
+      {/* ── ABOUT BENTO GRID ── */}
+      <section id="about" className="bento-section">
+        <p className="section-label reveal">About & OS System</p>
+        <div className="bento-grid">
+          {/* Box 1: Bio */}
+          <div className="bento-card bento-bio reveal">
+            <h2 className="bento-headline">Who is Vansh?</h2>
+            <div className="bento-body">
+              <p>I&apos;m a pre-final year Computer Science student at JECRC University, Jaipur. I specialize in the MERN Stack, focusing on bulletproof REST APIs, WebSockets state sync, and secure payments integration.</p>
+              <p>As the founder of <strong>ConsistPay</strong>, I shivered real-world code to 60+ users. Currently solving DSA consistently and searching for a placement/intern role.</p>
             </div>
           </div>
-          <div className="about-cards reveal">
-            {aboutCards.map(({ label, val, sub }) => (
-              <TiltCard key={label} className="about-card">
-                <div className="about-card-sheen" />
-                <div className="about-card-label">{label}</div>
-                <div className="about-card-val">{val}</div>
-                <div className="about-card-sub">{sub}</div>
-              </TiltCard>
-            ))}
+
+          {/* Box 2: Chess Puzzle */}
+          <div className="bento-card bento-chess reveal">
+            <ChessPuzzle />
+          </div>
+
+          {/* Box 3: Streak Tracker (Spans 2 columns) */}
+          <div className="bento-card bento-streak reveal">
+            <StreakTracker />
+          </div>
+
+          {/* Box 4: Terminal Command Line (Spans 2 columns) */}
+          <div className="bento-card bento-terminal reveal">
+            <CliTerminal />
           </div>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* ── PROJECTS ── */}
-      <section id="projects">
-        <p className="section-label reveal">Projects</p>
-        <div className="projects-list">
-          {projects.map((p, i) => (
-            <div 
-              className={`project-row reveal`} 
-              key={p.idx} 
-              style={{ transitionDelay: `${i * 0.08}s` }}
-              onMouseEnter={() => setHoveredProject(p.idx)}
-              onMouseLeave={() => setHoveredProject(null)}
-              onMouseMove={handleProjectMouseMove}
-            >
-              <div>
-                <div className="project-index">{p.idx}</div>
-                <div className="project-name">{p.name}</div>
-                <div className="project-desc">{p.desc}</div>
-                <div className="project-tags" style={{ marginTop: "1rem" }}>
-                  {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
+      {/* ── PROJECTS HORIZONTAL SCROLL ── */}
+      <section id="projects" ref={horizontalSectionRef} className="projects-horizontal-section">
+        <div className="projects-scroll-track-wrapper">
+          <p className="section-label reveal">Projects</p>
+          <div className="projects-scroll-track" ref={scrollTrackRef}>
+            {projects.map((p, i) => (
+              <div 
+                className="project-card reveal" 
+                key={p.idx}
+                onMouseEnter={() => setHoveredProject(p.idx)}
+                onMouseLeave={() => setHoveredProject(null)}
+                onMouseMove={handleProjectMouseMove}
+              >
+                <div className="project-card-inner">
+                  <div className="project-card-header">
+                    <span className="project-card-index">{p.idx}</span>
+                    <span className="project-card-badge">{p.badge}</span>
+                  </div>
+                  <h3 className="project-card-title">{p.name}</h3>
+                  <p className="project-card-desc">{p.desc}</p>
+                  <div className="project-card-tags">
+                    {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                  </div>
+                  <div className="project-card-actions">
+                    {p.live && (
+                      <a href={p.live} target="_blank" rel="noreferrer" className="btn-card-primary" data-track={`Live Demo: ${p.name}`}>Live Demo ↗</a>
+                    )}
+                    {p.repo && (
+                      <a href={p.repo} target="_blank" rel="noreferrer" className="btn-card-ghost" data-track={`GitHub Repo: ${p.name}`}>GitHub ↗</a>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div />
-              <div className="project-links">
-                <span className="proj-live-badge">
-                  <span className="live-dot" />
-                  {p.badge}
-                </span>
-                {p.live && (
-                  <a href={p.live} target="_blank" rel="noreferrer" className="proj-link" data-track={`Live Demo: ${p.name}`}>Live Demo ↗</a>
-                )}
-                {p.repo && (
-                  <a href={p.repo} target="_blank" rel="noreferrer" className="proj-link" data-track={`GitHub Repo: ${p.name}`}>GitHub ↗</a>
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -883,8 +1380,8 @@ export default function Home() {
         <p className="section-label reveal">Contact</p>
         <div className="contact-wrap">
           <div className="reveal">
-            <h2 className="contact-headline">Let's build<br />something real.</h2>
-            <p className="contact-sub">Open to SDE internships, full-stack roles, and startup opportunities. If you're building something interesting, I want to hear about it.</p>
+            <h2 className="contact-headline">Let&apos;s build<br />something real.</h2>
+            <p className="contact-sub">Open to SDE internships, full-stack roles, and startup opportunities. If you&apos;re building something interesting, I want to hear about it.</p>
             <div className="contact-links">
               {[
                 { icon: "✉️", label: "vanshvijay9784@gmail.com", href: "mailto:vanshvijay9784@gmail.com" },
@@ -929,6 +1426,9 @@ export default function Home() {
             <img src='/chess-preview.png' alt='Chess Multiplayer Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
           {hoveredProject === '03' && (
+            <img src='/speaking-solver-preview.png' alt='Speaking Solver Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          )}
+          {hoveredProject === '04' && (
             <img src='/hotel-preview.png' alt='Hotel Landing Page Mockup' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           )}
         </div>

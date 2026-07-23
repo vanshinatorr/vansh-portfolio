@@ -103,18 +103,23 @@ const getDeviceDetails = () => {
 };
 
 export const usePortfolioTracker = () => {
-  const startTime = useRef(Date.now());
+  const startTime = useRef(null);
   const activeTime = useRef(0);
-  const lastActiveStamp = useRef(Date.now());
+  const lastActiveStamp = useRef(null);
   const clickCounts = useRef({});
-  const sessionId = useRef(Math.random().toString(36).substring(2, 9).toUpperCase());
+  const sessionId = useRef(null);
   const hasSentSummary = useRef(false);
-  const refName = useRef(getRefParameter());
+  const refName = useRef(null);
   const isExternalTransition = useRef(false);
   const deviceName = useRef('Parsing Device...');
   const transitionTimeout = useRef(null);
 
   useEffect(() => {
+    startTime.current = Date.now();
+    lastActiveStamp.current = Date.now();
+    sessionId.current = Math.random().toString(36).substring(2, 9).toUpperCase();
+    refName.current = getRefParameter();
+
     let isMounted = true;
 
     const handleUnload = () => {
