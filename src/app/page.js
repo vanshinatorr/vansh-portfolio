@@ -819,7 +819,7 @@ function ChessPuzzle() {
       {vibeState === 'init' && (
         <div className="vibe-scanner-panel">
           <div className="vibe-scanner-orb"></div>
-          <h3>Friendship Check</h3>
+          <h3>Tactical Compatibility</h3>
           <p>Check if you are eligible to be Vansh&apos;s friend.</p>
           <button className="vibe-scan-btn" onClick={startVibeCheck}>
             Scan Eligibility
