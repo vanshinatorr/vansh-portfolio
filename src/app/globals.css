@@ -1140,6 +1140,103 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   color: #0c0c0f;
   border-color: var(--accent);
 }
+
+/* ─── DISCORD PING FORM & WIDGET ─── */
+.discord-ping-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 0.5rem;
+  padding: 0.85rem;
+  background: rgba(88, 101, 242, 0.08);
+  border: 1px solid rgba(88, 101, 242, 0.35);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(88, 101, 242, 0.12);
+  animation: fadeUp 0.3s ease-out;
+}
+.discord-form-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #7289da;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.discord-input {
+  width: 100%;
+  background: rgba(10, 10, 15, 0.85);
+  border: 1px solid rgba(88, 101, 242, 0.35);
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.discord-input:focus {
+  border-color: #5865F2;
+  box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
+}
+.discord-form-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+.discord-submit-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+  color: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(88, 101, 242, 0.4);
+}
+.discord-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
+  background: linear-gradient(135deg, #6975f3 0%, #5865F2 100%);
+}
+.discord-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.discord-success-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  text-align: center;
+  animation: fadeUp 0.3s ease-out;
+}
+.discord-success-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.06em;
+}
+.discord-success-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
 .chess-puzzle-name {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.76rem;

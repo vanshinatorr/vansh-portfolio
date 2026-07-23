@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { usePortfolioTracker } from "@/hooks/usePortfolioTracker";
-import { fetchGithubContributions } from "@/app/actions";
+import { fetchGithubContributions, sendDiscordMessage } from "@/app/actions";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -673,6 +673,33 @@ function ChessPuzzle() {
   const [elo, setElo] = useState(1500);
   const [shake, setShake] = useState(false);
   const [puzzleStep, setPuzzleStep] = useState(0);
+  const [discordMsg, setDiscordMsg] = useState("Hey Vansh! I solved your Philidor checkmate ♟️");
+  const [senderName, setSenderName] = useState("");
+  const [discordSent, setDiscordSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleDiscordSend = async (e) => {
+    if (e) e.preventDefault();
+    if (!discordMsg.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await sendDiscordMessage({
+        name: senderName.trim() || "Chess Champion Friend",
+        contact: senderName.trim() || "Via Portfolio",
+        message: discordMsg.trim()
+      });
+      if (res && res.success) {
+        setDiscordSent(true);
+        playSynthSFX('impact');
+      } else {
+        alert("Failed to send to Discord. Please try again!");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSending(false);
+    }
+  };
 
   const handleClick = (r, c) => {
     if (solved || vibeState !== 'ready') return;
@@ -758,6 +785,9 @@ function ChessPuzzle() {
     setBoard(puzzle.board);
     setSelected(null);
     setSolved(false);
+    setDiscordSent(false);
+    setSenderName("");
+    setDiscordMsg("Hey Vansh! I solved your Philidor checkmate ♟️");
     setElo(1500);
     setPuzzleStep(0);
     setVibeState('init');
@@ -873,17 +903,45 @@ function ChessPuzzle() {
           </div>
           <div className="chess-feedback">{feedback}</div>
           {solved && (
-            <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem' }}>
-              <a 
-                href="mailto:vanshvijay9784@gmail.com?subject=Friendship%20Eligibility:%20Passed!%20⚡&body=Hey%20Vansh,%20I%20solved%20your%20smothered%20mate%20puzzle%20and%20passed%20the%20friendship%20check.%20My%20name%20is%20[Your%20Name].%20Let's%20connect!"
-                className="chess-btn-connect"
-                onClick={() => playSynthSFX('impact')}
-              >
-                ✉️ Say Hi & Claim Friendship!
-              </a>
-              <button onClick={handleReset} className="chess-reset-btn" style={{ fontSize: '0.7rem', opacity: 0.6, border: 'none', background: 'transparent', padding: '0.2rem 0.5rem' }}>
-                Play Again ↺
-              </button>
+            <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem', width: '100%' }}>
+              {discordSent ? (
+                <div className="discord-success-card">
+                  <div className="discord-success-badge">✅ SENT TO VANSH'S DISCORD</div>
+                  <p className="discord-success-sub">Your message was delivered live to Vansh's Discord channel! 🚀</p>
+                  <button onClick={handleReset} className="chess-reset-btn">
+                    Play Again ↺
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleDiscordSend} className="discord-ping-form">
+                  <div className="discord-form-header">
+                    <span style={{ fontSize: '0.9rem' }}>💬</span>
+                    <span>DISCORD PING TO VANSH</span>
+                  </div>
+                  <input 
+                    type="text" 
+                    className="discord-input" 
+                    placeholder="Your Name / Discord Handle..." 
+                    value={senderName} 
+                    onChange={(e) => setSenderName(e.target.value)} 
+                  />
+                  <input 
+                    type="text" 
+                    className="discord-input" 
+                    placeholder="Type your message..." 
+                    value={discordMsg} 
+                    onChange={(e) => setDiscordMsg(e.target.value)}
+                  />
+                  <div className="discord-form-buttons">
+                    <button type="submit" disabled={sending} className="discord-submit-btn">
+                      {sending ? "Sending..." : "🚀 Send to Vansh's Discord"}
+                    </button>
+                    <button type="button" onClick={handleReset} className="chess-reset-btn">
+                      Reset ↺
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           )}
         </>

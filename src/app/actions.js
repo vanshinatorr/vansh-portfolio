@@ -123,6 +123,50 @@ export async function logSessionEnd({ sessionId, refName, deviceName, finalActiv
   }
 }
 
+export async function sendDiscordMessage({ name, contact, message }) {
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL || process.env.REACT_APP_DISCORD_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("Discord Webhook URL not configured.");
+    return { success: false, error: "Webhook not configured" };
+  }
+
+  const reqHeaders = await headers();
+  const rawIp = reqHeaders.get("x-forwarded-for")?.split(",")[0] || reqHeaders.get("x-real-ip") || "Unknown";
+
+  const payload = {
+    username: "Portfolio Message Bot",
+    avatar_url: "https://i.imgur.com/gS84yWw.png",
+    embeds: [
+      {
+        title: "💬 New Direct Message from Portfolio!",
+        color: 5814783,
+        fields: [
+          { name: "Sender / Name", value: name || "Anonymous Friend", inline: true },
+          { name: "Contact / Handle", value: contact || "Not provided", inline: true },
+          { name: "Message", value: message || "Hi Vansh! I solved your chess puzzle! ♟️", inline: false },
+          { name: "Sent From IP", value: rawIp, inline: true }
+        ],
+        timestamp: new Date().toISOString(),
+      }
+    ]
+  };
+
+  try {
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    return { success: false, error: `HTTP ${res.status}` };
+  } catch (error) {
+    console.error("Discord message failed:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function fetchGithubContributions() {
   try {
     const res = await fetch("https://github-contributions.vercel.app/api/v1/vanshinatorr", {
@@ -142,3 +186,4 @@ export async function fetchGithubContributions() {
   }
   return 204;
 }
+
