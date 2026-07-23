@@ -722,7 +722,7 @@ function ChessPuzzle() {
             playSynthSFX('chess_mate');
           }, 120);
 
-          setFeedback("Vibe check: 100% matched. Neural sync verified. You are officially certified to be Vansh's friend! ⚡");
+          setFeedback("You are officially certified to be Vansh's friend! ⚡");
         } else {
           triggerIncorrect();
         }
