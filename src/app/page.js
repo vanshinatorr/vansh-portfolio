@@ -1248,12 +1248,12 @@ const SKILL_ICONS = {
   "Operating Systems": { type: "lucide", name: "Terminal", color: "#00ff00" },
 
   // Creative Editing
-  "Canva": { type: "img", src: "https://cdn.simpleicons.org/canva/00C4CC", color: "#00c4cc" },
+  "Canva": { type: "devicon", class: "devicon-canva-original colored", color: "#00c4cc" },
   "CapCut": { type: "img", src: "https://cdn.simpleicons.org/capcut/ffffff", color: "#ffffff" },
-  "Premiere Pro": { type: "img", src: "https://cdn.simpleicons.org/adobepremierepro/9999FF", color: "#9999ff" },
+  "Premiere Pro": { type: "img", src: "https://cdn.simpleicons.org/adobepremierepro/9999ff", color: "#9999ff" },
   "DaVinci Resolve": { type: "img", src: "https://cdn.simpleicons.org/davinciresolve/f4a300", color: "#f4a300" },
   "After Effects": { type: "img", src: "https://cdn.simpleicons.org/adobeaftereffects/9c91e4", color: "#9c91e4" },
-  "Lightroom": { type: "img", src: "https://cdn.simpleicons.org/adobelightroom/31A8FF", color: "#31a8ff" }
+  "Lightroom": { type: "img", src: "https://cdn.simpleicons.org/adobelightroom/31a8ff", color: "#31a8ff" }
 };
 
 export default function Home() {
