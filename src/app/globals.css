@@ -89,13 +89,21 @@ body {
   opacity: 0;
   will-change: transform, opacity;
 }
+.intro-dot-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.15em;
+  margin-bottom: clamp(10px, 2.2vw, 22px);
+  align-self: flex-end;
+}
 .intro-char.dot {
-  display: inline-block;
-  width: 7px; height: 7px;
+  display: block;
+  width: 9px; height: 9px;
   border-radius: 50%;
   background: var(--accent2);
-  margin-left: 0.15em;
-  margin-bottom: clamp(6px, 1.2vw, 12px);
+  margin: 0;
   transform-origin: center;
   opacity: 0;
   will-change: transform, opacity;
@@ -103,8 +111,8 @@ body {
 .intro-shockwave {
   position: absolute;
   top: 50%; left: 50%;
-  width: 20px; height: 20px;
-  border: 1px solid rgba(167, 139, 250, 0.4);
+  width: 18px; height: 18px;
+  border: 1.5px solid rgba(240, 194, 123, 0.7);
   border-radius: 50%;
   pointer-events: none;
   z-index: 5;

@@ -619,7 +619,7 @@ function IntroScreen({ onDone }) {
               <span ref={el => { charsRef.current[i] = el; }} className="intro-char">{char}</span>
             </span>
           ))}
-          <span className="intro-mask" style={{ overflow: 'visible', position: 'relative' }}>
+          <span className="intro-dot-wrapper">
             <span ref={el => { charsRef.current[INTRO_LETTERS.length] = el; }} className="intro-char dot" />
             <div ref={shockwaveRef} className="intro-shockwave" />
           </span>
