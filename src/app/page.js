@@ -661,36 +661,36 @@ const CHESS_PUZZLES = [
     solution: { fromR: 3, fromC: 7, toR: 1, toC: 7 }
   },
   {
-    name: "Back-Rank Weakness",
-    instructions: "White to play: Exploit the weak back-rank",
+    name: "Arabian Mate",
+    instructions: "White to play: Deliver Arabian Mate (Rook & Knight)",
     eloGain: 20,
     board: [
       [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
-      [null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }, null],
+      [null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null],
-      [{ type: 'r', color: 'w', label: '♜' }, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
+      [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, { type: 'r', color: 'w', label: '♜' }]
     ],
-    solution: { fromR: 7, fromC: 0, toR: 0, toC: 0 }
+    solution: { fromR: 7, fromC: 7, toR: 1, toC: 7 }
   },
   {
-    name: "Smothered Checkmate",
-    instructions: "White to play: Deliver the suffocating Smothered Mate",
+    name: "Philidor's Sacrifice",
+    instructions: "White to play: Solve the legendary smothered mate (Mate in 2)",
     eloGain: 25,
     board: [
-      [null, null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, { type: 'k', color: 'b', label: '♚' }],
+      [null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, null, { type: 'k', color: 'b', label: '♚' }],
       [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }, null],
-      [null, null, null, null, null, null, null, null],
+      [null, null, { type: 'q', color: 'w', label: '♛' }, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
     ],
-    solution: { fromR: 3, fromC: 6, toR: 1, toC: 5 }
+    solution: { fromR: 2, fromC: 7, toR: 1, toC: 5 } // Final Knight checkmate move coordinates
   }
 ];
 
@@ -702,6 +702,7 @@ function ChessPuzzle() {
   const [feedback, setFeedback] = useState(CHESS_PUZZLES[0].instructions);
   const [elo, setElo] = useState(1500);
   const [shake, setShake] = useState(false);
+  const [puzzleStep, setPuzzleStep] = useState(0);
 
   const handleClick = (r, c) => {
     if (solved) return;
@@ -710,8 +711,18 @@ function ChessPuzzle() {
 
     // Selecting own piece
     if (piece && piece.color === 'w') {
+      if (puzzleIndex === 2) {
+        if (puzzleStep === 0 && piece.type !== 'q') {
+          setFeedback("Find the Queen sacrifice check first! ♕");
+          return;
+        }
+        if (puzzleStep === 1 && piece.type !== 'n') {
+          setFeedback("Deliver smothered checkmate with your Knight! ♞");
+          return;
+        }
+      }
       setSelected({ r, c });
-      setFeedback(`Selected white piece. Find the checkmate square!`);
+      setFeedback(`Selected white piece. Find the correct square!`);
       playSynthSFX('chess_move');
       return;
     }
@@ -719,42 +730,90 @@ function ChessPuzzle() {
     if (selected) {
       const { r: sr, c: sc } = selected;
       
-      // Check if matches solution
-      if (
-        sr === currentPuzzle.solution.fromR &&
-        sc === currentPuzzle.solution.fromC &&
-        r === currentPuzzle.solution.toR &&
-        c === currentPuzzle.solution.toC
-      ) {
-        const isCapture = board[r][c] !== null;
-        const newBoard = board.map(row => [...row]);
-        newBoard[r][c] = board[sr][sc];
-        newBoard[sr][sc] = null;
-        setBoard(newBoard);
-        setSolved(true);
-        
-        const newElo = elo + currentPuzzle.eloGain;
-        setElo(newElo);
-        
-        if (isCapture) {
-          playSynthSFX('chess_capture');
-        } else {
-          playSynthSFX('chess_move');
-        }
-        
-        setTimeout(() => {
-          playSynthSFX('chess_mate');
-        }, 120);
+      if (puzzleIndex === 2) {
+        // Hard Puzzle 3: 2-step solution
+        if (puzzleStep === 0) {
+          // Move 1: Queen moves from (4,2) to (0,6) [g8]
+          if (sr === 4 && sc === 2 && r === 0 && c === 6) {
+            const newBoard = board.map(row => [...row]);
+            newBoard[r][c] = board[sr][sc];
+            newBoard[sr][sc] = null;
+            setBoard(newBoard);
+            setSelected(null);
+            playSynthSFX('chess_move');
+            setFeedback("Check! Wait for Black's forced capture...");
+            setPuzzleStep(1);
 
-        setFeedback(`Correct! ${currentPuzzle.name} solved! (+${currentPuzzle.eloGain} ELO)`);
+            // Computer forced response: Rook (0,5) captures Queen (0,6) after 800ms
+            setTimeout(() => {
+              const replyBoard = newBoard.map(row => [...row]);
+              replyBoard[0][6] = replyBoard[0][5];
+              replyBoard[0][5] = null;
+              setBoard(replyBoard);
+              playSynthSFX('chess_capture');
+              setFeedback("Black Rook captured the Queen! Deliver smothered mate with your Knight.");
+            }, 850);
+          } else {
+            triggerIncorrect();
+          }
+        } else if (puzzleStep === 1) {
+          // Move 2: Knight moves from (2,7) to (1,5) [f7]
+          if (sr === 2 && sc === 7 && r === 1 && c === 5) {
+            const newBoard = board.map(row => [...row]);
+            newBoard[r][c] = board[sr][sc];
+            newBoard[sr][sc] = null;
+            setBoard(newBoard);
+            setSolved(true);
+            setElo(elo + currentPuzzle.eloGain);
+            playSynthSFX('chess_move');
+            setTimeout(() => playSynthSFX('chess_mate'), 120);
+            setFeedback(`Correct! Smothered Mate solved! (+${currentPuzzle.eloGain} ELO)`);
+          } else {
+            triggerIncorrect();
+          }
+        }
       } else {
-        setShake(true);
-        setFeedback("Incorrect move. Try again! 🤔");
-        playSynthSFX('tick');
-        setTimeout(() => setShake(false), 500);
-        setSelected(null);
+        // Puzzle 1 & 2: 1-step solutions
+        if (
+          sr === currentPuzzle.solution.fromR &&
+          sc === currentPuzzle.solution.fromC &&
+          r === currentPuzzle.solution.toR &&
+          c === currentPuzzle.solution.toC
+        ) {
+          const isCapture = board[r][c] !== null;
+          const newBoard = board.map(row => [...row]);
+          newBoard[r][c] = board[sr][sc];
+          newBoard[sr][sc] = null;
+          setBoard(newBoard);
+          setSolved(true);
+          
+          const newElo = elo + currentPuzzle.eloGain;
+          setElo(newElo);
+          
+          if (isCapture) {
+            playSynthSFX('chess_capture');
+          } else {
+            playSynthSFX('chess_move');
+          }
+          
+          setTimeout(() => {
+            playSynthSFX('chess_mate');
+          }, 120);
+
+          setFeedback(`Correct! ${currentPuzzle.name} solved! (+${currentPuzzle.eloGain} ELO)`);
+        } else {
+          triggerIncorrect();
+        }
       }
     }
+  };
+
+  const triggerIncorrect = () => {
+    setShake(true);
+    setFeedback("Incorrect move. Try again! 🤔");
+    playSynthSFX('tick');
+    setTimeout(() => setShake(false), 500);
+    setSelected(null);
   };
 
   const handleNext = () => {
@@ -763,6 +822,7 @@ function ChessPuzzle() {
     setBoard(CHESS_PUZZLES[nextIdx].board);
     setSelected(null);
     setSolved(false);
+    setPuzzleStep(0);
     setFeedback(CHESS_PUZZLES[nextIdx].instructions);
   };
 
@@ -771,6 +831,7 @@ function ChessPuzzle() {
     setBoard(CHESS_PUZZLES[0].board);
     setSelected(null);
     setSolved(false);
+    setPuzzleStep(0);
     setElo(1500);
     setFeedback(CHESS_PUZZLES[0].instructions);
   };
@@ -793,12 +854,14 @@ function ChessPuzzle() {
               const isDark = (rIdx + cIdx) % 2 === 1;
               const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
               
-              // Target hint highlight coordinates based on puzzle
-              const isTargetHint = selected && 
-                selected.r === currentPuzzle.solution.fromR && 
-                selected.c === currentPuzzle.solution.fromC && 
-                rIdx === currentPuzzle.solution.toR && 
-                cIdx === currentPuzzle.solution.toC;
+              // Target hint highlight coordinates based on puzzle state
+              const isTargetHint = selected && (
+                puzzleIndex === 2
+                  ? (puzzleStep === 0
+                      ? (selected.r === 4 && selected.c === 2 && rIdx === 0 && cIdx === 6)
+                      : (selected.r === 2 && selected.c === 7 && rIdx === 1 && cIdx === 5))
+                  : (selected.r === currentPuzzle.solution.fromR && selected.c === currentPuzzle.solution.fromC && rIdx === currentPuzzle.solution.toR && cIdx === currentPuzzle.solution.toC)
+              );
               
               return (
                 <div 
