@@ -1554,7 +1554,7 @@ export default function Home() {
     { title: "Frontend Engineering", items: ["React.js", "JavaScript", "Tailwind CSS", "HTML / CSS"] },
     { title: "UI/UX & Prototyping", items: ["Figma (Layout & Prototyping)", "User Interface Design", "Wireframing & Typography", "Component Systems", "Bento Grid Layouts"], primary: true },
     { title: "Database & Tools", items: ["MongoDB", "Mongoose", "Postman", "Git", "Vercel", "Render", "VS Code"] },
-    { title: "CS Fundamentals", items: ["DSA — 300+ problems", "OOPs", "DBMS", "Operating Systems"] },
+    { title: "CS Fundamentals", items: ["OOPs", "DBMS", "Operating Systems"] },
   ];
 
   const skillLore = {
