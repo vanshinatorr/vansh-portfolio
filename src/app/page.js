@@ -488,7 +488,7 @@ const makeMagnetic = (el, strength = 0.38) => {
 };
 
 // ── GSAP Cinematic Intro ──────────────────────────────────────────────────────
-const INTRO_LETTERS = "Vansh".split("");
+const INTRO_LETTERS = "Vanshh".split("");
 
 function IntroScreen({ onDone }) {
   const screenRef = useRef(null);
