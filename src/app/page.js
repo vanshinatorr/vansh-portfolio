@@ -1131,8 +1131,6 @@ function StreakTracker() {
         {/* Right Column: Mini Terminal & Stats Dashboard */}
         <div className="streak-details-panel">
           <div className="streak-stats-row">
-            <CliTerminal />
-
             <div className="streak-commit-terminal">
               <div className="terminal-header">
                 <span className="terminal-dot red"></span>
@@ -1172,6 +1170,8 @@ function StreakTracker() {
                 })}
               </div>
             </div>
+
+            <CliTerminal />
           </div>
         </div>
       </div>
