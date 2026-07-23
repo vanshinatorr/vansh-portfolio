@@ -362,7 +362,7 @@ function ParticleCanvas() {
         // Draw dot
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(167,139,250,${p.alpha})`;
+        ctx.fillStyle = `rgba(240,194,123,${p.alpha})`;
         ctx.fill();
       });
 
@@ -376,7 +376,7 @@ function ParticleCanvas() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(124,58,237,${(1 - dist / 120) * 0.25})`;
+            ctx.strokeStyle = `rgba(223,178,110,${(1 - dist / 120) * 0.25})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -554,7 +554,7 @@ function IntroScreen({ onDone }) {
         scale: 1, stagger: 0.08, duration: 0.72, ease: 'power3.inOut'
       }, '-=0.88')
       .to(charsRef.current[INTRO_LETTERS.length], {
-        boxShadow: '0 0 12px rgba(167,139,250,0.7)',
+        boxShadow: '0 0 12px rgba(240,194,123,0.7)',
         scale: 1.2, duration: 0.42, ease: 'power3.out',
         onStart: () => playSynthSFX('impact')
       }, '<')
