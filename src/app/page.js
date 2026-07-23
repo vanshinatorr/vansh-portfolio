@@ -1292,8 +1292,16 @@ export default function Home() {
       {/* ── PROJECTS HORIZONTAL SCROLL ── */}
       <section id="projects" ref={horizontalSectionRef} className="projects-horizontal-section">
         <div className="projects-scroll-track-wrapper">
-          <p className="section-label reveal">Projects</p>
           <div className="projects-scroll-track" ref={scrollTrackRef}>
+            {/* Title Panel */}
+            <div className="project-title-card">
+              <h2 className="project-title-heading">Selected<br /><span className="text-gradient">Works.</span></h2>
+              <p className="project-title-desc">A gallery of full-stack products, real-time WebSockets boardgames, and speech automation engines.</p>
+              <div className="project-scroll-guide">
+                <span className="scroll-guide-text">Scroll to explore</span>
+                <span className="scroll-guide-arrow">➔</span>
+              </div>
+            </div>
             {projects.map((p, i) => (
               <div 
                 className="project-card reveal" 

@@ -900,20 +900,68 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.035) 0%, transparent 80%);
 }
 .projects-scroll-track-wrapper {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 2.5rem;
+  width: 100%;
   position: relative;
 }
 .projects-scroll-track {
   display: flex;
-  gap: 2.25rem;
+  gap: 2.5rem;
   width: max-content;
   padding: 2.25rem 0;
+  padding-left: max(2.5rem, calc((100vw - 1100px) / 2 + 2.5rem));
+  padding-right: max(2.5rem, calc((100vw - 1100px) / 2 + 2.5rem));
   will-change: transform;
 }
+.project-title-card {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 2rem;
+}
+.project-title-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 0.85rem;
+}
+.project-title-heading .text-gradient {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.project-title-desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+.project-scroll-guide {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--accent2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.scroll-guide-arrow {
+  display: inline-block;
+  animation: arrowSlide 1.5s infinite ease-in-out;
+}
+@keyframes arrowSlide {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
 .project-card {
-  width: 370px;
+  width: 420px;
   flex-shrink: 0;
   background: rgba(19, 19, 31, 0.32);
   border: 1px solid var(--border);
@@ -1042,6 +1090,14 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
     width: 100%;
     transform: none !important;
     gap: 1.5rem;
+  }
+  .project-title-card {
+    width: 100%;
+    padding-right: 0;
+    margin-bottom: 0.75rem;
+  }
+  .project-scroll-guide {
+    display: none;
   }
   .project-card {
     width: 100%;
