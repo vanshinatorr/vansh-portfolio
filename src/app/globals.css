@@ -4,8 +4,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:      #000000;
-  --surface: #0a0a0c;
+  --bg:      #070814;
+  --surface: #0f1024;
   --border:  rgba(255, 107, 0, 0.14);
   --accent:  #ff6b00;
   --accent2: #f5c842;
@@ -219,33 +219,33 @@ nav.scrolled {
   filter: blur(140px);
   will-change: transform;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.35;
 }
 
 .orb-aurora-1 {
-  width: 650px;
-  height: 650px;
+  width: 700px;
+  height: 700px;
   top: -150px;
-  left: 20%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.1) 100%);
+  left: 15%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.38) 0%, rgba(139, 92, 246, 0.18) 100%);
   animation: auroraFloat1 24s infinite ease-in-out alternate;
 }
 
 .orb-aurora-2 {
-  width: 750px;
-  height: 750px;
-  top: 40%;
+  width: 800px;
+  height: 800px;
+  top: 35%;
   right: -150px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(56, 189, 248, 0.15) 100%);
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.35) 0%, rgba(56, 189, 248, 0.22) 100%);
   animation: auroraFloat2 28s infinite ease-in-out alternate;
 }
 
 .orb-aurora-3 {
-  width: 600px;
-  height: 600px;
+  width: 650px;
+  height: 650px;
   bottom: -100px;
   left: -100px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(99, 102, 241, 0.2) 100%);
   animation: auroraFloat3 22s infinite ease-in-out alternate;
 }
 
@@ -269,9 +269,9 @@ nav.scrolled {
 .global-bg-grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 32px 32px;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 /* Cursor-Tracked Spotlight Flare */
@@ -888,7 +888,7 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
   justify-content: center;
   overflow: hidden;
   padding: 3rem 0 !important;
-  background: radial-gradient(ellipse at 50% 50%, rgba(255, 107, 0, 0.04) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 80%);
   position: relative;
 }
 
@@ -909,11 +909,11 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 }
 .skills-scroll-track-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, var(--bg, #06060c), transparent);
+  background: linear-gradient(to right, rgba(7, 8, 20, 0.9), transparent);
 }
 .skills-scroll-track-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, var(--bg, #06060c), transparent);
+  background: linear-gradient(to left, rgba(7, 8, 20, 0.9), transparent);
 }
 
 .skills-scroll-track {
