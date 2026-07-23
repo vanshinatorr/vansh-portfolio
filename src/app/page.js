@@ -766,7 +766,7 @@ function ChessPuzzle() {
             playSynthSFX('chess_mate');
           }, 120);
 
-          setFeedback("Eligibility confirmed! You are officially certified to be Vansh's friend. ⚡");
+          setFeedback("Checkmate! Puzzle solved — send a direct message below.");
         } else {
           triggerIncorrect();
         }
@@ -907,17 +907,16 @@ function ChessPuzzle() {
             <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem', width: '100%' }}>
               {discordSent ? (
                 <div className="discord-success-card">
-                  <div className="discord-success-badge">✅ MESSAGE DELIVERED</div>
-                  <p className="discord-success-sub">Dispatched directly to Vansh's Discord channel! 🚀</p>
+                  <div className="discord-success-badge">MESSAGE DELIVERED</div>
+                  <p className="discord-success-sub">Dispatched directly to Vansh's Discord.</p>
                   <button onClick={handleReset} className="chess-reset-btn">
-                    Play Again ↺
+                    Play Again
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleDiscordSend} className="discord-ping-form">
                   <div className="discord-form-header">
-                    <span style={{ fontSize: '0.9rem' }}>👋</span>
-                    <span>SAY HI & CLAIM FRIENDSHIP</span>
+                    <span>SEND A DIRECT MESSAGE</span>
                   </div>
                   <input 
                     type="text" 
@@ -928,10 +927,10 @@ function ChessPuzzle() {
                   />
                   <div className="discord-form-buttons">
                     <button type="submit" disabled={sending} className="discord-submit-btn">
-                      {sending ? "Sending..." : "Send Message 🚀"}
+                      {sending ? "Sending..." : "Send"}
                     </button>
                     <button type="button" onClick={handleReset} className="chess-reset-btn">
-                      Reset ↺
+                      Reset
                     </button>
                   </div>
                 </form>
