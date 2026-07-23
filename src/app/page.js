@@ -1135,49 +1135,45 @@ function StreakTracker() {
               <span className="stat-label">CURRENT STREAK</span>
               <span className="stat-value text-orange">18 Days 🔥</span>
             </div>
-            <div className="streak-stat-card">
-              <span className="stat-label">COMMIT LEVEL</span>
-              <span className="stat-value text-green">Elite Dev 💻</span>
-            </div>
-          </div>
 
-          <div className="streak-commit-terminal">
-            <div className="terminal-header">
-              <span className="terminal-dot red"></span>
-              <span className="terminal-dot yellow"></span>
-              <span className="terminal-dot green"></span>
-              <span className="terminal-title">consistpay-git-bash</span>
-            </div>
-            <div className="terminal-body">
-              {terminalLines.map((line, idx) => {
-                const isPrompt = line.startsWith("guest@vanshos:");
-                if (isPrompt) {
-                  const parts = line.split("$ ");
-                  const commandText = parts[1] || "";
-                  const promptPath = parts[0] + "$";
-                  return (
-                    <div key={idx} className="streak-terminal-line">
-                      <span className="text-green">{promptPath}</span>{" "}
-                      {commandText === "_" ? (
-                        <span className="cursor-blink">_</span>
-                      ) : commandText.endsWith("_") ? (
-                        <>
-                          <span>{commandText.slice(0, -1)}</span>
+            <div className="streak-commit-terminal">
+              <div className="terminal-header">
+                <span className="terminal-dot red"></span>
+                <span className="terminal-dot yellow"></span>
+                <span className="terminal-dot green"></span>
+                <span className="terminal-title">consistpay-git-bash</span>
+              </div>
+              <div className="terminal-body">
+                {terminalLines.map((line, idx) => {
+                  const isPrompt = line.startsWith("guest@vanshos:");
+                  if (isPrompt) {
+                    const parts = line.split("$ ");
+                    const commandText = parts[1] || "";
+                    const promptPath = parts[0] + "$";
+                    return (
+                      <div key={idx} className="streak-terminal-line">
+                        <span className="text-green">{promptPath}</span>{" "}
+                        {commandText === "_" ? (
                           <span className="cursor-blink">_</span>
-                        </>
-                      ) : (
-                        <span>{commandText}</span>
-                      )}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={idx} className="streak-terminal-line text-muted">
-                      {line}
-                    </div>
-                  );
-                }
-              })}
+                        ) : commandText.endsWith("_") ? (
+                          <>
+                            <span>{commandText.slice(0, -1)}</span>
+                            <span className="cursor-blink">_</span>
+                          </>
+                        ) : (
+                          <span>{commandText}</span>
+                        )}
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div key={idx} className="streak-terminal-line text-muted">
+                        {line}
+                      </div>
+                    );
+                  }
+                })}
+              </div>
             </div>
           </div>
         </div>
