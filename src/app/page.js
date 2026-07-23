@@ -857,8 +857,17 @@ function ChessPuzzle() {
           </div>
           <div className="chess-feedback">{feedback}</div>
           {solved && (
-            <div className="chess-actions-row">
-              <button onClick={handleReset} className="chess-reset-btn">Play Again ↺</button>
+            <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem' }}>
+              <a 
+                href="mailto:vanshvijay9784@gmail.com?subject=Friendship%20Eligibility:%20Passed!%20⚡&body=Hey%20Vansh,%20I%20solved%20your%20smothered%20mate%20puzzle%20and%20passed%20the%20friendship%20check.%20My%20name%20is%20[Your%20Name].%20Let's%20connect!"
+                className="chess-btn-connect"
+                onClick={() => playSynthSFX('impact')}
+              >
+                ✉️ Say Hi & Claim Friendship!
+              </a>
+              <button onClick={handleReset} className="chess-reset-btn" style={{ fontSize: '0.7rem', opacity: 0.6, border: 'none', background: 'transparent', padding: '0.2rem 0.5rem' }}>
+                Play Again ↺
+              </button>
             </div>
           )}
         </>
