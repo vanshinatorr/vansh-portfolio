@@ -1129,51 +1129,9 @@ function StreakTracker() {
           </div>
         </div>
 
-        {/* Right Column: Mini Terminal & Stats Dashboard */}
+        {/* Right Column: Interactive OS CLI Command Terminal */}
         <div className="streak-details-panel">
-          <div className="streak-stats-row">
-            <div className="streak-commit-terminal">
-              <div className="terminal-header">
-                <span className="terminal-dot red"></span>
-                <span className="terminal-dot yellow"></span>
-                <span className="terminal-dot green"></span>
-                <span className="terminal-title">consistpay-git-bash</span>
-              </div>
-              <div className="terminal-body">
-                {terminalLines.map((line, idx) => {
-                  const isPrompt = line.startsWith("guest@vanshos:");
-                  if (isPrompt) {
-                    const parts = line.split("$ ");
-                    const commandText = parts[1] || "";
-                    const promptPath = parts[0] + "$";
-                    return (
-                      <div key={idx} className="streak-terminal-line">
-                        <span className="text-green">{promptPath}</span>{" "}
-                        {commandText === "_" ? (
-                          <span className="cursor-blink">_</span>
-                        ) : commandText.endsWith("_") ? (
-                          <>
-                            <span>{commandText.slice(0, -1)}</span>
-                            <span className="cursor-blink">_</span>
-                          </>
-                        ) : (
-                          <span>{commandText}</span>
-                        )}
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div key={idx} className="streak-terminal-line text-muted">
-                        {line}
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            </div>
-
-            <CliTerminal />
-          </div>
+          <CliTerminal />
         </div>
       </div>
     </div>
@@ -1182,41 +1140,41 @@ function StreakTracker() {
 
 const SKILL_ICONS = {
   // Backend
-  "Node.js": { type: "devicon", class: "devicon-nodejs-plain" },
+  "Node.js": { type: "devicon", class: "devicon-nodejs-plain colored" },
   "Express.js": { type: "devicon", class: "devicon-express-original" },
-  "REST APIs": { type: "lucide", name: "Network" },
-  "JWT Auth": { type: "lucide", name: "ShieldCheck" },
-  "Socket.IO": { type: "devicon", class: "devicon-socketio-original" },
-  "Razorpay": { type: "lucide", name: "CreditCard" },
-  "Gemini AI": { type: "lucide", name: "Cpu" },
+  "REST APIs": { type: "lucide", name: "Network", color: "#00f0ff" },
+  "JWT Auth": { type: "lucide", name: "ShieldCheck", color: "#ff007f" },
+  "Socket.IO": { type: "devicon", class: "devicon-socketio-original colored" },
+  "Razorpay": { type: "lucide", name: "CreditCard", color: "#008cff" },
+  "Gemini AI": { type: "lucide", name: "Cpu", color: "#9c3fe6" },
 
   // Frontend
-  "React.js": { type: "devicon", class: "devicon-react-original" },
-  "JavaScript": { type: "devicon", class: "devicon-javascript-plain" },
-  "Tailwind CSS": { type: "devicon", class: "devicon-tailwindcss-plain" },
-  "HTML / CSS": { type: "devicon", class: "devicon-html5-plain" },
+  "React.js": { type: "devicon", class: "devicon-react-original colored" },
+  "JavaScript": { type: "devicon", class: "devicon-javascript-plain colored" },
+  "Tailwind CSS": { type: "devicon", class: "devicon-tailwindcss-plain colored" },
+  "HTML / CSS": { type: "devicon", class: "devicon-html5-plain colored" },
 
   // UI/UX
-  "Figma (Layout & Prototyping)": { type: "devicon", class: "devicon-figma-plain" },
-  "User Interface Design": { type: "lucide", name: "Palette" },
-  "Wireframing & Typography": { type: "lucide", name: "Type" },
-  "Component Systems": { type: "lucide", name: "Layers" },
-  "Bento Grid Layouts": { type: "lucide", name: "LayoutGrid" },
+  "Figma (Layout & Prototyping)": { type: "devicon", class: "devicon-figma-plain colored" },
+  "User Interface Design": { type: "lucide", name: "Palette", color: "#ffaa00" },
+  "Wireframing & Typography": { type: "lucide", name: "Type", color: "#ffd600" },
+  "Component Systems": { type: "lucide", name: "Layers", color: "#00ff66" },
+  "Bento Grid Layouts": { type: "lucide", name: "LayoutGrid", color: "#ff5b00" },
 
   // Database
-  "MongoDB": { type: "devicon", class: "devicon-mongodb-plain" },
-  "Mongoose": { type: "lucide", name: "Database" },
-  "Postman": { type: "devicon", class: "devicon-postman-plain" },
-  "Git": { type: "devicon", class: "devicon-git-plain" },
-  "Vercel": { type: "devicon", class: "devicon-vercel-original" },
-  "Render": { type: "lucide", name: "Cloud" },
-  "VS Code": { type: "devicon", class: "devicon-vscode-plain" },
+  "MongoDB": { type: "devicon", class: "devicon-mongodb-plain colored" },
+  "Mongoose": { type: "lucide", name: "Database", color: "#800000" },
+  "Postman": { type: "devicon", class: "devicon-postman-plain colored" },
+  "Git": { type: "devicon", class: "devicon-git-plain colored" },
+  "Vercel": { type: "devicon", class: "devicon-vercel-original colored" },
+  "Render": { type: "lucide", name: "Cloud", color: "#4682b4" },
+  "VS Code": { type: "devicon", class: "devicon-vscode-plain colored" },
 
   // CS Fundamentals
-  "DSA — 300+ problems": { type: "lucide", name: "Binary" },
-  "OOPs": { type: "lucide", name: "Boxes" },
-  "DBMS": { type: "lucide", name: "HardDrive" },
-  "Operating Systems": { type: "lucide", name: "Terminal" }
+  "DSA — 300+ problems": { type: "lucide", name: "Binary", color: "#00ff66" },
+  "OOPs": { type: "lucide", name: "Boxes", color: "#ffaa00" },
+  "DBMS": { type: "lucide", name: "HardDrive", color: "#a8b2c1" },
+  "Operating Systems": { type: "lucide", name: "Terminal", color: "#00ff00" }
 };
 
 export default function Home() {
@@ -1785,7 +1743,7 @@ export default function Home() {
                             ) : (
                               (() => {
                                 const Component = Lucide[iconInfo.name];
-                                return Component ? <Component className="skill-chip-icon" size={20} /> : <span>{s}</span>;
+                                return Component ? <Component className="skill-chip-icon" size={20} style={{ color: iconInfo.color }} /> : <span>{s}</span>;
                               })()
                             )
                           ) : (
