@@ -1564,7 +1564,7 @@ export default function Home() {
         </ul>
         <div className="nav-right">
           <button onClick={toggleSound} className={`sound-toggle-btn ${soundEnabled ? 'active' : ''}`} title="Toggle ambient music">
-            {soundEnabled ? '🔊' : '🔇'}
+            {soundEnabled ? '🎧' : '🔇'}
           </button>
           <a href="mailto:vanshvijay9784@gmail.com" className="nav-cta magnetic" data-strength="0.4" data-track="Hire Me Clicked">Hire Me</a>
         </div>
