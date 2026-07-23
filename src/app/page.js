@@ -1125,7 +1125,7 @@ function StreakTracker() {
       14: "Day 14: Integrated Razorpay Payment Webhooks! 💳",
       32: "Day 30: Custom Streak Engine built in Node.js 🔥",
       58: "Day 45: Configured Google Gemini AI suggestions 🤖",
-      86: "Day 60: Shipped live: reached 60+ active users! 🚀"
+      86: "Day 60: Shipped live: reached 100+ active users! 🚀"
     };
 
     for (let i = 0; i < 112; i++) {
@@ -1515,7 +1515,7 @@ export default function Home() {
   }, [introDone]);
 
   const projects = [
-    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "60+ users" },
+    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "100+ users" },
     { idx: "02", name: "Chess Multiplayer", desc: "Real-time multiplayer chess platform. Room-based matchmaking, live move sync across clients, turn management, and game timers — all over WebSockets.", tags: ["Socket.IO", "Node.js", "WebSockets", "JavaScript"], live: "https://chess-multiplayer-y54n.onrender.com", repo: "https://github.com/vanshinatorr/chess-multiplayer", badge: "Live" },
     { idx: "03", name: "Automated Speaking Test Solver", desc: "An intelligent automation engine that solves interactive speaking tests in real-time. Features live speech-to-text (STT) audio transcription, conversational LLM API integration for response generation, and text-to-speech (TTS) voice synthesis.", tags: ["Python", "Speech-to-Text", "Text-to-Speech", "LLM APIs", "Automation"], repo: "https://github.com/vanshinatorr/automated-speaking-test-solver", badge: "Automation" },
     { idx: "04", name: "Hotel Landing Page", desc: "Modern responsive hotel booking website with room showcase and booking form. Focused on clean UI, responsive layouts, and visual design — demonstrating frontend fundamentals done right.", tags: ["HTML", "CSS", "Responsive Design", "UI/UX"], repo: "https://github.com/vanshinatorr/hotel-landing-page-01", badge: "Frontend" },
@@ -1620,7 +1620,7 @@ export default function Home() {
           <ScrambleText text=" not projects." delay={700} />
         </h1>
         <p className="hero-statement" style={{ position: "relative", zIndex: 1 }}>
-          <strong>Developer & Designer, founder of ConsistPay</strong> — a real platform used by 60+ students. Blending high-performance systems engineering with pixel-perfect Figma layouts.{" "}
+          <strong>Developer & Designer, founder of ConsistPay</strong> — a real platform used by 100+ students. Blending high-performance systems engineering with pixel-perfect Figma layouts.{" "}
           <Typewriter lines={["Full Stack & UI/UX Design.", "Designing in Figma.", "Final year CSE @ JECRC.", "Shipping real products."]} />
         </p>
         <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
@@ -1628,7 +1628,7 @@ export default function Home() {
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" data-track="GitHub (Hero)">GitHub →</a>
         </div>
         <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
-          {[{ to: 60, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: githubContributions, suffix: "", label: "GitHub Contributions" }].map(s => (
+          {[{ to: 100, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: githubContributions, suffix: "", label: "GitHub Contributions" }].map(s => (
             <div className="stat-item" key={s.label}>
               <span className="stat-num"><Counter to={s.to} suffix={s.suffix} /></span>
               <span className="stat-label">{s.label}</span>
@@ -1649,7 +1649,7 @@ export default function Home() {
             <div className="bento-body">
               <p>I&apos;m a final year Computer Science student at JECRC University, Jaipur. I operate at the intersection of robust backend engineering and high-fidelity user interface design.</p>
               <p>I specialize in building full-stack products with the MERN Stack while simultaneously crafting pixel-perfect, modern component design systems in Figma.</p>
-              <p>As the founder of <strong>ConsistPay</strong>, I shipped real-world code to 60+ users. Currently solving DSA consistently and looking for opportunities to design and build premium digital platforms.</p>
+              <p>As the founder of <strong>ConsistPay</strong>, I shipped real-world code to 100+ users. Currently solving DSA consistently and looking for opportunities to design and build premium digital platforms.</p>
             </div>
           </div>
 
