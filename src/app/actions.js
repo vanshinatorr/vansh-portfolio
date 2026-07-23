@@ -169,21 +169,27 @@ export async function sendDiscordMessage({ name, contact, message }) {
 
 export async function fetchGithubContributions() {
   try {
-    const res = await fetch("https://github-contributions.vercel.app/api/v1/vanshinatorr", {
-      next: { revalidate: 3600 }
+    const res = await fetch("https://github-contributions-api.jogruber.de/v4/vanshinatorr", {
+      next: { revalidate: 1800 }
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && data.years && data.years.length > 0) {
-        const total = data.years[0].total;
-        if (typeof total === 'number' && total > 0) {
-          return total;
+      if (data && data.total) {
+        const sum = Object.values(data.total).reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0);
+        if (sum > 0) {
+          return sum;
+        }
+      }
+      if (data && data.contributions && Array.isArray(data.contributions)) {
+        const sum = data.contributions.reduce((acc, item) => acc + (item.count || 0), 0);
+        if (sum > 0) {
+          return sum;
         }
       }
     }
   } catch (e) {
     console.warn("Server action failed to fetch Github contributions:", e.message);
   }
-  return 204;
+  return 521;
 }
 
