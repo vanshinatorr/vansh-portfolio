@@ -673,20 +673,21 @@ function ChessPuzzle() {
   const [elo, setElo] = useState(1500);
   const [shake, setShake] = useState(false);
   const [puzzleStep, setPuzzleStep] = useState(0);
-  const [discordMsg, setDiscordMsg] = useState("Hey Vansh! I solved your Philidor checkmate ♟️");
+  const [discordMsg, setDiscordMsg] = useState("");
   const [senderName, setSenderName] = useState("");
   const [discordSent, setDiscordSent] = useState(false);
   const [sending, setSending] = useState(false);
 
   const handleDiscordSend = async (e) => {
     if (e) e.preventDefault();
-    if (!discordMsg.trim() || sending) return;
+    if (sending) return;
     setSending(true);
     try {
+      const textToSend = discordMsg.trim() || "Hey Vansh! I solved your Philidor checkmate ♟️";
       const res = await sendDiscordMessage({
         name: "Chess Winner Friend",
         contact: "Via Portfolio",
-        message: discordMsg.trim()
+        message: textToSend
       });
       if (res && res.success) {
         setDiscordSent(true);
@@ -787,7 +788,7 @@ function ChessPuzzle() {
     setSolved(false);
     setDiscordSent(false);
     setSenderName("");
-    setDiscordMsg("Hey Vansh! I solved your Philidor checkmate ♟️");
+    setDiscordMsg("");
     setElo(1500);
     setPuzzleStep(0);
     setVibeState('init');
@@ -921,7 +922,7 @@ function ChessPuzzle() {
                   <input 
                     type="text" 
                     className="discord-input" 
-                    placeholder="Type your message..." 
+                    placeholder="Hey Vansh, I am..." 
                     value={discordMsg} 
                     onChange={(e) => setDiscordMsg(e.target.value)}
                   />
