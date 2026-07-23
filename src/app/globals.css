@@ -227,7 +227,7 @@ nav.scrolled {
   height: 650px;
   top: -150px;
   left: 20%;
-  background: radial-gradient(circle, rgba(255, 107, 0, 0.45) 0%, rgba(99, 102, 241, 0.2) 100%);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.1) 100%);
   animation: auroraFloat1 24s infinite ease-in-out alternate;
 }
 
@@ -236,7 +236,7 @@ nav.scrolled {
   height: 750px;
   top: 40%;
   right: -150px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(16, 185, 129, 0.25) 100%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(56, 189, 248, 0.15) 100%);
   animation: auroraFloat2 28s infinite ease-in-out alternate;
 }
 
@@ -245,7 +245,7 @@ nav.scrolled {
   height: 600px;
   bottom: -100px;
   left: -100px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(245, 158, 11, 0.2) 100%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
   animation: auroraFloat3 22s infinite ease-in-out alternate;
 }
 
@@ -269,9 +269,9 @@ nav.scrolled {
 .global-bg-grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.065) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 32px 32px;
-  opacity: 0.75;
+  opacity: 0.7;
 }
 
 /* Cursor-Tracked Spotlight Flare */
@@ -279,10 +279,9 @@ nav.scrolled {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    650px circle at var(--bg-mouse-x, 50vw) var(--bg-mouse-y, 30vh),
-    rgba(255, 107, 0, 0.08),
-    rgba(99, 102, 241, 0.03) 40%,
-    transparent 80%
+    500px circle at var(--bg-mouse-x, 50vw) var(--bg-mouse-y, 30vh),
+    rgba(255, 255, 255, 0.035),
+    transparent 70%
   );
 }
 
