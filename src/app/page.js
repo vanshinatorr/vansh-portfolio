@@ -1656,7 +1656,7 @@ export default function Home() {
       {/* ── NAV ── */}
       <nav className={scrolled ? "scrolled" : ""}>
         <a href="#hero" className="nav-logo">
-          Vansh<span>.</span>V
+          vansh<span>.</span>
         </a>
         <ul className="nav-links">
           {["About", "Projects", "Skills", "Contact"].map(l => (
