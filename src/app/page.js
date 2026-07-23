@@ -839,7 +839,7 @@ function ChessPuzzle() {
 
       {vibeState === 'ready' && (
         <>
-          <div className="chess-puzzle-name">{puzzle.name}</div>
+          {!solved && <div className="chess-puzzle-name">{puzzle.name}</div>}
           <div className="chess-grid-container">
             <div className="chess-board-grid" style={{ position: 'relative' }}>
               {board.map((row, rIdx) => 
