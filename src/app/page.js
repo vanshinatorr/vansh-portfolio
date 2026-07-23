@@ -1683,9 +1683,28 @@ export default function Home() {
     { icon: "💼", title: "Full Stack Intern", sub: "Plasmid Innovation — Jul–Sep 2025. Real-world MERN development.", color: "#22d3ee", glow: "rgba(34,211,238,0.12)" },
   ];
 
+  useEffect(() => {
+    const handleGlobalMouseMove = (e) => {
+      document.documentElement.style.setProperty('--bg-mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--bg-mouse-y', `${e.clientY}px`);
+    };
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => window.removeEventListener('mousemove', handleGlobalMouseMove);
+  }, []);
+
   return (
     <>
       <IntroScreen onDone={handleIntroDone} />
+
+      {/* GLOBAL ATMOSPHERIC BACKGROUND SYSTEM */}
+      <div className="global-bg-container">
+        <div className="global-bg-aurora orb-aurora-1" />
+        <div className="global-bg-aurora orb-aurora-2" />
+        <div className="global-bg-aurora orb-aurora-3" />
+        <div className="global-bg-grid" />
+        <div className="global-bg-spotlight" />
+        <div className="global-bg-noise" />
+      </div>
 
       {/* ── NAV ── */}
       <nav className={scrolled ? "scrolled" : ""}>

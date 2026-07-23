@@ -202,6 +202,98 @@ nav.scrolled {
   height:1.5px; background:var(--accent2); border-radius:2px;
   transform:scaleX(0); transform-origin:left; transition:transform .3s cubic-bezier(.22,1,.36,1);
 }
+/* ─── GLOBAL ATMOSPHERIC BACKGROUND SYSTEM ─── */
+.global-bg-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--bg, #06060c);
+}
+
+/* Subtle Aurora Blobs */
+.global-bg-aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  will-change: transform;
+  pointer-events: none;
+  opacity: 0.16;
+}
+
+.orb-aurora-1 {
+  width: 650px;
+  height: 650px;
+  top: -150px;
+  left: 20%;
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.45) 0%, rgba(99, 102, 241, 0.2) 100%);
+  animation: auroraFloat1 24s infinite ease-in-out alternate;
+}
+
+.orb-aurora-2 {
+  width: 750px;
+  height: 750px;
+  top: 40%;
+  right: -150px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(16, 185, 129, 0.25) 100%);
+  animation: auroraFloat2 28s infinite ease-in-out alternate;
+}
+
+.orb-aurora-3 {
+  width: 600px;
+  height: 600px;
+  bottom: -100px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(245, 158, 11, 0.2) 100%);
+  animation: auroraFloat3 22s infinite ease-in-out alternate;
+}
+
+@keyframes auroraFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(120px, 80px) scale(1.15); }
+  100% { transform: translate(-80px, 140px) scale(0.92); }
+}
+@keyframes auroraFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-140px, -90px) scale(1.12); }
+  100% { transform: translate(60px, 110px) scale(0.95); }
+}
+@keyframes auroraFloat3 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(100px, -120px) scale(1.18); }
+  100% { transform: translate(-60px, -60px) scale(0.88); }
+}
+
+/* Micro Dot Matrix Grid */
+.global-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.065) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.75;
+}
+
+/* Cursor-Tracked Spotlight Flare */
+.global-bg-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    650px circle at var(--bg-mouse-x, 50vw) var(--bg-mouse-y, 30vh),
+    rgba(255, 107, 0, 0.08),
+    rgba(99, 102, 241, 0.03) 40%,
+    transparent 80%
+  );
+}
+
+/* Tactile Micro Noise Grain */
+.global-bg-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.35;
+}
+
 .nav-links a:hover { color:var(--text); }
 .nav-links a:hover::after, .nav-links a.active::after { transform:scaleX(1); }
 .nav-links a.active { color:var(--text); }
