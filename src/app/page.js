@@ -1206,7 +1206,7 @@ const SKILL_ICONS = {
   "Express.js": { type: "devicon", class: "devicon-express-original", color: "#ffffff" },
   "REST APIs": { type: "lucide", name: "Network", color: "#00f0ff" },
   "JWT Auth": { type: "lucide", name: "ShieldCheck", color: "#ff007f" },
-  "Socket.IO": { type: "devicon", class: "devicon-socketio-original colored", color: "#ffffff" },
+  "Socket.IO": { type: "lucide", name: "Zap", color: "#ffd600" },
   "Razorpay": { type: "lucide", name: "CreditCard", color: "#008cff" },
   "Gemini AI": { type: "lucide", name: "Cpu", color: "#9c3fe6" },
 
@@ -1226,9 +1226,9 @@ const SKILL_ICONS = {
   // Database
   "MongoDB": { type: "devicon", class: "devicon-mongodb-plain colored", color: "#47a248" },
   "Mongoose": { type: "lucide", name: "Database", color: "#800000" },
-  "Postman": { type: "devicon", class: "devicon-postman-plain colored", color: "#ff6c37" },
+  "Postman": { type: "lucide", name: "Rocket", color: "#ff6c37" },
   "Git": { type: "devicon", class: "devicon-git-plain colored", color: "#f05032" },
-  "Vercel": { type: "devicon", class: "devicon-vercel-original colored", color: "#ffffff" },
+  "Vercel": { type: "lucide", name: "Triangle", color: "#ffffff" },
   "Render": { type: "lucide", name: "Cloud", color: "#4682b4" },
   "VS Code": { type: "devicon", class: "devicon-vscode-plain colored", color: "#007acc" },
 
@@ -1806,7 +1806,7 @@ export default function Home() {
                             ) : (
                               (() => {
                                 const Component = Lucide[iconInfo.name];
-                                return Component ? <Component className="skill-chip-icon" size={30} style={{ color: iconInfo.color }} /> : <span>{s}</span>;
+                                return Component ? <Component className="skill-chip-icon" size={30} style={{ color: iconInfo.color, fill: iconInfo.name === "Triangle" ? iconInfo.color : "none" }} /> : <span>{s}</span>;
                               })()
                             )
                           ) : (
