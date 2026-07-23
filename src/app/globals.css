@@ -1310,14 +1310,13 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .chess-board-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(10, 10, 15, 0.72);
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   border-radius: 6px;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  pointer-events: none;
   animation: overlayFade 0.3s forwards cubic-bezier(.22,1,.36,1);
 }
 @keyframes overlayFade {
@@ -1327,14 +1326,14 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .checkmate-banner {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 800;
-  font-size: 1.45rem;
-  letter-spacing: 0.14em;
-  color: #34d399;
-  background: rgba(10, 10, 15, 0.88);
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  padding: 0.65rem 1.8rem;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  background: #66b032;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1.6rem;
   border-radius: 100px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(52, 211, 153, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(102, 176, 50, 0.4);
   animation: checkmatePop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   display: flex;
   align-items: center;
