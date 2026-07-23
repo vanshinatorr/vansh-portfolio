@@ -760,7 +760,7 @@ function ChessPuzzle() {
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>🧩 Vibe Matcher</span>
+        <span>♟️ Top Hobby: Chess</span>
         <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
           {elo} ELO
         </span>
@@ -769,10 +769,10 @@ function ChessPuzzle() {
       {vibeState === 'init' && (
         <div className="vibe-scanner-panel">
           <div className="vibe-scanner-orb"></div>
-          <h3>Vibe Check Engine</h3>
-          <p>Scan your tactical cognitive alignment before attempting Vansh's puzzle.</p>
+          <h3>Top Hobby: Chess</h3>
+          <p>Verify neural vibe match before unlocking Vansh&apos;s favorite hobby.</p>
           <button className="vibe-scan-btn" onClick={startVibeCheck}>
-            Verify Neural Vibe
+            Start Scan
           </button>
         </div>
       )}
