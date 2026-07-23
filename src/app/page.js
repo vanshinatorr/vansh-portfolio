@@ -632,7 +632,7 @@ function MagneticNavLink({ href, label, active }) {
 const CHESS_PUZZLES = [
   {
     name: "Philidor's Sacrifice",
-    instructions: "White to play: Deliver checkmate in 2 moves.",
+    instructions: "White to play: Deliver checkmate in 2 moves to prove your eligibility.",
     eloGain: 25,
     board: [
       [null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, null, { type: 'k', color: 'b', label: '♚' }],
@@ -722,7 +722,7 @@ function ChessPuzzle() {
             playSynthSFX('chess_mate');
           }, 120);
 
-          setFeedback("You are officially certified to be Vansh's friend! ⚡");
+          setFeedback("Eligibility confirmed! You are officially certified to be Vansh's friend. ⚡");
         } else {
           triggerIncorrect();
         }
@@ -769,10 +769,10 @@ function ChessPuzzle() {
       {vibeState === 'init' && (
         <div className="vibe-scanner-panel">
           <div className="vibe-scanner-orb"></div>
-          <h3>Top Hobby: Chess</h3>
-          <p>Verify neural vibe match before unlocking Vansh&apos;s favorite hobby.</p>
+          <h3>Friendship Check</h3>
+          <p>Scan your tactical frequency to check if you are eligible to be Vansh&apos;s friend.</p>
           <button className="vibe-scan-btn" onClick={startVibeCheck}>
-            Start Scan
+            Scan Eligibility
           </button>
         </div>
       )}
@@ -782,7 +782,7 @@ function ChessPuzzle() {
           <div className="vibe-scanner-bar"></div>
           <div className="vibe-scanner-orb pulsing"></div>
           <h3>Syncing Frequency...</h3>
-          <p className="vibe-scan-log">ANALYZING TACTICAL LAYOUT [1500 ELO]...</p>
+          <p className="vibe-scan-log">EVALUATING FRIENDSHIP ELIGIBILITY...</p>
         </div>
       )}
 
@@ -826,7 +826,7 @@ function ChessPuzzle() {
               {/* CHECKMATE POPUP OVERLAY */}
               {solved && (
                 <div className="chess-board-overlay">
-                  <div className="checkmate-banner">VIBE MATCHED</div>
+                  <div className="checkmate-banner">ELIGIBILITY: PASSED</div>
                   <div className="confetti-container">
                     {Array.from({ length: 32 }).map((_, idx) => {
                       const size = Math.random() * 8 + 4;
