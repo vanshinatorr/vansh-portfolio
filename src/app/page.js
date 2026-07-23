@@ -1312,6 +1312,8 @@ export default function Home() {
 
   const horizontalSectionRef = useRef(null);
   const scrollTrackRef = useRef(null);
+  const skillsSectionRef = useRef(null);
+  const skillsTrackRef = useRef(null);
 
   const handleIntroDone = useCallback(() => setIntroDone(true), []);
 
@@ -1448,27 +1450,92 @@ export default function Home() {
     if (!section || !track) return;
 
     let ctx = gsap.context(() => {
+      const getScrollAmount = () => {
+        const extra = window.innerWidth > 768 ? 240 : 20;
+        return track.scrollWidth - window.innerWidth + extra;
+      };
+
       gsap.to(track, {
-        x: () => -(track.scrollWidth - window.innerWidth + 240),
+        x: () => -getScrollAmount(),
         ease: "none",
         scrollTrigger: {
           trigger: section,
           pin: true,
           scrub: 0.8,
           start: "top top",
-          end: () => `+=${track.scrollWidth - window.innerWidth + 240}`,
+          end: () => `+=${getScrollAmount()}`,
           invalidateOnRefresh: true,
         }
       });
     });
 
     // Safeguard: Refresh ScrollTrigger after Next.js layout has stabilized
-    const timer = setTimeout(() => {
+    const timer1 = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 500);
 
+    const timer2 = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 1500);
+
+    const handleLoad = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener('load', handleLoad);
+
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      window.removeEventListener('load', handleLoad);
+      ctx.revert();
+    };
+  }, [introDone]);
+
+  // GSAP Vertical-to-Horizontal Pinning Scroll Animation (Skills)
+  useEffect(() => {
+    if (!introDone) return;
+
+    const section = skillsSectionRef.current;
+    const track = skillsTrackRef.current;
+    if (!section || !track) return;
+
+    let ctx = gsap.context(() => {
+      const getScrollAmount = () => {
+        const extra = window.innerWidth > 768 ? 240 : 20;
+        return track.scrollWidth - window.innerWidth + extra;
+      };
+
+      gsap.to(track, {
+        x: () => -getScrollAmount(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          scrub: 0.8,
+          start: "top top",
+          end: () => `+=${getScrollAmount()}`,
+          invalidateOnRefresh: true,
+        }
+      });
+    });
+
+    const timer1 = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
+    const timer2 = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 1500);
+
+    const handleLoad = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener('load', handleLoad);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      window.removeEventListener('load', handleLoad);
       ctx.revert();
     };
   }, [introDone]);
@@ -1718,72 +1785,87 @@ export default function Home() {
       <div className="divider" />
 
       {/* ── SKILLS ── */}
-      <section id="skills">
-        <p className="section-label reveal">Skills</p>
-        <div className="skills-grid">
-          {skills.map((g, i) => {
-            let gridClass = "";
-            let icon = "⚙️";
-            if (g.title.includes("Backend")) {
-              gridClass = "skill-card-backend";
-              icon = "🖥️";
-            } else if (g.title.includes("Frontend")) {
-              gridClass = "skill-card-frontend";
-              icon = "💻";
-            } else if (g.title.includes("UI/UX")) {
-              gridClass = "skill-card-uiux";
-              icon = "🎨";
-            } else if (g.title.includes("Database")) {
-              gridClass = "skill-card-database";
-              icon = "🔧";
-            } else if (g.title.includes("Fundamentals")) {
-              gridClass = "skill-card-cs";
-              icon = "🧩";
-            }
-
-            return (
-              <div 
-                key={g.title} 
-                className={`skill-group-card ${gridClass} ${g.primary ? "primary" : ""} reveal`} 
-                style={{ transitionDelay: `${i * 0.1}s` }}
-              >
-                <div className="skill-group-header">
-                  <span className="skill-group-icon">{icon}</span>
-                  <div className="skill-group-title">{g.title}</div>
-                </div>
-                <div className="skill-chips">
-                  {g.items.map(s => {
-                    const isActive = activeSkill === s;
-                    return (
-                      <span 
-                        key={s} 
-                        className={`skill-chip ${g.primary ? "primary" : ""} ${isActive ? "active-skill" : ""}`}
-                        onClick={() => {
-                          setActiveSkill(s);
-                          playSynthSFX('tick');
-                        }}
-                        onMouseMove={(e) => {
-                          const rect = e.currentTarget.getBoundingClientRect();
-                          e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                          e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        {s}
-                      </span>
-                    );
-                  })}
-                </div>
+      <section id="skills" ref={skillsSectionRef} className="skills-horizontal-section">
+        <p className="section-label horizontal-title reveal">Skills</p>
+        <div className="skills-scroll-track-wrapper">
+          <div ref={skillsTrackRef} className="skills-scroll-track">
+            {/* Title Card */}
+            <div className="project-title-card">
+              <h2 className="project-title-heading" style={{ fontSize: "2rem" }}>Technical Intel</h2>
+              <p className="project-title-desc" style={{ marginTop: "0.5rem" }}>
+                Hover over chips to activate interactive diagnostic overlays below.
+              </p>
+              <div className="project-scroll-guide">
+                Scroll to slide skills →
               </div>
-            );
-          })}
+            </div>
+
+            {skills.map((g, i) => {
+              let gridClass = "";
+              let icon = "⚙️";
+              if (g.title.includes("Backend")) {
+                gridClass = "skill-card-backend";
+                icon = "🖥️";
+              } else if (g.title.includes("Frontend")) {
+                gridClass = "skill-card-frontend";
+                icon = "💻";
+              } else if (g.title.includes("UI/UX")) {
+                gridClass = "skill-card-uiux";
+                icon = "🎨";
+              } else if (g.title.includes("Database")) {
+                gridClass = "skill-card-database";
+                icon = "🔧";
+              } else if (g.title.includes("Fundamentals")) {
+                gridClass = "skill-card-cs";
+                icon = "🧩";
+              }
+
+              return (
+                <div 
+                  key={g.title} 
+                  className={`skill-group-card ${gridClass} ${g.primary ? "primary" : ""} reveal`} 
+                  style={{ transitionDelay: `${i * 0.05}s` }}
+                >
+                  <div className="skill-group-header">
+                    <span className="skill-group-icon">{icon}</span>
+                    <div className="skill-group-title">{g.title}</div>
+                  </div>
+                  <div className="skill-chips">
+                    {g.items.map(s => {
+                      const isActive = activeSkill === s;
+                      return (
+                        <span 
+                          key={s} 
+                          className={`skill-chip ${g.primary ? "primary" : ""} ${isActive ? "active-skill" : ""}`}
+                          onClick={() => {
+                            setActiveSkill(s);
+                            playSynthSFX('tick');
+                          }}
+                          onMouseMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                            e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {s}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {activeSkill && skillLore[activeSkill] && (
-          <div className="skills-console-wrapper reveal" style={{ marginTop: '2.5rem' }}>
-            <div className="console-indicator">SYSTEM STATUS: INTEL ONLINE</div>
-            <div className="console-skill-title">[ INTEL: {activeSkill} ]</div>
-            <div className="console-skill-desc">{skillLore[activeSkill]}</div>
+          <div className="skills-console-sticky reveal">
+            <div className="skills-console-wrapper" style={{ marginTop: 0 }}>
+              <div className="console-indicator">SYSTEM STATUS: INTEL ONLINE</div>
+              <div className="console-skill-title">[ INTEL: {activeSkill} ]</div>
+              <div className="console-skill-desc">{skillLore[activeSkill]}</div>
+            </div>
           </div>
         )}
       </section>

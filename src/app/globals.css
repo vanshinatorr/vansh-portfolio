@@ -573,13 +573,40 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
   box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
 }
 
+/* ─── HORIZONTAL SKILLS SECTION ─────────────────── */
+.skills-horizontal-section {
+  width: 100%;
+  overflow: hidden;
+  padding: 6rem 0 !important;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 102, 0.01) 0%, transparent 80%);
+}
+.skills-scroll-track-wrapper {
+  width: 100%;
+  overflow: hidden !important;
+  position: relative;
+}
+.skills-scroll-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  padding: 1.5rem 0;
+  padding-left: max(2.5rem, calc((100vw - 1100px) / 2 + 2.5rem));
+  padding-right: max(2.5rem, calc((100vw - 1100px) / 2 + 2.5rem));
+  will-change: transform;
+}
+.skills-console-sticky {
+  width: min(100%, 1100px);
+  margin: 2.5rem auto 0;
+  padding: 0 2.5rem;
+}
+
 /* ─── SKILLS INTERACTIVE ADDITIONS ─── */
-.skills-grid:hover .skill-group-card {
+.skills-scroll-track:hover .skill-group-card {
   opacity: 0.45;
   transform: scale(0.985);
 }
 
-.skills-grid .skill-group-card:hover {
+.skills-scroll-track .skill-group-card:hover {
   opacity: 1 !important;
   transform: scale(1.025) translateY(-4px) !important;
   border-color: var(--accent);
@@ -1558,8 +1585,24 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   .project-card-desc {
     min-height: auto;
   }
-  
-  .skills-grid{grid-template-columns:1fr;} .ach-grid{grid-template-columns:1fr;}
+  .section-label.horizontal-title {
+    padding-left: 1.25rem !important;
+  }
+  .skills-scroll-track {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    gap: 1.25rem !important;
+  }
+  .skill-group-card {
+    width: 290px !important;
+    padding: 1.25rem !important;
+  }
+  .skills-console-sticky {
+    padding: 0 1.25rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .ach-grid{grid-template-columns:1fr;}
   .hero-stats{display:grid; grid-template-columns:repeat(2,1fr); gap:2rem 1.5rem; margin-top: 3.5rem;}
   footer{flex-direction:column;gap:1rem;text-align:center; padding: 2rem 1rem;}
 }
