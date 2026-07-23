@@ -1245,7 +1245,15 @@ const SKILL_ICONS = {
   "DSA — 300+ problems": { type: "lucide", name: "Binary", color: "#00ff66" },
   "OOPs": { type: "lucide", name: "Boxes", color: "#ffaa00" },
   "DBMS": { type: "lucide", name: "HardDrive", color: "#a8b2c1" },
-  "Operating Systems": { type: "lucide", name: "Terminal", color: "#00ff00" }
+  "Operating Systems": { type: "lucide", name: "Terminal", color: "#00ff00" },
+
+  // Creative Editing
+  "Canva": { type: "lucide", name: "Wand2", color: "#00c4cc" },
+  "CapCut": { type: "lucide", name: "Scissors", color: "#ffffff" },
+  "Premiere Pro": { type: "lucide", name: "Film", color: "#9999ff" },
+  "DaVinci Resolve": { type: "lucide", name: "SunDim", color: "#f4a300" },
+  "After Effects": { type: "lucide", name: "Sparkles", color: "#9c91e4" },
+  "Lightroom": { type: "lucide", name: "Sun", color: "#31a8ff" }
 };
 
 export default function Home() {
@@ -1564,6 +1572,7 @@ export default function Home() {
     { title: "UI/UX & Prototyping", items: ["Figma (Layout & Prototyping)", "User Interface Design", "Wireframing & Typography", "Component Systems", "Bento Grid Layouts"], primary: true },
     { title: "Database & Tools", items: ["MongoDB", "Mongoose", "Postman", "Git", "Vercel", "Render", "VS Code"] },
     { title: "CS Fundamentals", items: ["OOPs", "DBMS", "Operating Systems"] },
+    { title: "Creative Editing", items: ["Canva", "CapCut", "Premiere Pro", "DaVinci Resolve", "After Effects", "Lightroom"] },
   ];
 
   const skillLore = {
@@ -1593,7 +1602,14 @@ export default function Home() {
     "DSA — 300+ problems": "Solved 300+ algorithm problems across LeetCode & GFG covering DP, Trees, and Graphs.",
     "OOPs": "Solid mastery of classes, polymorphism, encapsulation, inheritance, and clean abstraction design.",
     "DBMS": "Relational database theories, SQL queries, transaction locks, and normalization rules.",
-    "Operating Systems": "CPU scheduling, deadlock resolution, virtual memory tables, and multithreading processes."
+    "Operating Systems": "CPU scheduling, deadlock resolution, virtual memory tables, and multithreading processes.",
+    // Creative Editing
+    "Canva": "Designed thumbnails, social media posts, pitch decks, and brand kits using Canva's pro design system.",
+    "CapCut": "Edited short-form content, reels, and quick-cut highlight videos with CapCut's mobile and desktop suite.",
+    "Premiere Pro": "Non-linear video editing, multicam sequences, color grading workflows, and audio sync.",
+    "DaVinci Resolve": "Professional color grading, node-based workflows, and cinematic LUT application.",
+    "After Effects": "Motion graphics, title animations, particle effects, and keyframe-based compositing.",
+    "Lightroom": "Batch photo editing, custom presets, tone curves, HSL grading, and export pipelines."
   };
 
   const achievements = [
@@ -1779,6 +1795,9 @@ export default function Home() {
               } else if (g.title.includes("Fundamentals")) {
                 gridClass = "skill-card-cs";
                 icon = "🧩";
+              } else if (g.title.includes("Creative")) {
+                gridClass = "skill-card-creative";
+                icon = "🎬";
               }
 
               return (
