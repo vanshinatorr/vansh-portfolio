@@ -697,7 +697,7 @@ function ChessPuzzle() {
           playSynthSFX('chess_mate');
         }, 120);
 
-        setFeedback(`Checkmate! Your strategic frequency aligns perfectly with Vansh's vibe. 🧠⚡ (+${currentPuzzle.eloGain} ELO)`);
+        setFeedback("Your strategic frequency aligns perfectly with Vansh's vibe. ⚡");
       } else {
         triggerIncorrect();
       }
