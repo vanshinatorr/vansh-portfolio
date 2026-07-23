@@ -9,75 +9,61 @@ import { fetchGithubContributions } from "@/app/actions";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Audio Synthesizer (Web Audio API) ──────────────────────────────────────────
-let audioCtx = null;
-let droneOscs = [];
-let droneGain = null;
+// ── Audio Engine (HTML5 Background Music & Fades) ──────────────────────────────
+let bgAudio = null;
+let fadeInterval = null;
 
 const startAmbientDrone = () => {
   try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    audioCtx = new AudioContext();
+    if (typeof window === 'undefined') return;
+    if (!bgAudio) {
+      bgAudio = new Audio('/intro.mp3');
+      bgAudio.loop = true;
+      bgAudio.volume = 0;
+    }
     
-    // Create gain node for master volume (soft background drone)
-    droneGain = audioCtx.createGain();
-    droneGain.gain.setValueAtTime(0.025, audioCtx.currentTime);
+    if (fadeInterval) clearInterval(fadeInterval);
     
-    // Low pass filter to make the drone warm and atmospheric
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(450, audioCtx.currentTime);
-    
-    // Drone frequencies (A minor/major hybrid chord: A2, E3, A3, C#4)
-    const freqs = [110.00, 164.81, 220.00, 277.18];
-    const oscTypes = ['triangle', 'sine', 'sine', 'triangle'];
-    
-    droneOscs = freqs.map((f, i) => {
-      const osc = audioCtx.createOscillator();
-      osc.type = oscTypes[i];
-      osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-      
-      // LFO modulation to create movement in the synth drone
-      const lfo = audioCtx.createOscillator();
-      const lfoGain = audioCtx.createGain();
-      lfo.frequency.value = 0.25 + Math.random() * 0.25; // 0.25Hz - 0.5Hz
-      lfoGain.gain.value = 1.8; // Modulate frequency by 1.8Hz
-      
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc.frequency);
-      lfo.start();
-      
-      osc.connect(filter);
-      osc.start();
-      
-      return { osc, lfo };
+    bgAudio.play().then(() => {
+      // Fade in to 0.28 volume over 1.5 seconds
+      const targetVol = 0.28;
+      const step = targetVol / 15;
+      fadeInterval = setInterval(() => {
+        if (bgAudio.volume < targetVol) {
+          bgAudio.volume = Math.min(targetVol, bgAudio.volume + step);
+        } else {
+          clearInterval(fadeInterval);
+        }
+      }, 100);
+    }).catch(e => {
+      console.warn("Autoplay blocked or play error:", e);
     });
-    
-    filter.connect(droneGain);
-    droneGain.connect(audioCtx.destination);
   } catch (e) {
-    console.warn("Failed to start audio drone:", e);
+    console.warn("Audio start error:", e);
   }
 };
 
 const stopAmbientDrone = () => {
   try {
-    if (droneOscs.length > 0) {
-      droneOscs.forEach(d => {
-        d.osc.stop();
-        d.lfo.stop();
-      });
-      droneOscs = [];
-    }
-    if (audioCtx) {
-      audioCtx.close();
-      audioCtx = null;
-    }
+    if (!bgAudio) return;
+    if (fadeInterval) clearInterval(fadeInterval);
+    
+    // Fade out to 0 volume over 800ms
+    const step = bgAudio.volume / 8;
+    fadeInterval = setInterval(() => {
+      if (bgAudio.volume > 0.04) {
+        bgAudio.volume = Math.max(0, bgAudio.volume - step);
+      } else {
+        bgAudio.pause();
+        bgAudio.volume = 0;
+        clearInterval(fadeInterval);
+      }
+    }, 100);
   } catch (e) {
-    console.warn("Failed to stop audio drone:", e);
+    console.warn("Audio stop error:", e);
   }
 };
+
 
 const playSynthSFX = (type) => {
   try {
