@@ -362,7 +362,7 @@ function ParticleCanvas() {
         // Draw dot
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(240,194,123,${p.alpha})`;
+        ctx.fillStyle = `rgba(255,107,0,${p.alpha})`;
         ctx.fill();
       });
 
@@ -376,7 +376,7 @@ function ParticleCanvas() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(223,178,110,${(1 - dist / 120) * 0.25})`;
+            ctx.strokeStyle = `rgba(255,107,0,${(1 - dist / 120) * 0.25})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
