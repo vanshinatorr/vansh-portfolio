@@ -307,6 +307,126 @@ function ScrambleText({ text, delay = 0 }) {
   return <>{display}</>;
 }
 
+// ── Global Constellation Canvas ──────────────────────────────────────────────
+function ConstellationCanvas() {
+  const canvasRef = useRef(null);
+  const mouse = useRef({ x: -1000, y: -1000 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animId;
+    let particles = [];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const N = Math.min(110, Math.floor((canvas.width * canvas.height) / 16000));
+
+    for (let i = 0; i < N; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.6,
+        alpha: Math.random() * 0.4 + 0.15,
+        color: i % 4 === 0 ? 'rgba(167, 139, 250, ' : 'rgba(255, 255, 255, '
+      });
+    }
+
+    const onMove = (e) => {
+      mouse.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", onMove);
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        // Subtle Mouse attraction
+        const dx = mouse.current.x - p.x;
+        const dy = mouse.current.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180 && dist > 10) {
+          const force = (180 - dist) / 180 * 0.08;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+        }
+
+        // Damping & speed limit
+        p.vx *= 0.97;
+        p.vy *= 0.97;
+        const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (spd > 1.4) {
+          p.vx = (p.vx / spd) * 1.4;
+          p.vy = (p.vy / spd) * 1.4;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Draw node
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color}${p.alpha})`;
+        ctx.fill();
+      });
+
+      // Draw subtle connecting lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 115) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist / 115) * 0.12})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
+        zIndex: -1,
+        opacity: 0.65
+      }}
+    />
+  );
+}
+
 // ── Particle Canvas ───────────────────────────────────────────────────────────
 function ParticleCanvas() {
   const canvasRef = useRef(null);
@@ -1698,6 +1818,7 @@ export default function Home() {
 
       {/* GLOBAL ATMOSPHERIC BACKGROUND SYSTEM */}
       <div className="global-bg-container">
+        <ConstellationCanvas />
         <div className="global-bg-aurora orb-aurora-1" />
         <div className="global-bg-aurora orb-aurora-2" />
         <div className="global-bg-aurora orb-aurora-3" />
