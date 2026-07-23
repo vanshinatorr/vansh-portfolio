@@ -1952,10 +1952,23 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   .project-title-heading { font-size: 1.6rem !important; }
   .project-scroll-guide { display: block !important; margin-top: 0.5rem; }
   .project-card {
-    width: 290px !important;
-    flex-shrink: 0 !important;
+    width: 260px !important;
   }
-  .project-card-desc { min-height: auto; font-size: 0.78rem; }
+  .project-card-desc {
+    min-height: auto;
+    font-size: 0.76rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
+  }
+  .project-card-title { font-size: 1.1rem !important; margin-bottom: 0.5rem; }
+  .project-card-badge { font-size: 0.6rem; }
+  .project-card-tags { gap: 0.3rem; margin-bottom: 1rem; }
+  .project-tag { font-size: 0.62rem !important; padding: 0.2rem 0.5rem !important; }
+  .project-title-card { width: 200px !important; }
+  .project-title-heading { font-size: 1.5rem !important; }
   .section-label.horizontal-title { padding-left: 1.25rem !important; }
 
   /* ── SKILLS SCROLL ── */
