@@ -808,18 +808,14 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 }
 
 /* ─── SKILLS INTERACTIVE ADDITIONS ─── */
-.skills-scroll-track:hover .skill-group-card {
-  opacity: 0.5;
-  transform: scale(0.97);
-  filter: brightness(0.85);
+.skills-scroll-track .skill-group-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .skills-scroll-track .skill-group-card:hover {
-  opacity: 1 !important;
-  transform: scale(1.02) translateY(-6px) !important;
-  filter: brightness(1) !important;
+  transform: translateY(-6px) !important;
   border-color: rgba(255, 107, 0, 0.35) !important;
-  box-shadow: 0 2px 0 rgba(255,255,255,0.04) inset, 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 0, 0.1) !important;
+  box-shadow: 0 2px 0 rgba(255,255,255,0.04) inset, 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 35px rgba(255, 107, 0, 0.12) !important;
 }
 
 
