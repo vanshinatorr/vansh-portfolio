@@ -1137,7 +1137,7 @@ function StreakTracker() {
   return (
     <div className="streak-tracker-widget">
       <div className="streak-header">
-        <span>🔥 ConsistPay Streak Tracker</span>
+        <span>ConsistPay Streak Tracker</span>
         <span className="streak-counter">{contributions} Contributions</span>
       </div>
       
