@@ -827,82 +827,111 @@ function ChessPuzzle() {
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>🧩 Chess Puzzle ({puzzleIndex + 1}/3)</span>
-        <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
-          {elo} ELO
-        </span>
-      </div>
-      <div className="chess-puzzle-name">{currentPuzzle.name}</div>
-      <div className="chess-grid-container">
-        <div className="chess-board-grid" style={{ position: 'relative' }}>
-          {board.map((row, rIdx) => 
-            row.map((cell, cIdx) => {
-              const isDark = (rIdx + cIdx) % 2 === 1;
-              const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
-              
-              // Target hint highlight coordinates based on puzzle state
-              const isTargetHint = selected && (
-                puzzleIndex === 2
-                  ? (puzzleStep === 0
-                      ? (selected.r === 4 && selected.c === 2 && rIdx === 0 && cIdx === 6)
-                      : (selected.r === 2 && selected.c === 7 && rIdx === 1 && cIdx === 5))
-                  : (selected.r === currentPuzzle.solution.fromR && selected.c === currentPuzzle.solution.fromC && rIdx === currentPuzzle.solution.toR && cIdx === currentPuzzle.solution.toC)
-              );
-              
-              return (
-                <div 
-                  key={`${rIdx}-${cIdx}`}
-                  className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHint && !solved ? 'target-hint' : ''}`}
-                  onClick={() => handleClick(rIdx, cIdx)}
-                >
-                  {cell && (
-                    <img 
-                      src={`https://upload.wikimedia.org/wikipedia/commons/${
-                        cell.color === 'w' 
-                          ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
-                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'f/ff/Chess_rdt45.svg' : cell.type === 'b' ? '9/98/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
-                      }`}
-                      alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
-                      className="chess-piece-img"
-                    />
-                  )}
-                </div>
-              );
-            })
-          )}
-          
-          {/* CHECKMATE POPUP OVERLAY */}
-          {solved && (
-            <div className="chess-board-overlay">
-              <div className="checkmate-banner">CHECKMATE</div>
-              <div className="confetti-container">
-                {Array.from({ length: 32 }).map((_, idx) => {
-                  const size = Math.random() * 8 + 4;
-                  const delay = Math.random() * 0.4;
-                  const x = Math.random() * 100;
-                  const color = ['#c084fc', '#f43f5e', '#bbcb2b', '#60a5fa', '#f59e0b'][Math.floor(Math.random() * 5)];
-                  return (
-                    <div 
-                      key={idx}
-                      className="confetti-particle"
-                      style={{
-                        left: `${x}%`,
-                        width: `${size}px`,
-                        height: `${size}px`,
-                        background: color,
-                        animationDelay: `${delay}s`,
-                        '--dx': `${(Math.random() - 0.5) * 160}px`,
-                        '--dy': `${-Math.random() * 180 - 80}px`,
-                        '--rot': `${Math.random() * 360}deg`
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
+        <div className="chess-lobby-player">
+          <span className="player-avatar">👨‍💻</span>
+          <div>
+            <div className="player-name">Vansh Vijay</div>
+            <div className="player-rating">ELO {elo}</div>
+          </div>
+        </div>
+        <div className="vs-badge">VS</div>
+        <div className="chess-lobby-opponent">
+          <div>
+            <div className="opponent-name">Stockfish AI</div>
+            <div className="opponent-rating">ELO {puzzleIndex === 0 ? 1500 : puzzleIndex === 1 ? 1515 : 1535}</div>
+          </div>
+          <span className="opponent-avatar">🤖</span>
         </div>
       </div>
+      <div className="chess-puzzle-name">{currentPuzzle.name} ({puzzleIndex + 1}/3)</div>
+      
+      <div className="chess-grid-container">
+        <div className="chess-board-wrapper">
+          {/* Left: Rank Labels */}
+          <div className="chess-ranks-labels">
+            <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+          </div>
+          
+          <div className="chess-board-container">
+            {/* The actual 8x8 grid */}
+            <div className="chess-board-grid" style={{ position: 'relative' }}>
+              {board.map((row, rIdx) => 
+                row.map((cell, cIdx) => {
+                  const isDark = (rIdx + cIdx) % 2 === 1;
+                  const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
+                  
+                  // Target hint highlight coordinates based on puzzle state
+                  const isTargetHint = selected && (
+                    puzzleIndex === 2
+                      ? (puzzleStep === 0
+                          ? (selected.r === 4 && selected.c === 2 && rIdx === 0 && cIdx === 6)
+                          : (selected.r === 2 && selected.c === 7 && rIdx === 1 && cIdx === 5))
+                      : (selected.r === currentPuzzle.solution.fromR && selected.c === currentPuzzle.solution.fromC && rIdx === currentPuzzle.solution.toR && cIdx === currentPuzzle.solution.toC)
+                  );
+                  
+                  return (
+                    <div 
+                      key={`${rIdx}-${cIdx}`}
+                      className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHint && !solved ? 'target-hint' : ''}`}
+                      onClick={() => handleClick(rIdx, cIdx)}
+                    >
+                      {cell && (
+                        <img 
+                          src={`https://upload.wikimedia.org/wikipedia/commons/${
+                            cell.color === 'w' 
+                              ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
+                              : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'f/ff/Chess_rdt45.svg' : cell.type === 'b' ? '9/98/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
+                          }`}
+                          alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
+                          className="chess-piece-img"
+                        />
+                      )}
+                    </div>
+                  );
+                })
+              )}
+              
+              {/* CHECKMATE POPUP OVERLAY */}
+              {solved && (
+                <div className="chess-board-overlay">
+                  <div className="checkmate-banner">TACTICAL MATE</div>
+                  <div className="checkmate-sub">STOCKFISH BREACHED / +{currentPuzzle.eloGain} ELO</div>
+                  <div className="confetti-container">
+                    {Array.from({ length: 32 }).map((_, idx) => {
+                      const size = Math.random() * 8 + 4;
+                      const delay = Math.random() * 0.4;
+                      const x = Math.random() * 100;
+                      const color = ['#ff6b00', '#ffd600', '#00ff66', '#ff5f1f', '#f4f4f7'][Math.floor(Math.random() * 5)];
+                      return (
+                        <div 
+                          key={idx}
+                          className="confetti-particle"
+                          style={{
+                            left: `${x}%`,
+                            width: `${size}px`,
+                            height: `${size}px`,
+                            background: color,
+                            animationDelay: `${delay}s`,
+                            '--dx': `${(Math.random() - 0.5) * 160}px`,
+                            '--dy': `${-Math.random() * 180 - 80}px`,
+                            '--rot': `${Math.random() * 360}deg`
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Bottom: File Labels */}
+            <div className="chess-files-labels">
+              <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="chess-feedback">{feedback}</div>
       {solved && (
         <div className="chess-actions-row">
