@@ -907,7 +907,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 102px;
+  height: 122px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.58rem;
   color: var(--muted);
@@ -915,15 +915,15 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 }
 .streak-calendar-grid {
   display: grid;
-  grid-template-columns: repeat(16, 12px);
-  grid-template-rows: repeat(7, 12px);
-  gap: 3px;
+  grid-template-columns: repeat(16, 14px);
+  grid-template-rows: repeat(7, 14px);
+  gap: 4px;
   position: relative;
 }
 .streak-square {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
   cursor: pointer;
   transition: transform 0.15s, background-color 0.2s, box-shadow 0.2s;
 }
@@ -944,8 +944,8 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   border: 1px solid rgba(255, 107, 0, 0.65);
 }
 .streak-square.clicked-green {
-  background: var(--green) !important;
-  box-shadow: 0 0 8px rgba(0, 255, 102, 0.8) !important;
+  background: var(--accent) !important;
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.75) !important;
 }
 .streak-tooltip {
   position: absolute;
@@ -1085,6 +1085,15 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   opacity: 0.45;
 }
 
+@keyframes terminalCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  animation: terminalCursor 1s infinite;
+  color: var(--green);
+  font-weight: bold;
+}
 
 /* ─── SOUND CONTROLLER ──────────────────────────────── */
 .sound-toggle-btn {

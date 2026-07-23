@@ -1109,11 +1109,13 @@ function CliTerminal() {
 
 // ── BENTO: ConsistPay Streak Tracker ─────────────────────────────────────────
 function StreakTracker() {
-  const [contributions, setContributions] = useState(254);
+  const [contributions, setContributions] = useState(263);
   const [activeTooltip, setActiveTooltip] = useState(null);
-  const [commitLogs, setCommitLogs] = useState([
-    "> git status: active development tracked on ConsistPay repo",
-    "> hover squares to browse milestones, click to push commits"
+  const [terminalLines, setTerminalLines] = useState([
+    "guest@vanshos:~/consistpay$ git status",
+    "On branch main. Your branch is up to date.",
+    "nothing to commit, working tree clean",
+    "guest@vanshos:~/consistpay$ _"
   ]);
   
   // Create 112 squares (16 weeks x 7 days)
@@ -1156,9 +1158,16 @@ function StreakTracker() {
       setSquares(next);
       setContributions(prev => prev + 1);
       
+      const hash = Math.random().toString(16).substring(2, 8);
+      const dayNum = index + 1;
       const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const newLog = `> git commit -m \"Pushed updates to Day ${index + 1} milestone\" [${timeString}]`;
-      setCommitLogs(prev => [newLog, prev[0]]);
+      
+      setTerminalLines([
+        `guest@vanshos:~/consistpay$ git commit -m "commit Day ${dayNum}"`,
+        `[main ${hash}] Pushed Day ${dayNum} updates successfully [${timeString}]`,
+        ` 1 file changed, 14 insertions(+), 2 deletions(-)`,
+        `guest@vanshos:~/consistpay$ _`
+      ]);
       
       playSynthSFX('tick');
     }
@@ -1251,9 +1260,35 @@ function StreakTracker() {
               <span className="terminal-title">consistpay-git-bash</span>
             </div>
             <div className="terminal-body">
-              {commitLogs.map((log, idx) => (
-                <div key={idx} className="streak-terminal-line">{log}</div>
-              ))}
+              {terminalLines.map((line, idx) => {
+                const isPrompt = line.startsWith("guest@vanshos:");
+                if (isPrompt) {
+                  const parts = line.split("$ ");
+                  const commandText = parts[1] || "";
+                  const promptPath = parts[0] + "$";
+                  return (
+                    <div key={idx} className="streak-terminal-line">
+                      <span className="text-green">{promptPath}</span>{" "}
+                      {commandText === "_" ? (
+                        <span className="cursor-blink">_</span>
+                      ) : commandText.endsWith("_") ? (
+                        <>
+                          <span>{commandText.slice(0, -1)}</span>
+                          <span className="cursor-blink">_</span>
+                        </>
+                      ) : (
+                        <span>{commandText}</span>
+                      )}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={idx} className="streak-terminal-line text-muted">
+                      {line}
+                    </div>
+                  );
+                }
+              })}
             </div>
           </div>
         </div>
