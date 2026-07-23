@@ -528,26 +528,26 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 }
 
 .skill-chip {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   position: relative;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0 !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  box-shadow: none !important;
 }
 
 /* Tooltip bubble */
 .skill-chip::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: 125%;
+  bottom: 115%;
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   background: rgba(10, 10, 12, 0.95);
@@ -571,7 +571,7 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 .skill-chip::before {
   content: '';
   position: absolute;
-  bottom: 113%;
+  bottom: 103%;
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   border-width: 5px;
@@ -585,11 +585,9 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 
 /* Hover effects */
 .skill-chip:hover {
-  transform: translateY(-3px) scale(1.1);
-  border-color: var(--brand-color, var(--accent));
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 0 20px var(--brand-color, rgba(255, 107, 0, 0.35)),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px) scale(1.15);
+  background: transparent;
+  box-shadow: none !important;
 }
 .skill-chip:hover::after,
 .skill-chip:hover::before {
@@ -598,24 +596,26 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 }
 
 .skill-chip.primary {
-  border-color: rgba(255, 107, 0, 0.2);
-  background: rgba(255, 107, 0, 0.02);
+  border-color: transparent;
+  background: transparent;
 }
 
 .skill-chip.primary:hover {
-  border-color: var(--brand-color, var(--accent));
-  background: rgba(255, 107, 0, 0.06);
+  border-color: transparent;
+  background: transparent;
 }
 
 .skill-chip-icon {
-  font-size: 1.45rem;
+  font-size: 1.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  filter: drop-shadow(0 0 0px transparent);
 }
 .skill-chip:hover .skill-chip-icon {
-  transform: scale(1.12);
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 10px var(--brand-color, var(--accent)));
 }
 
 /* ─── HORIZONTAL SKILLS SECTION ─────────────────── */

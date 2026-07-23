@@ -1806,7 +1806,7 @@ export default function Home() {
                             ) : (
                               (() => {
                                 const Component = Lucide[iconInfo.name];
-                                return Component ? <Component className="skill-chip-icon" size={20} style={{ color: iconInfo.color }} /> : <span>{s}</span>;
+                                return Component ? <Component className="skill-chip-icon" size={30} style={{ color: iconInfo.color }} /> : <span>{s}</span>;
                               })()
                             )
                           ) : (
