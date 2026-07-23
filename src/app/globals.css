@@ -1317,76 +1317,42 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   justify-content: center;
   z-index: 100;
   border-radius: 6px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+.chess-board-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 6px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   animation: overlayFade 0.3s forwards cubic-bezier(.22,1,.36,1);
 }
 @keyframes overlayFade {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-.victory-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 1.1rem 1.6rem;
-  background: rgba(12, 12, 18, 0.88);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  border-radius: 16px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(245, 158, 11, 0.25);
-  animation: victoryPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  position: relative;
-  z-index: 10;
-}
-@keyframes victoryPop {
-  0% { transform: scale(0.4); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.victory-top-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  font-weight: 800;
-  color: #fbbf24;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  padding: 0.2rem 0.65rem;
-  border-radius: 100px;
-}
-.trophy-bounce {
-  display: inline-block;
-  animation: trophyHop 1.2s infinite ease-in-out;
-}
-@keyframes trophyHop {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px) scale(1.15); }
-}
-.checkmate-title {
+.checkmate-banner {
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 900;
-  font-size: 1.85rem;
-  letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #fffbeb 0%, #fef08a 30%, #f59e0b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
-  line-height: 1.1;
-  margin: 0.15rem 0;
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: 0.14em;
+  color: #34d399;
+  background: rgba(10, 10, 15, 0.88);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  padding: 0.65rem 1.8rem;
+  border-radius: 100px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(52, 211, 153, 0.25);
+  animation: checkmatePop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.victory-subtext {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.06em;
+@keyframes checkmatePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 .confetti-container {
   position: absolute;

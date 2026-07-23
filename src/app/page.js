@@ -877,38 +877,7 @@ function ChessPuzzle() {
               {/* CHECKMATE POPUP OVERLAY */}
               {solved && (
                 <div className="chess-board-overlay">
-                  <div className="victory-card">
-                    <div className="victory-top-tag">
-                      <span className="trophy-bounce">🏆</span>
-                      <span>VICTORY</span>
-                    </div>
-                    <div className="checkmate-title">CHECKMATE</div>
-                    <div className="victory-subtext">1 - 0 • Smothered Mate</div>
-                  </div>
-                  <div className="confetti-container">
-                    {Array.from({ length: 42 }).map((_, idx) => {
-                      const size = Math.random() * 8 + 4;
-                      const delay = Math.random() * 0.45;
-                      const x = Math.random() * 100;
-                      const color = ['#f59e0b', '#fbbf24', '#22c55e', '#38bdf8', '#a855f7'][Math.floor(Math.random() * 5)];
-                      return (
-                        <div 
-                          key={idx}
-                          className="confetti-particle"
-                          style={{
-                            left: `${x}%`,
-                            width: `${size}px`,
-                            height: `${size}px`,
-                            background: color,
-                            animationDelay: `${delay}s`,
-                            '--dx': `${(Math.random() - 0.5) * 200}px`,
-                            '--dy': `${-Math.random() * 220 - 90}px`,
-                            '--rot': `${Math.random() * 360}deg`
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
+                  <div className="checkmate-banner">CHECKMATE</div>
                 </div>
               )}
             </div>
