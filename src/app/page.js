@@ -1171,51 +1171,91 @@ function StreakTracker() {
         <span className="streak-counter">{contributions} Contributions</span>
       </div>
       
-      <div className="streak-calendar-grid">
-        {squares.map((sq, idx) => (
-          <div 
-            key={sq.id} 
-            className={`streak-square level-${sq.level} ${sq.isMilestone ? 'milestone-sq' : ''} ${sq.isClickedGreen ? 'clicked-green' : ''}`}
-            onClick={() => handleSquareClick(idx)}
-            onMouseEnter={(e) => {
-              setActiveTooltip({
-                text: sq.message,
-                x: e.currentTarget.offsetLeft,
-                y: e.currentTarget.offsetTop - 45
-              });
-            }}
-            onMouseLeave={() => setActiveTooltip(null)}
-          />
-        ))}
-        {activeTooltip && (
-          <div 
-            className="streak-tooltip"
-            style={{ 
-              left: `${activeTooltip.x}px`,
-              top: `${activeTooltip.y}px`
-            }}
-          >
-            {activeTooltip.text}
+      <div className="streak-body-split">
+        {/* Left Column: Compact Calendar Grid */}
+        <div className="streak-grid-panel">
+          <div className="streak-months-header">
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+            <span>Apr</span>
           </div>
-        )}
-      </div>
+          <div className="streak-grid-row">
+            <div className="streak-days-labels">
+              <span>Mon</span>
+              <span>Wed</span>
+              <span>Fri</span>
+            </div>
+            <div className="streak-calendar-grid">
+              {squares.map((sq, idx) => (
+                <div 
+                  key={sq.id} 
+                  className={`streak-square level-${sq.level} ${sq.isMilestone ? 'milestone-sq' : ''} ${sq.isClickedGreen ? 'clicked-green' : ''}`}
+                  onClick={() => handleSquareClick(idx)}
+                  onMouseEnter={(e) => {
+                    setActiveTooltip({
+                      text: sq.message,
+                      x: e.currentTarget.offsetLeft,
+                      y: e.currentTarget.offsetTop - 45
+                    });
+                  }}
+                  onMouseLeave={() => setActiveTooltip(null)}
+                />
+              ))}
+              {activeTooltip && (
+                <div 
+                  className="streak-tooltip"
+                  style={{ 
+                    left: `${activeTooltip.x}px`,
+                    top: `${activeTooltip.y}px`
+                  }}
+                >
+                  {activeTooltip.text}
+                </div>
+              )}
+            </div>
+          </div>
 
-      <div className="streak-commit-terminal">
-        {commitLogs.map((log, idx) => (
-          <div key={idx} className="streak-terminal-line">{log}</div>
-        ))}
-      </div>
+          <div className="streak-footer-row">
+            <div className="streak-footer-hint">Click squares to push live updates.</div>
+            <div className="streak-legend">
+              <span>Less</span>
+              <span className="legend-sq level-0"></span>
+              <span className="legend-sq level-1"></span>
+              <span className="legend-sq level-2"></span>
+              <span className="legend-sq level-3"></span>
+              <span className="legend-sq level-4"></span>
+              <span>More</span>
+            </div>
+          </div>
+        </div>
 
-      <div className="streak-footer-row">
-        <div className="streak-footer-hint">Click squares to push live updates.</div>
-        <div className="streak-legend">
-          <span>Less</span>
-          <span className="legend-sq level-0"></span>
-          <span className="legend-sq level-1"></span>
-          <span className="legend-sq level-2"></span>
-          <span className="legend-sq level-3"></span>
-          <span className="legend-sq level-4"></span>
-          <span>More</span>
+        {/* Right Column: Mini Terminal & Stats Dashboard */}
+        <div className="streak-details-panel">
+          <div className="streak-stats-row">
+            <div className="streak-stat-card">
+              <span className="stat-label">CURRENT STREAK</span>
+              <span className="stat-value text-orange">18 Days 🔥</span>
+            </div>
+            <div className="streak-stat-card">
+              <span className="stat-label">COMMIT LEVEL</span>
+              <span className="stat-value text-green">Elite Dev 💻</span>
+            </div>
+          </div>
+
+          <div className="streak-commit-terminal">
+            <div className="terminal-header">
+              <span className="terminal-dot red"></span>
+              <span className="terminal-dot yellow"></span>
+              <span className="terminal-dot green"></span>
+              <span className="terminal-title">consistpay-git-bash</span>
+            </div>
+            <div className="terminal-body">
+              {commitLogs.map((log, idx) => (
+                <div key={idx} className="streak-terminal-line">{log}</div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
