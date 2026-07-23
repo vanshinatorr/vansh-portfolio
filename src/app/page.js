@@ -145,6 +145,66 @@ const playSynthSFX = (type) => {
       oscSub.start();
       oscSub.stop(ctx.currentTime + 0.5);
     }
+
+    if (type === 'chess_move') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.09);
+    }
+    
+    if (type === 'chess_capture') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(240, ctx.currentTime);
+      osc.frequency.setValueAtTime(120, ctx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.13);
+    }
+
+    if (type === 'chess_check') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(780, ctx.currentTime);
+      osc.frequency.setValueAtTime(620, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.16);
+    }
+
+    if (type === 'chess_mate') {
+      const chord = [261.63, 329.63, 392.00, 523.25];
+      chord.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime + idx * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.05 + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + idx * 0.05 + 0.55);
+      });
+    }
   } catch (e) {
     // Fail silently
   }
@@ -582,50 +642,111 @@ function MagneticNavLink({ href, label, active }) {
   );
 }
 
-// ── BENTO: Chess Puzzle Widget ────────────────────────────────────────────────
-const INITIAL_CHESS_BOARD = [
-  [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
-  [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♛' }],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, { type: 'b', color: 'w', label: '♝' }, null, null, null, null, null],
-  [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
+// ── BENTO: Chess Puzzle Widget (Multi-Puzzle Campaign) ─────────────────────────
+const CHESS_PUZZLES = [
+  {
+    name: "Scholar's Mate Threat",
+    instructions: "White to play: Find Mate in 1 (defended capture)",
+    eloGain: 15,
+    board: [
+      [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
+      [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♛' }],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, { type: 'b', color: 'w', label: '♝' }, null, null, null, null, null],
+      [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
+    ],
+    solution: { fromR: 3, fromC: 7, toR: 1, toC: 7 }
+  },
+  {
+    name: "Back-Rank Weakness",
+    instructions: "White to play: Exploit the weak back-rank",
+    eloGain: 20,
+    board: [
+      [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
+      [null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [{ type: 'r', color: 'w', label: '♜' }, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
+    ],
+    solution: { fromR: 7, fromC: 0, toR: 0, toC: 0 }
+  },
+  {
+    name: "Smothered Checkmate",
+    instructions: "White to play: Deliver the suffocating Smothered Mate",
+    eloGain: 25,
+    board: [
+      [null, null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, { type: 'k', color: 'b', label: '♚' }],
+      [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
+    ],
+    solution: { fromR: 3, fromC: 6, toR: 1, toC: 5 }
+  }
 ];
 
 function ChessPuzzle() {
-  const [board, setBoard] = useState(INITIAL_CHESS_BOARD);
+  const [puzzleIndex, setPuzzleIndex] = useState(0);
+  const [board, setBoard] = useState(CHESS_PUZZLES[0].board);
   const [selected, setSelected] = useState(null);
   const [solved, setSolved] = useState(false);
-  const [feedback, setFeedback] = useState("White to move: find Mate in 1");
+  const [feedback, setFeedback] = useState(CHESS_PUZZLES[0].instructions);
   const [elo, setElo] = useState(1500);
   const [shake, setShake] = useState(false);
 
   const handleClick = (r, c) => {
     if (solved) return;
     const piece = board[r][c];
+    const currentPuzzle = CHESS_PUZZLES[puzzleIndex];
 
-    // Selecting own piece (Queen)
+    // Selecting own piece
     if (piece && piece.color === 'w') {
       setSelected({ r, c });
-      setFeedback("Selected White Queen. Capture the pawn on h7 for checkmate!");
-      playSynthSFX('tick');
+      setFeedback(`Selected white piece. Find the checkmate square!`);
+      playSynthSFX('chess_move');
       return;
     }
 
     if (selected) {
       const { r: sr, c: sc } = selected;
-      // Queen (3, 7) takes Pawn (1, 7)
-      if (sr === 3 && sc === 7 && r === 1 && c === 7) {
+      
+      // Check if matches solution
+      if (
+        sr === currentPuzzle.solution.fromR &&
+        sc === currentPuzzle.solution.fromC &&
+        r === currentPuzzle.solution.toR &&
+        c === currentPuzzle.solution.toC
+      ) {
+        const isCapture = board[r][c] !== null;
         const newBoard = board.map(row => [...row]);
         newBoard[r][c] = board[sr][sc];
         newBoard[sr][sc] = null;
         setBoard(newBoard);
         setSolved(true);
-        setElo(1501);
-        setFeedback("Checkmate! Mate-in-1 solved ♟️ (+1500 ELO Boost)");
-        playSynthSFX('impact');
+        
+        const newElo = elo + currentPuzzle.eloGain;
+        setElo(newElo);
+        
+        if (isCapture) {
+          playSynthSFX('chess_capture');
+        } else {
+          playSynthSFX('chess_move');
+        }
+        
+        setTimeout(() => {
+          playSynthSFX('chess_mate');
+        }, 120);
+
+        setFeedback(`Correct! ${currentPuzzle.name} solved! (+${currentPuzzle.eloGain} ELO)`);
       } else {
         setShake(true);
         setFeedback("Incorrect move. Try again! 🤔");
@@ -636,42 +757,61 @@ function ChessPuzzle() {
     }
   };
 
-  const resetPuzzle = () => {
-    setBoard(INITIAL_CHESS_BOARD);
+  const handleNext = () => {
+    const nextIdx = puzzleIndex + 1;
+    setPuzzleIndex(nextIdx);
+    setBoard(CHESS_PUZZLES[nextIdx].board);
+    setSelected(null);
+    setSolved(false);
+    setFeedback(CHESS_PUZZLES[nextIdx].instructions);
+  };
+
+  const handleReset = () => {
+    setPuzzleIndex(0);
+    setBoard(CHESS_PUZZLES[0].board);
     setSelected(null);
     setSolved(false);
     setElo(1500);
-    setFeedback("White to move: find Mate in 1");
+    setFeedback(CHESS_PUZZLES[0].instructions);
   };
+
+  const currentPuzzle = CHESS_PUZZLES[puzzleIndex];
 
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>♟️ Chess ELO Puzzle</span>
+        <span>🧩 Chess Puzzle ({puzzleIndex + 1}/3)</span>
         <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
           {elo} ELO
         </span>
       </div>
+      <div className="chess-puzzle-name">{currentPuzzle.name}</div>
       <div className="chess-grid-container">
-        <div className="chess-board-grid">
+        <div className="chess-board-grid" style={{ position: 'relative' }}>
           {board.map((row, rIdx) => 
             row.map((cell, cIdx) => {
               const isDark = (rIdx + cIdx) % 2 === 1;
               const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
-              const isTargetHighlight = selected && selected.r === 3 && selected.c === 7 && rIdx === 1 && cIdx === 7;
+              
+              // Target hint highlight coordinates based on puzzle
+              const isTargetHint = selected && 
+                selected.r === currentPuzzle.solution.fromR && 
+                selected.c === currentPuzzle.solution.fromC && 
+                rIdx === currentPuzzle.solution.toR && 
+                cIdx === currentPuzzle.solution.toC;
               
               return (
                 <div 
                   key={`${rIdx}-${cIdx}`}
-                  className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHighlight && !solved ? 'target-hint' : ''}`}
+                  className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHint && !solved ? 'target-hint' : ''}`}
                   onClick={() => handleClick(rIdx, cIdx)}
                 >
                   {cell && (
                     <img 
                       src={`https://upload.wikimedia.org/wikipedia/commons/${
                         cell.color === 'w' 
-                          ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : '4/45/Chess_plt45.svg')
-                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'a/a0/Chess_rdt45.svg' : cell.type === 'b' ? '9/9b/Chess_bdt45.svg' : 'c/c7/Chess_pdt45.svg')
+                          ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
+                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'a/a0/Chess_rdt45.svg' : cell.type === 'b' ? '9/9b/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
                       }`}
                       alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
                       className="chess-piece-img"
@@ -681,11 +821,48 @@ function ChessPuzzle() {
               );
             })
           )}
+          
+          {/* CHECKMATE POPUP OVERLAY */}
+          {solved && (
+            <div className="chess-board-overlay">
+              <div className="checkmate-banner">CHECKMATE</div>
+              <div className="confetti-container">
+                {Array.from({ length: 32 }).map((_, idx) => {
+                  const size = Math.random() * 8 + 4;
+                  const delay = Math.random() * 0.4;
+                  const x = Math.random() * 100;
+                  const color = ['#c084fc', '#f43f5e', '#bbcb2b', '#60a5fa', '#f59e0b'][Math.floor(Math.random() * 5)];
+                  return (
+                    <div 
+                      key={idx}
+                      className="confetti-particle"
+                      style={{
+                        left: `${x}%`,
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        background: color,
+                        animationDelay: `${delay}s`,
+                        '--dx': `${(Math.random() - 0.5) * 160}px`,
+                        '--dy': `${-Math.random() * 180 - 80}px`,
+                        '--rot': `${Math.random() * 360}deg`
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="chess-feedback">{feedback}</div>
       {solved && (
-        <button onClick={resetPuzzle} className="chess-reset-btn">Reset Puzzle</button>
+        <div className="chess-actions-row">
+          {puzzleIndex < CHESS_PUZZLES.length - 1 ? (
+            <button onClick={handleNext} className="chess-reset-btn">Next Puzzle ➔</button>
+          ) : (
+            <button onClick={handleReset} className="chess-reset-btn">🏆 Restart Campaign</button>
+          )}
+        </div>
       )}
     </div>
   );
