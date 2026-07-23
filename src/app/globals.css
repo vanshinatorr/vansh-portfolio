@@ -1141,7 +1141,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   border-color: var(--accent);
 }
 
-/* ─── DISCORD PING FORM & WIDGET ─── */
+/* ─── SAY HI & DISCORD PING FORM ─── */
 .discord-ping-form {
   display: flex;
   flex-direction: column;
@@ -1150,10 +1150,10 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   max-width: 320px;
   margin-top: 0.5rem;
   padding: 0.85rem;
-  background: rgba(88, 101, 242, 0.08);
-  border: 1px solid rgba(88, 101, 242, 0.35);
+  background: rgba(255, 107, 0, 0.04);
+  border: 1px solid rgba(255, 107, 0, 0.25);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(88, 101, 242, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 107, 0, 0.06);
   animation: fadeUp 0.3s ease-out;
 }
 .discord-form-header {
@@ -1163,7 +1163,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #7289da;
+  color: var(--accent2);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.2rem;
@@ -1171,7 +1171,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .discord-input {
   width: 100%;
   background: rgba(10, 10, 15, 0.85);
-  border: 1px solid rgba(88, 101, 242, 0.35);
+  border: 1px solid rgba(255, 107, 0, 0.2);
   border-radius: 6px;
   padding: 0.45rem 0.75rem;
   color: #f1f5f9;
@@ -1181,8 +1181,8 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .discord-input:focus {
-  border-color: #5865F2;
-  box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
 }
 .discord-form-buttons {
   display: flex;
@@ -1192,8 +1192,8 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 }
 .discord-submit-btn {
   flex: 1;
-  background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff8c00 100%);
+  color: #0c0c0f;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.76rem;
   font-weight: 700;
@@ -1202,12 +1202,11 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(88, 101, 242, 0.4);
+  box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
 }
 .discord-submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
-  background: linear-gradient(135deg, #6975f3 0%, #5865F2 100%);
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.55);
 }
 .discord-submit-btn:disabled {
   opacity: 0.6;

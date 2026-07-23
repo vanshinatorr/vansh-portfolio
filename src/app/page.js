@@ -906,8 +906,8 @@ function ChessPuzzle() {
             <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem', width: '100%' }}>
               {discordSent ? (
                 <div className="discord-success-card">
-                  <div className="discord-success-badge">✅ SENT TO VANSH'S DISCORD</div>
-                  <p className="discord-success-sub">Your message was delivered live to Vansh's Discord channel! 🚀</p>
+                  <div className="discord-success-badge">✅ MESSAGE DELIVERED</div>
+                  <p className="discord-success-sub">Dispatched directly to Vansh's Discord channel! 🚀</p>
                   <button onClick={handleReset} className="chess-reset-btn">
                     Play Again ↺
                   </button>
@@ -915,26 +915,26 @@ function ChessPuzzle() {
               ) : (
                 <form onSubmit={handleDiscordSend} className="discord-ping-form">
                   <div className="discord-form-header">
-                    <span style={{ fontSize: '0.9rem' }}>💬</span>
-                    <span>DISCORD PING TO VANSH</span>
+                    <span style={{ fontSize: '0.9rem' }}>👋</span>
+                    <span>SAY HI & CLAIM FRIENDSHIP</span>
                   </div>
                   <input 
                     type="text" 
                     className="discord-input" 
-                    placeholder="Your Name / Discord Handle..." 
+                    placeholder="Your Name or Handle..." 
                     value={senderName} 
                     onChange={(e) => setSenderName(e.target.value)} 
                   />
                   <input 
                     type="text" 
                     className="discord-input" 
-                    placeholder="Type your message..." 
+                    placeholder="Say something..." 
                     value={discordMsg} 
                     onChange={(e) => setDiscordMsg(e.target.value)}
                   />
                   <div className="discord-form-buttons">
                     <button type="submit" disabled={sending} className="discord-submit-btn">
-                      {sending ? "Sending..." : "🚀 Send to Vansh's Discord"}
+                      {sending ? "Sending..." : "Send Message 🚀"}
                     </button>
                     <button type="button" onClick={handleReset} className="chess-reset-btn">
                       Reset ↺
