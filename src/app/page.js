@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import * as Lucide from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -1179,6 +1180,45 @@ function StreakTracker() {
   );
 }
 
+const SKILL_ICONS = {
+  // Backend
+  "Node.js": { type: "devicon", class: "devicon-nodejs-plain" },
+  "Express.js": { type: "devicon", class: "devicon-express-original" },
+  "REST APIs": { type: "lucide", name: "Network" },
+  "JWT Auth": { type: "lucide", name: "ShieldCheck" },
+  "Socket.IO": { type: "devicon", class: "devicon-socketio-original" },
+  "Razorpay": { type: "lucide", name: "CreditCard" },
+  "Gemini AI": { type: "lucide", name: "Cpu" },
+
+  // Frontend
+  "React.js": { type: "devicon", class: "devicon-react-original" },
+  "JavaScript": { type: "devicon", class: "devicon-javascript-plain" },
+  "Tailwind CSS": { type: "devicon", class: "devicon-tailwindcss-plain" },
+  "HTML / CSS": { type: "devicon", class: "devicon-html5-plain" },
+
+  // UI/UX
+  "Figma (Layout & Prototyping)": { type: "devicon", class: "devicon-figma-plain" },
+  "User Interface Design": { type: "lucide", name: "Palette" },
+  "Wireframing & Typography": { type: "lucide", name: "Type" },
+  "Component Systems": { type: "lucide", name: "Layers" },
+  "Bento Grid Layouts": { type: "lucide", name: "LayoutGrid" },
+
+  // Database
+  "MongoDB": { type: "devicon", class: "devicon-mongodb-plain" },
+  "Mongoose": { type: "lucide", name: "Database" },
+  "Postman": { type: "devicon", class: "devicon-postman-plain" },
+  "Git": { type: "devicon", class: "devicon-git-plain" },
+  "Vercel": { type: "devicon", class: "devicon-vercel-original" },
+  "Render": { type: "lucide", name: "Cloud" },
+  "VS Code": { type: "devicon", class: "devicon-vscode-plain" },
+
+  // CS Fundamentals
+  "DSA — 300+ problems": { type: "lucide", name: "Binary" },
+  "OOPs": { type: "lucide", name: "Boxes" },
+  "DBMS": { type: "lucide", name: "HardDrive" },
+  "Operating Systems": { type: "lucide", name: "Terminal" }
+};
+
 export default function Home() {
   usePortfolioTracker();
   const [introDone, setIntroDone] = useState(false);
@@ -1724,23 +1764,33 @@ export default function Home() {
                   </div>
                   <div className="skill-chips">
                     {g.items.map(s => {
-                      const isActive = activeSkill === s;
+                      const iconInfo = SKILL_ICONS[s];
                       return (
                         <span 
                           key={s} 
-                          className={`skill-chip ${g.primary ? "primary" : ""} ${isActive ? "active-skill" : ""}`}
-                          onClick={() => {
-                            setActiveSkill(s);
-                            playSynthSFX('tick');
-                          }}
+                          className={`skill-chip ${g.primary ? "primary" : ""}`}
+                          data-tooltip={s}
                           onMouseMove={(e) => {
                             const rect = e.currentTarget.getBoundingClientRect();
                             e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
                             e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                           }}
-                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            playSynthSFX('tick');
+                          }}
                         >
-                          {s}
+                          {iconInfo ? (
+                            iconInfo.type === "devicon" ? (
+                              <i className={`${iconInfo.class} skill-chip-icon`} />
+                            ) : (
+                              (() => {
+                                const Component = Lucide[iconInfo.name];
+                                return Component ? <Component className="skill-chip-icon" size={20} /> : <span>{s}</span>;
+                              })()
+                            )
+                          ) : (
+                            <span>{s}</span>
+                          )}
                         </span>
                       );
                     })}
