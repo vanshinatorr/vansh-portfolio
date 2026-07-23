@@ -841,7 +841,7 @@ function ChessPuzzle() {
         <>
           {!solved && <div className="chess-puzzle-name">{puzzle.name}</div>}
           <div className="chess-grid-container">
-            <div className="chess-board-grid" style={{ position: 'relative' }}>
+            <div className={`chess-board-grid ${solved ? 'solved-pop' : ''}`} style={{ position: 'relative' }}>
               {board.map((row, rIdx) => 
                 row.map((cell, cIdx) => {
                   const isDark = (rIdx + cIdx) % 2 === 1;
