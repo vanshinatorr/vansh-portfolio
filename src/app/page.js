@@ -826,7 +826,7 @@ function ChessPuzzle() {
               {/* CHECKMATE POPUP OVERLAY */}
               {solved && (
                 <div className="chess-board-overlay">
-                  <div className="checkmate-banner">ELIGIBILITY: PASSED</div>
+                  <div className="checkmate-banner">CHECKMATE</div>
                   <div className="confetti-container">
                     {Array.from({ length: 32 }).map((_, idx) => {
                       const size = Math.random() * 8 + 4;
