@@ -809,7 +809,7 @@ function ChessPuzzle() {
       <div className="chess-widget-header">
         {solved ? (
           <div className="chess-certified-top-banner">
-            Eligibility Confirmed! Certified Friend of Vansh ⚡
+            You can be a certified friend of Vansh ⚡
           </div>
         ) : (
           <span className="chess-widget-title">Friendship Qualifier</span>
