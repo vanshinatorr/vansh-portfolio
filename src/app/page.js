@@ -1305,6 +1305,7 @@ export default function Home() {
   const [hoveredProject, setHoveredProject] = useState(null);
   const [githubContributions, setGithubContributions] = useState(204);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [activeSkill, setActiveSkill] = useState("Figma (Layout & Prototyping)");
   
   const portalRef = useRef(null);
   const lastMouse = useRef({ x: 0, y: 0 });
@@ -1517,6 +1518,36 @@ export default function Home() {
     { title: "CS Fundamentals", items: ["DSA — 300+ problems", "OOPs", "DBMS", "Operating Systems"] },
   ];
 
+  const skillLore = {
+    "Figma (Layout & Prototyping)": "Created bento grids, custom dark modes, and contribution cards for ConsistPay. Mastered auto-layout, interactive variants, and typography scales.",
+    "User Interface Design": "Focused on user workflows, accessibility audits (color contrast, touch targets), and clean modern developer aesthetics.",
+    "Wireframing & Typography": "Translating product ideas into clean low-fidelity wireframes and structural grids using Space Grotesk and JetBrains Mono.",
+    "Component Systems": "Engineered modular component libraries for rapid front-end assembly matching Figma design tokens.",
+    "Bento Grid Layouts": "Specialized in designing highly-scannable dashboard panels and bento widgets (like this portfolio).",
+    "Node.js": "Built server runtimes handling concurrent state syncing, heavy database transactions, and WebSockets servers.",
+    "Express.js": "Designed secure REST endpoints, middleware interceptors, and robust rate-limiting filters.",
+    "REST APIs": "Architected standard REST endpoints with clean CRUD operations, pagination, and unified JSON response models.",
+    "JWT Auth": "Secured user sessions with stateless JSON Web Tokens, refresh tokens, and strict HTTP-only cookies.",
+    "Socket.IO": "Implemented real-time bidirectional messaging rooms syncing chess boards and chat lobbies instantly.",
+    "Razorpay": "Integrated commercial webhooks, transaction checks, and instant refunds for user streak challenges.",
+    "Gemini AI": "Engineered LLM system instructions, dynamic prompt templates, and structured JSON parsing engines.",
+    "React.js": "Constructed reactive state systems, performance-optimized hooks, and fluid GSAP animation tracks.",
+    "JavaScript": "Deep ES6+ core: promises, async/await, closures, prototypical inheritance, and canvas engines.",
+    "Tailwind CSS": "Built clean responsive mockups using tailwind utility tokens and custom design system extensions.",
+    "HTML / CSS": "Pixel-perfect modern grids, flexbox layouts, keyframe loops, and glassmorphism styling.",
+    "MongoDB": "Designed relational collections, aggregation pipelines, database indices, and MERN schemas.",
+    "Mongoose": "Built schema validation models, middleware hooks, and populate references.",
+    "Postman": "Created test collections, automated environment vars, and simulated mock server request flows.",
+    "Git": "Source control workflow: branching, merging, clean rebase, and staging.",
+    "Vercel": "Deployed Next.js apps with automated environment variables and edge functions.",
+    "Render": "Configured live backend servers, cron jobs, and background workers.",
+    "VS Code": "Default IDE customized with vim keybindings, console debugging, and custom shortcuts.",
+    "DSA — 300+ problems": "Solved 300+ algorithm problems across LeetCode & GFG covering DP, Trees, and Graphs.",
+    "OOPs": "Solid mastery of classes, polymorphism, encapsulation, inheritance, and clean abstraction design.",
+    "DBMS": "Relational database theories, SQL queries, transaction locks, and normalization rules.",
+    "Operating Systems": "CPU scheduling, deadlock resolution, virtual memory tables, and multithreading processes."
+  };
+
   const achievements = [
     { icon: "🥇", title: "Top 30 on Codolio", sub: "Ranked among top 30 coding profiles out of 2000+ students at JECRC University" },
     { icon: "♟️", title: "District Chess Champion", sub: "District-level winner & college Runner-Up. 1500+ ELO on Chess.com — strategic thinker on and off the board." },
@@ -1713,24 +1744,40 @@ export default function Home() {
                   <div className="skill-group-title">{g.title}</div>
                 </div>
                 <div className="skill-chips">
-                  {g.items.map(s => (
-                    <span 
-                      key={s} 
-                      className={`skill-chip${g.primary ? " primary" : ""}`}
-                      onMouseMove={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                        e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                      }}
-                    >
-                      {s}
-                    </span>
-                  ))}
+                  {g.items.map(s => {
+                    const isActive = activeSkill === s;
+                    return (
+                      <span 
+                        key={s} 
+                        className={`skill-chip ${g.primary ? "primary" : ""} ${isActive ? "active-skill" : ""}`}
+                        onClick={() => {
+                          setActiveSkill(s);
+                          playSynthSFX('tick');
+                        }}
+                        onMouseMove={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                          e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {s}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
         </div>
+
+        {activeSkill && skillLore[activeSkill] && (
+          <div className="skills-console-wrapper reveal" style={{ marginTop: '2.5rem' }}>
+            <div className="console-indicator">SYSTEM STATUS: INTEL ONLINE</div>
+            <div className="console-skill-title">[ INTEL: {activeSkill} ]</div>
+            <div className="console-skill-desc">{skillLore[activeSkill]}</div>
+          </div>
+        )}
       </section>
 
       <div className="divider" />
