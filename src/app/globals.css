@@ -662,6 +662,10 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
   border-color: rgba(255, 255, 255, 0.14);
 }
 
+.skill-chip:hover .skill-chip-icon img {
+  filter: drop-shadow(0 0 10px var(--brand-color, var(--accent)));
+}
+
 .skill-chip:hover .skill-chip-label {
   color: rgba(255, 255, 255, 0.75);
 }

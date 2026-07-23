@@ -1248,12 +1248,12 @@ const SKILL_ICONS = {
   "Operating Systems": { type: "lucide", name: "Terminal", color: "#00ff00" },
 
   // Creative Editing
-  "Canva": { type: "lucide", name: "Wand2", color: "#00c4cc" },
-  "CapCut": { type: "lucide", name: "Scissors", color: "#ffffff" },
-  "Premiere Pro": { type: "lucide", name: "Film", color: "#9999ff" },
-  "DaVinci Resolve": { type: "lucide", name: "SunDim", color: "#f4a300" },
-  "After Effects": { type: "lucide", name: "Sparkles", color: "#9c91e4" },
-  "Lightroom": { type: "lucide", name: "Sun", color: "#31a8ff" }
+  "Canva": { type: "img", src: "https://cdn.simpleicons.org/canva/00C4CC", color: "#00c4cc" },
+  "CapCut": { type: "img", src: "https://cdn.simpleicons.org/capcut/ffffff", color: "#ffffff" },
+  "Premiere Pro": { type: "img", src: "https://cdn.simpleicons.org/adobepremierepro/9999FF", color: "#9999ff" },
+  "DaVinci Resolve": { type: "img", src: "https://cdn.simpleicons.org/davinciresolve/f4a300", color: "#f4a300" },
+  "After Effects": { type: "img", src: "https://cdn.simpleicons.org/adobeaftereffects/9c91e4", color: "#9c91e4" },
+  "Lightroom": { type: "img", src: "https://cdn.simpleicons.org/adobelightroom/31A8FF", color: "#31a8ff" }
 };
 
 export default function Home() {
@@ -1833,6 +1833,10 @@ export default function Home() {
                           {iconInfo ? (
                             iconInfo.type === "devicon" ? (
                               <span className="skill-chip-icon"><i className={`${iconInfo.class}`} /></span>
+                            ) : iconInfo.type === "img" ? (
+                              <span className="skill-chip-icon">
+                                <img src={iconInfo.src} alt={s} width={26} height={26} style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 0px transparent)', transition: 'filter 0.25s ease' }} />
+                              </span>
                             ) : (
                               (() => {
                                 const Component = Lucide[iconInfo.name];
