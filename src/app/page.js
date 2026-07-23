@@ -1127,7 +1127,8 @@ function StreakTracker() {
       if (milestones[i]) {
         level = 4;
       } else {
-        const r = Math.random();
+        // Use a deterministic pseudo-random value based on index to prevent SSR hydration errors
+        const r = (Math.abs(Math.sin(i + 1)) * 1000) % 1;
         level = r < 0.35 ? 0 : r < 0.65 ? 1 : r < 0.88 ? 2 : 3;
       }
 
