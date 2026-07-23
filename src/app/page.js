@@ -667,9 +667,15 @@ function ChessPuzzle() {
                   onClick={() => handleClick(rIdx, cIdx)}
                 >
                   {cell && (
-                    <span className={`chess-piece ${cell.color === 'w' ? 'white-piece' : 'black-piece'}`}>
-                      {cell.label}
-                    </span>
+                    <img 
+                      src={`https://upload.wikimedia.org/wikipedia/commons/${
+                        cell.color === 'w' 
+                          ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : '4/45/Chess_plt45.svg')
+                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'a/a0/Chess_rdt45.svg' : cell.type === 'b' ? '9/9b/Chess_bdt45.svg' : 'c/c7/Chess_pdt45.svg')
+                      }`}
+                      alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
+                      className="chess-piece-img"
+                    />
                   )}
                 </div>
               );
