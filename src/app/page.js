@@ -1919,6 +1919,17 @@ export default function Home() {
           </div>
         </div>
 
+        <div className="skills-bottom-bar">
+          <div className="skills-bottom-stat">
+            <span className="skills-stat-dot" />
+            <span>ACTIVE STACK • 25+ TECHNOLOGIES & TOOLS</span>
+          </div>
+          <div className="skills-bottom-hint">
+            <span>Scroll horizontally</span>
+            <span className="skills-hint-arrow">→</span>
+          </div>
+        </div>
+
       </section>
 
       <div className="divider" />

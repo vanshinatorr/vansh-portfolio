@@ -763,9 +763,13 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
 /* ─── HORIZONTAL SKILLS SECTION ─────────────────── */
 .skills-horizontal-section {
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
-  padding: 6rem 0 !important;
-  background: radial-gradient(ellipse at 50% 0%, rgba(255, 107, 0, 0.03) 0%, transparent 60%);
+  padding: 3rem 0 !important;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 107, 0, 0.04) 0%, transparent 70%);
   position: relative;
 }
 
@@ -816,10 +820,43 @@ section { position:relative; z-index:1; padding:7rem 2.5rem; max-width:1100px; m
   min-width: 270px;
 }
 
-.skills-console-sticky {
+.skills-bottom-bar {
   width: min(100%, 1100px);
-  margin: 2.5rem auto 0;
+  margin: 2rem auto 0;
   padding: 0 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.skills-bottom-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent2);
+  font-weight: 600;
+}
+.skills-stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  animation: pulseGreenDot 2s infinite ease-in-out;
+}
+.skills-bottom-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+.skills-hint-arrow {
+  display: inline-block;
+  animation: arrowSlide 1.5s infinite ease-in-out;
 }
 
 /* ─── SKILLS INTERACTIVE ADDITIONS ─── */
