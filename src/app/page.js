@@ -631,40 +631,49 @@ function MagneticNavLink({ href, label, active }) {
 
 const CHESS_PUZZLES = [
   {
-    name: "Scholar's Mate Threat",
-    instructions: "White to play: Find Mate in 1 (defended capture)",
-    eloGain: 15,
+    name: "Philidor's Sacrifice",
+    instructions: "White to play: Deliver checkmate in 2 moves to pass vibe check.",
+    eloGain: 25,
     board: [
-      [null, null, null, null, null, null, null, { type: 'k', color: 'b', label: '♚' }],
+      [null, null, null, null, null, { type: 'r', color: 'b', label: '♜' }, null, { type: 'k', color: 'b', label: '♚' }],
       [null, null, null, null, null, null, { type: 'p', color: 'b', label: '♟' }, { type: 'p', color: 'b', label: '♟' }],
+      [null, null, null, null, null, null, null, { type: 'n', color: 'w', label: '♞' }],
       [null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, { type: 'q', color: 'w', label: '♛' }],
+      [null, null, { type: 'q', color: 'w', label: '♛' }, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
-      [null, null, { type: 'b', color: 'w', label: '♝' }, null, null, null, null, null],
       [null, null, null, null, null, null, { type: 'k', color: 'w', label: '♚' }, null]
-    ],
-    solution: { fromR: 3, fromC: 7, toR: 1, toC: 7 }
+    ]
   }
 ];
 
 function ChessPuzzle() {
-  const [board, setBoard] = useState(CHESS_PUZZLES[0].board);
+  const puzzle = CHESS_PUZZLES[0];
+  const [vibeState, setVibeState] = useState('init'); // 'init', 'scanning', 'ready'
+  const [board, setBoard] = useState(puzzle.board);
   const [selected, setSelected] = useState(null);
   const [solved, setSolved] = useState(false);
-  const [feedback, setFeedback] = useState(CHESS_PUZZLES[0].instructions);
+  const [feedback, setFeedback] = useState(puzzle.instructions);
   const [elo, setElo] = useState(1500);
   const [shake, setShake] = useState(false);
+  const [puzzleStep, setPuzzleStep] = useState(0);
 
   const handleClick = (r, c) => {
-    if (solved) return;
+    if (solved || vibeState !== 'ready') return;
     const piece = board[r][c];
-    const currentPuzzle = CHESS_PUZZLES[0];
 
     // Selecting own piece
     if (piece && piece.color === 'w') {
+      if (puzzleStep === 0 && piece.type !== 'q') {
+        setFeedback("Find the Queen sacrifice check first! ♕");
+        return;
+      }
+      if (puzzleStep === 1 && piece.type !== 'n') {
+        setFeedback("Deliver smothered checkmate with your Knight! ♞");
+        return;
+      }
       setSelected({ r, c });
-      setFeedback(`Selected white piece. Find the correct square!`);
+      setFeedback(`Selected white piece. Find the target square.`);
       playSynthSFX('chess_move');
       return;
     }
@@ -672,140 +681,193 @@ function ChessPuzzle() {
     if (selected) {
       const { r: sr, c: sc } = selected;
       
-      if (
-        sr === currentPuzzle.solution.fromR &&
-        sc === currentPuzzle.solution.fromC &&
-        r === currentPuzzle.solution.toR &&
-        c === currentPuzzle.solution.toC
-      ) {
-        const isCapture = board[r][c] !== null;
-        const newBoard = board.map(row => [...row]);
-        newBoard[r][c] = board[sr][sc];
-        newBoard[sr][sc] = null;
-        setBoard(newBoard);
-        setSolved(true);
-        
-        const newElo = elo + currentPuzzle.eloGain;
-        setElo(newElo);
-        
-        if (isCapture) {
-          playSynthSFX('chess_capture');
-        } else {
+      // Step 1: Queen moves from (4,2) to (0,6)
+      if (puzzleStep === 0) {
+        if (sr === 4 && sc === 2 && r === 0 && c === 6) {
+          const newBoard = board.map(row => [...row]);
+          newBoard[r][c] = board[sr][sc];
+          newBoard[sr][sc] = null;
+          setBoard(newBoard);
+          setSelected(null);
           playSynthSFX('chess_move');
-        }
-        
-        setTimeout(() => {
-          playSynthSFX('chess_mate');
-        }, 120);
+          setFeedback("Check! Black rook is forced to capture Queen...");
+          setPuzzleStep(1);
 
-        setFeedback("Your strategic frequency aligns perfectly with Vansh's vibe. ⚡");
-      } else {
-        triggerIncorrect();
+          // Computer forced response: Rook (0,5) captures Queen (0,6)
+          setTimeout(() => {
+            const replyBoard = newBoard.map(row => [...row]);
+            replyBoard[0][6] = replyBoard[0][5];
+            replyBoard[0][5] = null;
+            setBoard(replyBoard);
+            playSynthSFX('chess_capture');
+            setFeedback("Rook captured Queen! Deliver smothered checkmate with Knight.");
+          }, 850);
+        } else {
+          triggerIncorrect();
+        }
+      } 
+      // Step 2: Knight moves from (2,7) to (1,5)
+      else if (puzzleStep === 1) {
+        if (sr === 2 && sc === 7 && r === 1 && c === 5) {
+          const newBoard = board.map(row => [...row]);
+          newBoard[r][c] = board[sr][sc];
+          newBoard[sr][sc] = null;
+          setBoard(newBoard);
+          setSelected(null);
+          setSolved(true);
+          setElo(1525);
+          playSynthSFX('chess_move');
+          
+          setTimeout(() => {
+            playSynthSFX('chess_mate');
+          }, 120);
+
+          setFeedback("Vibe check: 100% matched. Neural sync verified. You are officially certified to be Vansh's friend! ⚡");
+        } else {
+          triggerIncorrect();
+        }
       }
     }
   };
 
   const triggerIncorrect = () => {
     setShake(true);
-    setFeedback("Incorrect move. Try again! 🤔");
+    setFeedback("Incorrect move. Keep trying! 🤔");
     playSynthSFX('tick');
     setTimeout(() => setShake(false), 500);
     setSelected(null);
   };
 
   const handleReset = () => {
-    setBoard(CHESS_PUZZLES[0].board);
+    setBoard(puzzle.board);
     setSelected(null);
     setSolved(false);
     setElo(1500);
-    setFeedback(CHESS_PUZZLES[0].instructions);
+    setPuzzleStep(0);
+    setVibeState('init');
+    setFeedback(puzzle.instructions);
   };
 
-  const currentPuzzle = CHESS_PUZZLES[0];
+  const startVibeCheck = () => {
+    setVibeState('scanning');
+    playSynthSFX('laser');
+    setTimeout(() => {
+      setVibeState('ready');
+      playSynthSFX('impact');
+    }, 1800);
+  };
 
   return (
     <div className={`chess-widget ${shake ? 'shake' : ''}`}>
       <div className="chess-widget-header">
-        <span>🧩 Chess Puzzle</span>
+        <span>🧩 Vibe Matcher</span>
         <span className={`chess-elo-badge ${solved ? 'glow-green' : ''}`}>
           {elo} ELO
         </span>
       </div>
-      <div className="chess-puzzle-name">{currentPuzzle.name}</div>
-      <div className="chess-grid-container">
-        <div className="chess-board-grid" style={{ position: 'relative' }}>
-          {board.map((row, rIdx) => 
-            row.map((cell, cIdx) => {
-              const isDark = (rIdx + cIdx) % 2 === 1;
-              const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
-              
-              const isTargetHint = selected && (
-                selected.r === currentPuzzle.solution.fromR && selected.c === currentPuzzle.solution.fromC && rIdx === currentPuzzle.solution.toR && cIdx === currentPuzzle.solution.toC
-              );
-              
-              return (
-                <div 
-                  key={`${rIdx}-${cIdx}`}
-                  className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHint && !solved ? 'target-hint' : ''}`}
-                  onClick={() => handleClick(rIdx, cIdx)}
-                >
-                  {cell && (
-                    <img 
-                      src={`https://upload.wikimedia.org/wikipedia/commons/${
-                        cell.color === 'w' 
-                          ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
-                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'f/ff/Chess_rdt45.svg' : cell.type === 'b' ? '9/98/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
-                      }`}
-                      alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
-                      className="chess-piece-img"
-                    />
-                  )}
-                </div>
-              );
-            })
-          )}
-          
-          {/* CHECKMATE POPUP OVERLAY */}
-          {solved && (
-            <div className="chess-board-overlay">
-              <div className="checkmate-banner">CHECKMATE</div>
-              <div className="confetti-container">
-                {Array.from({ length: 32 }).map((_, idx) => {
-                  const size = Math.random() * 8 + 4;
-                  const delay = Math.random() * 0.4;
-                  const x = Math.random() * 100;
-                  const color = ['#c084fc', '#f43f5e', '#bbcb2b', '#60a5fa', '#f59e0b'][Math.floor(Math.random() * 5)];
+
+      {vibeState === 'init' && (
+        <div className="vibe-scanner-panel">
+          <div className="vibe-scanner-orb"></div>
+          <h3>Vibe Check Engine</h3>
+          <p>Scan your tactical cognitive alignment before attempting Vansh's puzzle.</p>
+          <button className="vibe-scan-btn" onClick={startVibeCheck}>
+            Verify Neural Vibe
+          </button>
+        </div>
+      )}
+
+      {vibeState === 'scanning' && (
+        <div className="vibe-scanner-panel scanning">
+          <div className="vibe-scanner-bar"></div>
+          <div className="vibe-scanner-orb pulsing"></div>
+          <h3>Syncing Frequency...</h3>
+          <p className="vibe-scan-log">ANALYZING TACTICAL LAYOUT [1500 ELO]...</p>
+        </div>
+      )}
+
+      {vibeState === 'ready' && (
+        <>
+          <div className="chess-puzzle-name">{puzzle.name}</div>
+          <div className="chess-grid-container">
+            <div className="chess-board-grid" style={{ position: 'relative' }}>
+              {board.map((row, rIdx) => 
+                row.map((cell, cIdx) => {
+                  const isDark = (rIdx + cIdx) % 2 === 1;
+                  const isSelected = selected && selected.r === rIdx && selected.c === cIdx;
+                  
+                  const isTargetHint = selected && (
+                    (puzzleStep === 0 && selected.r === 4 && selected.c === 2 && rIdx === 0 && cIdx === 6) ||
+                    (puzzleStep === 1 && selected.r === 2 && selected.c === 7 && rIdx === 1 && cIdx === 5)
+                  );
+                  
                   return (
                     <div 
-                      key={idx}
-                      className="confetti-particle"
-                      style={{
-                        left: `${x}%`,
-                        width: `${size}px`,
-                        height: `${size}px`,
-                        background: color,
-                        animationDelay: `${delay}s`,
-                        '--dx': `${(Math.random() - 0.5) * 160}px`,
-                        '--dy': `${-Math.random() * 180 - 80}px`,
-                        '--rot': `${Math.random() * 360}deg`
-                      }}
-                    />
+                      key={`${rIdx}-${cIdx}`}
+                      className={`chess-square ${isDark ? 'dark' : 'light'} ${isSelected ? 'selected' : ''} ${isTargetHint && !solved ? 'target-hint' : ''}`}
+                      onClick={() => handleClick(rIdx, cIdx)}
+                    >
+                      {cell && (
+                        <img 
+                          src={`https://upload.wikimedia.org/wikipedia/commons/${
+                            cell.color === 'w' 
+                              ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
+                              : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'f/ff/Chess_rdt45.svg' : cell.type === 'b' ? '9/98/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
+                          }`}
+                          alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
+                          className="chess-piece-img"
+                        />
+                      )}
+                    </div>
                   );
-                })}
-              </div>
+                })
+              )}
+              
+              {/* CHECKMATE POPUP OVERLAY */}
+              {solved && (
+                <div className="chess-board-overlay">
+                  <div className="checkmate-banner">VIBE MATCHED</div>
+                  <div className="confetti-container">
+                    {Array.from({ length: 32 }).map((_, idx) => {
+                      const size = Math.random() * 8 + 4;
+                      const delay = Math.random() * 0.4;
+                      const x = Math.random() * 100;
+                      const color = ['#c084fc', '#f43f5e', '#bbcb2b', '#60a5fa', '#f59e0b'][Math.floor(Math.random() * 5)];
+                      return (
+                        <div 
+                          key={idx}
+                          className="confetti-particle"
+                          style={{
+                            left: `${x}%`,
+                            width: `${size}px`,
+                            height: `${size}px`,
+                            background: color,
+                            animationDelay: `${delay}s`,
+                            '--dx': `${(Math.random() - 0.5) * 160}px`,
+                            '--dy': `${-Math.random() * 180 - 80}px`,
+                            '--rot': `${Math.random() * 360}deg`
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="chess-feedback">{feedback}</div>
+          {solved && (
+            <div className="chess-actions-row">
+              <button onClick={handleReset} className="chess-reset-btn">Play Again ↺</button>
             </div>
           )}
-        </div>
-      </div>
-      <div className="chess-feedback">{feedback}</div>
-      {solved && (
-        <div className="chess-actions-row">
-          <button onClick={handleReset} className="chess-reset-btn">Play Again ↺</button>
-        </div>
+        </>
       )}
     </div>
   );
 }
+
+
 
 // ── BENTO: Matrix rain for CLI hacking sequence ──────────────────────────────
 function MatrixRain() {
