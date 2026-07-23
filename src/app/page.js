@@ -860,7 +860,7 @@ function ChessPuzzle() {
                       src={`https://upload.wikimedia.org/wikipedia/commons/${
                         cell.color === 'w' 
                           ? (cell.type === 'k' ? '4/42/Chess_klt45.svg' : cell.type === 'q' ? '1/15/Chess_qlt45.svg' : cell.type === 'r' ? '7/72/Chess_rlt45.svg' : cell.type === 'b' ? 'b/b1/Chess_blt45.svg' : cell.type === 'n' ? '7/70/Chess_nlt45.svg' : '4/45/Chess_plt45.svg')
-                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'a/a0/Chess_rdt45.svg' : cell.type === 'b' ? '9/9b/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
+                          : (cell.type === 'k' ? 'f/f0/Chess_kdt45.svg' : cell.type === 'q' ? '4/47/Chess_qdt45.svg' : cell.type === 'r' ? 'f/ff/Chess_rdt45.svg' : cell.type === 'b' ? '9/98/Chess_bdt45.svg' : cell.type === 'n' ? 'e/ef/Chess_ndt45.svg' : 'c/c7/Chess_pdt45.svg')
                       }`}
                       alt={`${cell.color === 'w' ? 'White' : 'Black'} ${cell.type}`}
                       className="chess-piece-img"
