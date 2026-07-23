@@ -684,15 +684,15 @@ function ChessPuzzle() {
     setSending(true);
     try {
       const res = await sendDiscordMessage({
-        name: senderName.trim() || "Chess Champion Friend",
-        contact: senderName.trim() || "Via Portfolio",
+        name: "Chess Winner Friend",
+        contact: "Via Portfolio",
         message: discordMsg.trim()
       });
       if (res && res.success) {
         setDiscordSent(true);
         playSynthSFX('impact');
       } else {
-        alert("Failed to send to Discord. Please try again!");
+        alert("Failed to send. Please try again!");
       }
     } catch (err) {
       console.error(err);
@@ -921,14 +921,7 @@ function ChessPuzzle() {
                   <input 
                     type="text" 
                     className="discord-input" 
-                    placeholder="Your Name or Handle..." 
-                    value={senderName} 
-                    onChange={(e) => setSenderName(e.target.value)} 
-                  />
-                  <input 
-                    type="text" 
-                    className="discord-input" 
-                    placeholder="Say something..." 
+                    placeholder="Type your message..." 
                     value={discordMsg} 
                     onChange={(e) => setDiscordMsg(e.target.value)}
                   />
