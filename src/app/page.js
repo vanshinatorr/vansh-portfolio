@@ -809,7 +809,8 @@ function ChessPuzzle() {
       <div className="chess-widget-header">
         {solved ? (
           <div className="chess-certified-top-banner">
-            You can be a certified friend of Vansh ✨
+            <span className="certified-status-dot" />
+            <span>You can be a certified friend of Vansh ✨</span>
           </div>
         ) : (
           <span className="chess-widget-title">Friendship Qualifier</span>
@@ -905,7 +906,7 @@ function ChessPuzzle() {
               )}
             </div>
           </div>
-          <div className="chess-feedback">{feedback}</div>
+          {!solved && <div className="chess-feedback">{feedback}</div>}
           {solved && (
             <div className="chess-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', alignItems: 'center', marginTop: '1rem', width: '100%' }}>
               {discordSent ? (
