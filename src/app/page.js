@@ -1557,21 +1557,12 @@ export default function Home() {
 
   // Smooth scroll
   useEffect(() => {
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouch) {
-      const handleScroll = () => {
-        ScrollTrigger.update();
-      };
-      window.addEventListener('scroll', handleScroll);
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-    }
-
     const lenis = new Lenis({
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       wheelMultiplier: 1.18,
       smoothWheel: true,
+      syncTouch: true,
+      touchMultiplier: 1.5,
     });
     lenis.on('scroll', ScrollTrigger.update);
     const raf = (time) => { 
