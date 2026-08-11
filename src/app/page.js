@@ -614,23 +614,35 @@ function ConstellationCanvas() {
         spaceship.angle += diff * 0.08;
       }
 
-      // Emit thruster exhaust trails
-      const tailLength = 8;
-      const emitterX = spaceship.x - Math.cos(spaceship.angle) * tailLength;
-      const emitterY = spaceship.y - Math.sin(spaceship.angle) * tailLength;
-      
-      const emitCount = speed > 1.5 ? 2 : (Math.random() < 0.65 ? 1 : 0);
-      for (let i = 0; i < emitCount; i++) {
+      // Emit thruster exhaust trails (Twin engine setup)
+      // Left and right nozzle emission points relative to spaceship orientation
+      const emitExhaust = (ex, ey) => {
         spaceship.trailParticles.push({
-          x: emitterX,
-          y: emitterY,
-          vx: -Math.cos(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.15,
-          vy: -Math.sin(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.15,
+          x: ex,
+          y: ey,
+          vx: -Math.cos(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.12,
+          vy: -Math.sin(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.12,
           alpha: 0.45,
           life: 1.0,
-          decay: Math.random() * 0.02 + 0.015,
-          size: Math.random() * 2.2 + 0.8
+          decay: Math.random() * 0.022 + 0.014,
+          size: Math.random() * 2.0 + 0.6
         });
+      };
+
+      // Twin exhaust nozzles offset from center back (-6px back, +/- 2.2px side offset)
+      const nozzleOffsetBack = 6;
+      const nozzleOffsetSide = 2.2;
+      
+      const leftEngineX = spaceship.x - Math.cos(spaceship.angle) * nozzleOffsetBack + Math.cos(spaceship.angle + Math.PI / 2) * nozzleOffsetSide;
+      const leftEngineY = spaceship.y - Math.sin(spaceship.angle) * nozzleOffsetBack + Math.sin(spaceship.angle + Math.PI / 2) * nozzleOffsetSide;
+      
+      const rightEngineX = spaceship.x - Math.cos(spaceship.angle) * nozzleOffsetBack - Math.cos(spaceship.angle + Math.PI / 2) * nozzleOffsetSide;
+      const rightEngineY = spaceship.y - Math.sin(spaceship.angle) * nozzleOffsetBack - Math.sin(spaceship.angle + Math.PI / 2) * nozzleOffsetSide;
+
+      const emitCount = speed > 1.5 ? 2 : (Math.random() < 0.65 ? 1 : 0);
+      for (let i = 0; i < emitCount; i++) {
+        emitExhaust(leftEngineX, leftEngineY);
+        emitExhaust(rightEngineX, rightEngineY);
       }
 
       // Draw exhaust trails
@@ -644,6 +656,7 @@ function ConstellationCanvas() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
         
+        // Dynamic exhaust colors: bright yellow/orange to reddish-violet fade
         const r = 251;
         const g = Math.floor(100 + p.life * 130);
         const b = Math.floor(40 + (1 - p.life) * 150);
@@ -658,28 +671,87 @@ function ConstellationCanvas() {
       ctx.translate(spaceship.x, spaceship.y);
       ctx.rotate(spaceship.angle);
       
+      // 1. Draw Energy Shield Ring (very faint glowing circle around the ship)
+      const shieldGlow = 0.08 + Math.sin(Date.now() / 150) * 0.03 + (speed / 2.5) * 0.05;
       ctx.beginPath();
-      ctx.moveTo(8, 0);
-      ctx.lineTo(-7, -4);
-      ctx.lineTo(-4, 0);
-      ctx.lineTo(-7, 4);
+      ctx.arc(0, 0, 16, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(129, 140, 248, ${shieldGlow})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // 2. Draw Main Wings (Left and Right stabilizers)
+      ctx.beginPath();
+      // Left Wing
+      ctx.moveTo(-3, -2);
+      ctx.lineTo(-9, -9);
+      ctx.lineTo(-5, -9);
+      ctx.lineTo(-2, -2);
+      // Right Wing
+      ctx.moveTo(-3, 2);
+      ctx.lineTo(-9, 9);
+      ctx.lineTo(-5, 9);
+      ctx.lineTo(-2, 2);
       ctx.closePath();
-      
-      ctx.fillStyle = "rgba(129, 140, 248, 0.22)";
+      ctx.fillStyle = "rgba(100, 116, 139, 0.35)"; // greyish blue metal wings
       ctx.fill();
-      ctx.strokeStyle = "rgba(251, 146, 60, 0.35)";
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+      ctx.stroke();
+
+      // 3. Draw Fuselage (Main Body)
+      ctx.beginPath();
+      ctx.moveTo(11, 0); // Nose cone
+      ctx.lineTo(-4, -3.5); // Left fuselage edge
+      ctx.lineTo(-7, -2); // Left engine mount
+      ctx.lineTo(-5, 0); // Center engine bay recess
+      ctx.lineTo(-7, 2); // Right engine mount
+      ctx.lineTo(-4, 3.5); // Right fuselage edge
+      ctx.closePath();
+      ctx.fillStyle = "rgba(129, 140, 248, 0.35)"; // Indigo metal body
+      ctx.fill();
+      ctx.strokeStyle = "rgba(167, 139, 250, 0.5)"; // Purple outer trim
       ctx.lineWidth = 1.0;
       ctx.stroke();
-      
-      // Thruster core glow
+
+      // 4. Draw Cockpit (Glass Canopy)
       ctx.beginPath();
-      ctx.moveTo(-4, 0);
-      ctx.lineTo(-6, -1.2);
-      ctx.lineTo(-10, 0);
-      ctx.lineTo(-6, 1.2);
+      ctx.moveTo(4, 0);
+      ctx.lineTo(0, -1.5);
+      ctx.lineTo(-3, 0);
+      ctx.lineTo(0, 1.5);
       ctx.closePath();
-      ctx.fillStyle = "rgba(251, 146, 60, 0.65)";
+      ctx.fillStyle = "rgba(56, 189, 248, 0.75)"; // glowing cyan glass
       ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // 5. Draw Twin Thruster Engine Glows (at nozzle mounts)
+      // Left Engine nozzle glow
+      ctx.beginPath();
+      ctx.arc(-6.5, -2, 1.8, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(251, 146, 60, 0.85)"; // Orange thruster light
+      ctx.fill();
+      // Right Engine nozzle glow
+      ctx.beginPath();
+      ctx.arc(-6.5, 2, 1.8, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(251, 146, 60, 0.85)";
+      ctx.fill();
+
+      // Left Thruster inner flame jet
+      ctx.beginPath();
+      ctx.moveTo(-6.5, -2);
+      ctx.lineTo(-12 - speed * 2, -2); // Flame length scales with speed
+      ctx.strokeStyle = "rgba(251, 146, 60, 0.7)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Right Thruster inner flame jet
+      ctx.beginPath();
+      ctx.moveTo(-6.5, 2);
+      ctx.lineTo(-12 - speed * 2, 2);
+      ctx.strokeStyle = "rgba(251, 146, 60, 0.7)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
 
       ctx.restore();
 
