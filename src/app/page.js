@@ -321,36 +321,134 @@ function ConstellationCanvas() {
     let starDust = [];
     let shootingStars = [];
 
-    // Spaceship state
+    // Nebula definitions (indigo, purple, cyan, warm gold/amber)
+    let nebulae = [
+      {
+        x: canvas.width * 0.25,
+        y: canvas.height * 0.3,
+        baseX: 0.25,
+        baseY: 0.3,
+        radius: Math.min(canvas.width, canvas.height) * 0.45,
+        color: "99, 102, 241", // Indigo
+        alpha: 0.05,
+        pulseSpeed: 0.0004,
+        pulsePhase: 0,
+        driftSpeedX: 0.015,
+        driftSpeedY: 0.01,
+        driftX: 0,
+        driftY: 0
+      },
+      {
+        x: canvas.width * 0.75,
+        y: canvas.height * 0.6,
+        baseX: 0.75,
+        baseY: 0.6,
+        radius: Math.min(canvas.width, canvas.height) * 0.55,
+        color: "139, 92, 246", // Purple
+        alpha: 0.045,
+        pulseSpeed: 0.0003,
+        pulsePhase: Math.PI / 3,
+        driftSpeedX: -0.01,
+        driftSpeedY: 0.012,
+        driftX: 0,
+        driftY: 0
+      },
+      {
+        x: canvas.width * 0.4,
+        y: canvas.height * 0.8,
+        baseX: 0.4,
+        baseY: 0.8,
+        radius: Math.min(canvas.width, canvas.height) * 0.4,
+        color: "56, 189, 248", // Cyan
+        alpha: 0.04,
+        pulseSpeed: 0.0005,
+        pulsePhase: Math.PI / 1.5,
+        driftSpeedX: 0.008,
+        driftSpeedY: -0.015,
+        driftX: 0,
+        driftY: 0
+      },
+      {
+        x: canvas.width * 0.8,
+        y: canvas.height * 0.2,
+        baseX: 0.8,
+        baseY: 0.2,
+        radius: Math.min(canvas.width, canvas.height) * 0.38,
+        color: "251, 146, 60", // Warm Gold/Amber
+        alpha: 0.025,
+        pulseSpeed: 0.0002,
+        pulsePhase: Math.PI,
+        driftSpeedX: -0.012,
+        driftSpeedY: -0.008,
+        driftX: 0,
+        driftY: 0
+      }
+    ];
+
+    // Persistent spaceship voyager state
     let spaceship = {
-      x: -100,
-      y: -100,
-      vx: 0,
-      vy: 0,
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      vx: 0.6,
+      vy: -0.4,
+      targetX: canvas.width / 2,
+      targetY: canvas.height / 2,
+      targetTimer: 0,
       angle: 0,
-      active: false,
-      spawnTimer: 180, // Spawn early (3 seconds after load) for demo, then random
-      trailParticles: []
+      trailParticles: [],
+      size: 10
     };
 
     const initStarDust = () => {
       starDust = [];
-      const numStars = Math.min(150, Math.floor((canvas.width * canvas.height) / 12000));
-      for (let i = 0; i < numStars; i++) {
+      const totalStars = Math.min(180, Math.floor((canvas.width * canvas.height) / 10000));
+      for (let i = 0; i < totalStars; i++) {
+        const r = Math.random();
+        let layer = 1;
+        let size = Math.random() * 0.4 + 0.4; // layer 1: background
+        let speed = Math.random() * 0.02 + 0.01;
+        let parallax = 0.05;
+        let alpha = Math.random() * 0.18 + 0.08;
+
+        if (r > 0.85) { // layer 3: foreground
+          layer = 3;
+          size = Math.random() * 0.5 + 1.1;
+          speed = Math.random() * 0.06 + 0.06;
+          parallax = 0.20;
+          alpha = Math.random() * 0.3 + 0.15;
+        } else if (r > 0.55) { // layer 2: midground
+          layer = 2;
+          size = Math.random() * 0.4 + 0.7;
+          speed = Math.random() * 0.03 + 0.03;
+          parallax = 0.12;
+          alpha = Math.random() * 0.24 + 0.1;
+        }
+
         starDust.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 0.8 + 0.4,
-          alpha: Math.random() * 0.22 + 0.08,
-          speed: Math.random() * 0.05 + 0.02
+          size,
+          speed,
+          parallax,
+          alpha,
+          layer
         });
       }
+    };
+
+    const updateNebulaeSize = () => {
+      nebulae.forEach(n => {
+        n.x = canvas.width * n.baseX;
+        n.y = canvas.height * n.baseY;
+        n.radius = Math.min(canvas.width, canvas.height) * (n.baseX === 0.25 ? 0.45 : n.baseX === 0.75 ? 0.55 : n.baseX === 0.4 ? 0.4 : 0.38);
+      });
     };
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       initStarDust();
+      updateNebulaeSize();
     };
     resize();
     window.addEventListener("resize", resize);
@@ -377,20 +475,56 @@ function ConstellationCanvas() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. Draw Parallax Star Dust (Galactic Background Drift)
+      const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+      // 1. Draw Cosmic Nebulae with pulse & vertical parallax scrolling
+      nebulae.forEach(n => {
+        n.pulsePhase += n.pulseSpeed;
+        n.driftX += n.driftSpeedX;
+        n.driftY += n.driftSpeedY;
+
+        // Parallax scroll moves the nebulae upwards slowly
+        const parallaxOffset = scrollY * 0.16;
+        const drawX = n.x + n.driftX;
+        const drawY = n.y + n.driftY - parallaxOffset;
+
+        // Wrap drift if it goes too far
+        if (Math.abs(n.driftX) > 150) n.driftSpeedX = -n.driftSpeedX;
+        if (Math.abs(n.driftY) > 150) n.driftSpeedY = -n.driftSpeedY;
+
+        const scale = 1 + Math.sin(n.pulsePhase) * 0.12;
+        const r = n.radius * scale;
+
+        const grad = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, r);
+        grad.addColorStop(0, `rgba(${n.color}, ${n.alpha})`);
+        grad.addColorStop(0.5, `rgba(${n.color}, ${n.alpha * 0.35})`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(drawX, drawY, r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 2. Draw Parallax Star Dust (Galactic Background Drift)
       starDust.forEach(star => {
         star.x -= star.speed;
         if (star.x < 0) {
           star.x = canvas.width;
           star.y = Math.random() * canvas.height;
         }
+
+        // Parallax vertical offset wrapping
+        const drawY = (star.y - scrollY * star.parallax) % canvas.height;
+        const finalY = drawY < 0 ? drawY + canvas.height : drawY;
+
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.arc(star.x, finalY, star.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
         ctx.fill();
       });
 
-      // 2. Draw Shooting Stars
+      // 3. Draw Shooting Stars
       if (Math.random() < 0.0012 && shootingStars.length < 2) {
         shootingStars.push({
           x: Math.random() * canvas.width,
@@ -421,72 +555,82 @@ function ConstellationCanvas() {
         return true;
       });
 
-      // 3. Update & Draw Spaceship
-      if (!spaceship.active) {
-        spaceship.spawnTimer--;
-        if (spaceship.spawnTimer <= 0) {
-          spaceship.active = true;
-          spaceship.x = -30;
-          spaceship.y = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2);
-          spaceship.vx = Math.random() * 1.0 + 1.2;
-          spaceship.vy = (Math.random() - 0.5) * 0.4;
-          spaceship.angle = Math.atan2(spaceship.vy, spaceship.vx);
-          spaceship.trailParticles = [];
-        }
+      // 4. Update Persistent Spaceship Voyager
+      if (mouse.current.x > -1000) {
+        // Orbit the cursor like a loyal escort ship
+        const orbitRadius = 65;
+        const orbitSpeed = Date.now() * 0.0015;
+        spaceship.targetX = mouse.current.x + Math.cos(orbitSpeed) * orbitRadius;
+        spaceship.targetY = mouse.current.y + Math.sin(orbitSpeed) * orbitRadius;
       } else {
-        spaceship.x += spaceship.vx;
-        spaceship.y += spaceship.vy;
-
-        // Steering influence from cursor
-        const dx = mouse.current.x - spaceship.x;
-        const dy = mouse.current.y - spaceship.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist < 220 && mouse.current.x > -1000) {
-          const steerStrength = 0.03;
-          spaceship.vx += (dx / dist) * steerStrength;
-          spaceship.vy += (dy / dist) * steerStrength;
-        } else {
-          // Self-propelled floaty oscillation
-          spaceship.vy += Math.sin(Date.now() / 400) * 0.015;
+        // Random wandering path
+        spaceship.targetTimer--;
+        if (spaceship.targetTimer <= 0) {
+          spaceship.targetX = Math.random() * (canvas.width - 200) + 100;
+          spaceship.targetY = Math.random() * (canvas.height - 200) + 100;
+          spaceship.targetTimer = Math.floor(Math.random() * 200) + 150;
         }
+      }
 
-        // Speed limits
-        const speed = Math.sqrt(spaceship.vx * spaceship.vx + spaceship.vy * spaceship.vy);
-        const minSpeed = 1.0;
-        const maxSpeed = 2.0;
-        if (speed < minSpeed) {
-          spaceship.vx = (spaceship.vx / speed) * minSpeed;
-          spaceship.vy = (spaceship.vy / speed) * minSpeed;
-        } else if (speed > maxSpeed) {
-          spaceship.vx = (spaceship.vx / speed) * maxSpeed;
-          spaceship.vy = (spaceship.vy / speed) * maxSpeed;
-        }
+      const tx = spaceship.targetX - spaceship.x;
+      const ty = spaceship.targetY - spaceship.y;
+      const distToTarget = Math.sqrt(tx * tx + ty * ty);
+      
+      const speed = Math.sqrt(spaceship.vx * spaceship.vx + spaceship.vy * spaceship.vy);
 
-        spaceship.angle = Math.atan2(spaceship.vy, spaceship.vx);
+      if (distToTarget > 6) {
+        // Steer towards target, accelerate faster if cursor is active
+        const accel = mouse.current.x > -1000 ? 0.035 : 0.015;
+        spaceship.vx += (tx / distToTarget) * accel;
+        spaceship.vy += (ty / distToTarget) * accel;
+      }
 
-        // Exhaust emitter at tail
-        const tailLength = 8;
-        const emitterX = spaceship.x - Math.cos(spaceship.angle) * tailLength;
-        const emitterY = spaceship.y - Math.sin(spaceship.angle) * tailLength;
-        
+      // Avoid borders to stay on-screen
+      const borderBuffer = 80;
+      const pushForce = 0.08;
+      if (spaceship.x < borderBuffer) spaceship.vx += pushForce;
+      else if (spaceship.x > canvas.width - borderBuffer) spaceship.vx -= pushForce;
+      if (spaceship.y < borderBuffer) spaceship.vy += pushForce;
+      else if (spaceship.y > canvas.height - borderBuffer) spaceship.vy -= pushForce;
+
+      // Friction and speed clamps
+      spaceship.vx *= 0.985;
+      spaceship.vy *= 0.985;
+      
+      const maxSpeed = mouse.current.x > -1000 ? 2.5 : 1.2;
+      if (speed > maxSpeed) {
+        spaceship.vx = (spaceship.vx / speed) * maxSpeed;
+        spaceship.vy = (spaceship.vy / speed) * maxSpeed;
+      }
+
+      spaceship.x += spaceship.vx;
+      spaceship.y += spaceship.vy;
+
+      if (speed > 0.05) {
+        const targetAngle = Math.atan2(spaceship.vy, spaceship.vx);
+        let diff = targetAngle - spaceship.angle;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        spaceship.angle += diff * 0.08;
+      }
+
+      // Emit thruster exhaust trails
+      const tailLength = 8;
+      const emitterX = spaceship.x - Math.cos(spaceship.angle) * tailLength;
+      const emitterY = spaceship.y - Math.sin(spaceship.angle) * tailLength;
+      
+      const emitCount = speed > 1.5 ? 2 : (Math.random() < 0.65 ? 1 : 0);
+      for (let i = 0; i < emitCount; i++) {
         spaceship.trailParticles.push({
           x: emitterX,
           y: emitterY,
-          vx: -Math.cos(spaceship.angle) * 0.4 + (Math.random() - 0.5) * 0.15,
-          vy: -Math.sin(spaceship.angle) * 0.4 + (Math.random() - 0.5) * 0.15,
-          alpha: 0.5,
+          vx: -Math.cos(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.15,
+          vy: -Math.sin(spaceship.angle) * (0.35 + speed * 0.15) + (Math.random() - 0.5) * 0.15,
+          alpha: 0.45,
           life: 1.0,
-          decay: Math.random() * 0.02 + 0.02,
-          size: Math.random() * 2.0 + 0.8
+          decay: Math.random() * 0.02 + 0.015,
+          size: Math.random() * 2.2 + 0.8
         });
-
-        // Sail off-screen checker
-        if (spaceship.x > canvas.width + 50 || spaceship.x < -50 || spaceship.y > canvas.height + 50 || spaceship.y < -50) {
-          spaceship.active = false;
-          // Spawn every 25 to 55 seconds
-          spaceship.spawnTimer = Math.floor(Math.random() * 1800) + 1500;
-        }
       }
 
       // Draw exhaust trails
@@ -510,38 +654,36 @@ function ConstellationCanvas() {
       });
 
       // Draw Spaceship
-      if (spaceship.active) {
-        ctx.save();
-        ctx.translate(spaceship.x, spaceship.y);
-        ctx.rotate(spaceship.angle);
-        
-        ctx.beginPath();
-        ctx.moveTo(8, 0);
-        ctx.lineTo(-7, -4);
-        ctx.lineTo(-4, 0);
-        ctx.lineTo(-7, 4);
-        ctx.closePath();
-        
-        ctx.fillStyle = "rgba(129, 140, 248, 0.22)";
-        ctx.fill();
-        ctx.strokeStyle = "rgba(251, 146, 60, 0.35)";
-        ctx.lineWidth = 1.0;
-        ctx.stroke();
-        
-        // Thruster core glow
-        ctx.beginPath();
-        ctx.moveTo(-4, 0);
-        ctx.lineTo(-6, -1.2);
-        ctx.lineTo(-10, 0);
-        ctx.lineTo(-6, 1.2);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(251, 146, 60, 0.65)";
-        ctx.fill();
+      ctx.save();
+      ctx.translate(spaceship.x, spaceship.y);
+      ctx.rotate(spaceship.angle);
+      
+      ctx.beginPath();
+      ctx.moveTo(8, 0);
+      ctx.lineTo(-7, -4);
+      ctx.lineTo(-4, 0);
+      ctx.lineTo(-7, 4);
+      ctx.closePath();
+      
+      ctx.fillStyle = "rgba(129, 140, 248, 0.22)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(251, 146, 60, 0.35)";
+      ctx.lineWidth = 1.0;
+      ctx.stroke();
+      
+      // Thruster core glow
+      ctx.beginPath();
+      ctx.moveTo(-4, 0);
+      ctx.lineTo(-6, -1.2);
+      ctx.lineTo(-10, 0);
+      ctx.lineTo(-6, 1.2);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(251, 146, 60, 0.65)";
+      ctx.fill();
 
-        ctx.restore();
-      }
+      ctx.restore();
 
-      // 4. Draw Constellation nodes & links
+      // 5. Draw Constellation nodes & links
       particles.forEach(p => {
         const dx = mouse.current.x - p.x;
         const dy = mouse.current.y - p.y;
