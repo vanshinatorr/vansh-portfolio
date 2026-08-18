@@ -19,6 +19,51 @@ export async function POST(request) {
       });
     }
 
+    // Send Discord Webhook Notification if configured
+    const webhookUrl = process.env.REACT_APP_DISCORD_WEBHOOK_URL;
+    if (webhookUrl) {
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: "💼 SDE Candidate API — Hire Request Received!",
+                description: `A recruiter has queried the \`/api/candidate/hire\` endpoint on your GitHub Profile README.`,
+                color: 16752640, // Orange accent
+                fields: [
+                  {
+                    name: "Company Name",
+                    value: company_name || "N/A",
+                    inline: true
+                  },
+                  {
+                    name: "Role Type",
+                    value: role_type || "N/A",
+                    inline: true
+                  },
+                  {
+                    name: "Compensation / Stipend Range",
+                    value: stipend_range || "N/A",
+                    inline: true
+                  }
+                ],
+                footer: {
+                  text: "Vansh Vijay Portfolio API Subsystem"
+                },
+                timestamp: new Date().toISOString()
+              }
+            ]
+          })
+        });
+      } catch (err) {
+        console.error("Failed to dispatch Discord webhook:", err);
+      }
+    }
+
     // Success Response
     return NextResponse.json({
       status: "Success",
