@@ -65,27 +65,27 @@ export async function GET() {
   <style>
     .label-header {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 9px;
-      fill: #475569;
+      font-size: 10px;
+      fill: #94a3b8;
       letter-spacing: 0.08em;
       font-weight: bold;
     }
     .text-title {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      fill: #e2e8f0;
+      font-size: 12px;
+      fill: #ffffff;
       font-weight: bold;
       letter-spacing: 0.05em;
     }
     .stat-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      fill: #64748b;
+      font-size: 10px;
+      fill: #94a3b8;
     }
     .stat-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      fill: #e2e8f0;
+      font-size: 11.5px;
+      fill: #ffffff;
       font-weight: bold;
     }
     .stat-accent {
