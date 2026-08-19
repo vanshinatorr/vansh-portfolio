@@ -4,22 +4,31 @@ import path from 'path';
 
 const HITS_FILE = path.join(process.cwd(), 'telemetry_hits.json');
 
+let globalHits = null;
+
 function incrementHits() {
-  let hits = 1024; // starting baseline
-  try {
-    if (fs.existsSync(HITS_FILE)) {
-      const data = fs.readFileSync(HITS_FILE, 'utf8');
-      const json = JSON.parse(data);
-      hits = json.hits || 1024;
+  if (globalHits === null) {
+    try {
+      if (fs.existsSync(HITS_FILE)) {
+        const data = fs.readFileSync(HITS_FILE, 'utf8');
+        const json = JSON.parse(data);
+        globalHits = json.hits || 1024;
+      } else {
+        globalHits = 1024;
+      }
+    } catch (e) {
+      globalHits = 1024;
     }
-  } catch (e) {}
+  }
   
-  hits += 1;
+  globalHits += 1;
   
+  // Non-blocking asynchronous background write to disk
   try {
-    fs.writeFileSync(HITS_FILE, JSON.stringify({ hits }), 'utf8');
+    fs.writeFile(HITS_FILE, JSON.stringify({ hits: globalHits }), 'utf8', () => {});
   } catch (e) {}
-  return hits;
+  
+  return globalHits;
 }
 
 // Global start time to compute uptime
