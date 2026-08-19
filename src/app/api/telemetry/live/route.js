@@ -60,8 +60,8 @@ export async function GET() {
   const hhStr = String(hh).padStart(2, '0');
   const jaipurTimeStr = `${hhStr}:${mm}:${ss} ${ampm}`;
 
-  // 4. Generate SVG String
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 130" width="100%" height="100%" style="background: #0d0e12; border-radius: 6px; border: 1px solid #1e293b;">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 130" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="599" height="129" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="6" ry="6" />
   <style>
     .label-header {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
