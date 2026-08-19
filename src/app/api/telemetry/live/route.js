@@ -95,7 +95,7 @@ export async function GET() {
 
   <!-- Top Bar -->
   <line x1="0" y1="32" x2="600" y2="32" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="21" class="text-title">LIVE TELEMETRY PORTAL // METRIC DISPATCHER</text>
+  <text x="20" y="21" class="text-title">LIVE SYSTEM TELEMETRY</text>
   <text x="580" y="21" class="label-header" text-anchor="end">GATEWAY_CONN: OK</text>
 
   <!-- Grid Layout -->
