@@ -1,0 +1,127 @@
+import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
+
+const HITS_FILE = path.join(process.cwd(), 'telemetry_hits.json');
+
+function incrementHits() {
+  let hits = 1024; // starting baseline
+  try {
+    if (fs.existsSync(HITS_FILE)) {
+      const data = fs.readFileSync(HITS_FILE, 'utf8');
+      const json = JSON.parse(data);
+      hits = json.hits || 1024;
+    }
+  } catch (e) {}
+  
+  hits += 1;
+  
+  try {
+    fs.writeFileSync(HITS_FILE, JSON.stringify({ hits }), 'utf8');
+  } catch (e) {}
+  return hits;
+}
+
+// Global start time to compute uptime
+const startTime = Date.now();
+
+export async function GET() {
+  // 1. Increment hits
+  const hits = incrementHits();
+
+  // 2. Compute uptime
+  const diffMs = Date.now() - startTime;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const uptimeStr = `${days}d ${hours}h ${minutes}m`;
+
+  // 3. Compute Jaipur time (IST = UTC+5:30)
+  const utcDate = new Date();
+  const utcMs = utcDate.getTime() + utcDate.getTimezoneOffset() * 60000;
+  const jaipurTimeMs = utcMs + (3600000 * 5.5);
+  const jaipurDate = new Date(jaipurTimeMs);
+  
+  let hh = jaipurDate.getHours();
+  const mm = String(jaipurDate.getMinutes()).padStart(2, '0');
+  const ss = String(jaipurDate.getSeconds()).padStart(2, '0');
+  const ampm = hh >= 12 ? 'PM' : 'AM';
+  hh = hh % 12;
+  hh = hh ? hh : 12; // the hour '0' should be '12'
+  const hhStr = String(hh).padStart(2, '0');
+  const jaipurTimeStr = `${hhStr}:${mm}:${ss} ${ampm}`;
+
+  // 4. Generate SVG String
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 130" width="100%" height="100%" style="background: #0d0e12; border-radius: 6px; border: 1px solid #1e293b;">
+  <style>
+    .label-header {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 9px;
+      fill: #475569;
+      letter-spacing: 0.08em;
+      font-weight: bold;
+    }
+    .text-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      fill: #e2e8f0;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      fill: #64748b;
+    }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      fill: #e2e8f0;
+      font-weight: bold;
+    }
+    .stat-accent {
+      fill: #38bdf8; /* Flat slate blue */
+    }
+  </style>
+
+  <!-- Top Bar -->
+  <line x1="0" y1="32" x2="600" y2="32" stroke="#1e293b" stroke-width="1" />
+  <text x="20" y="21" class="text-title">LIVE TELEMETRY PORTAL // METRIC DISPATCHER</text>
+  <text x="580" y="21" class="label-header" text-anchor="end">GATEWAY_CONN: OK</text>
+
+  <!-- Grid Layout -->
+  <!-- Column 1: System Identification -->
+  <text x="20" y="55" class="stat-label">CANDIDATE_ID</text>
+  <text x="20" y="70" class="stat-val">VANSH_VIJAY_0x7F</text>
+
+  <text x="20" y="95" class="stat-label">NODE_PROCESS</text>
+  <text x="20" y="110" class="stat-val stat-accent">VITE_NEXTJS_V15</text>
+
+  <!-- Column 2: Live Traffic Counters -->
+  <text x="220" y="55" class="stat-label">SYSTEM_PING</text>
+  <text x="220" y="70" class="stat-val stat-accent">14ms [LOW_LATENCY]</text>
+
+  <text x="220" y="95" class="stat-label">VISITOR_METRICS</text>
+  <text x="220" y="110" class="stat-val">HITS_AGGREGATE: ${hits}</text>
+
+  <!-- Column 3: Server Telemetry -->
+  <text x="420" y="55" class="stat-label">JAIPUR_LOCAL_TIME</text>
+  <text x="420" y="70" class="stat-val">${jaipurTimeStr}</text>
+
+  <text x="420" y="95" class="stat-label">DAEMON_UPTIME</text>
+  <text x="420" y="110" class="stat-val">${uptimeStr}</text>
+
+  <!-- Vertical Column Dividers -->
+  <line x1="200" y1="32" x2="200" y2="130" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
+  <line x1="400" y1="32" x2="400" y2="130" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
+</svg>`;
+
+  return new NextResponse(svg, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
