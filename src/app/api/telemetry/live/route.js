@@ -38,14 +38,7 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  // 2. Compute uptime
-  const diffMs = Date.now() - startTime;
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-  const uptimeStr = `${days}d ${hours}h ${minutes}m`;
-
-  // 3. Compute Jaipur time (IST = UTC+5:30)
+  // 2. Compute Jaipur time (IST = UTC+5:30)
   const utcDate = new Date();
   const utcMs = utcDate.getTime() + utcDate.getTimezoneOffset() * 60000;
   const jaipurTimeMs = utcMs + (3600000 * 5.5);
@@ -95,30 +88,30 @@ export async function GET() {
 
   <!-- Top Bar -->
   <line x1="0" y1="32" x2="600" y2="32" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="21" class="text-title">LIVE SYSTEM TELEMETRY</text>
-  <text x="580" y="21" class="label-header" text-anchor="end">GATEWAY_CONN: OK</text>
+  <text x="20" y="21" class="text-title">LIVE DEVELOPER TELEMETRY</text>
+  <text x="580" y="21" class="label-header" text-anchor="end">CANDIDATE_STATUS: ACTIVE</text>
 
   <!-- Grid Layout -->
-  <!-- Column 1: System Identification -->
-  <text x="20" y="55" class="stat-label">CANDIDATE_ID</text>
-  <text x="20" y="70" class="stat-val">VANSH_VIJAY_0x7F</text>
+  <!-- Column 1: Role & Project Info -->
+  <text x="20" y="55" class="stat-label">TARGET_ROLE</text>
+  <text x="20" y="70" class="stat-val">MERN / FULL-STACK DEV</text>
 
-  <text x="20" y="95" class="stat-label">NODE_PROCESS</text>
-  <text x="20" y="110" class="stat-val stat-accent">VITE_NEXTJS_V15</text>
+  <text x="20" y="95" class="stat-label">CURRENT_FOCUS</text>
+  <text x="20" y="110" class="stat-val stat-accent">BUILDING CONSISTPAY</text>
 
-  <!-- Column 2: Live Traffic Counters -->
-  <text x="220" y="55" class="stat-label">SYSTEM_PING</text>
-  <text x="220" y="70" class="stat-val stat-accent">14ms [LOW_LATENCY]</text>
+  <!-- Column 2: Core Engineering Metrics -->
+  <text x="220" y="55" class="stat-label">DSA_ENGINE</text>
+  <text x="220" y="70" class="stat-val stat-accent">300+ SOLVED [C++]</text>
 
-  <text x="220" y="95" class="stat-label">VISITOR_METRICS</text>
-  <text x="220" y="110" class="stat-val">HITS_AGGREGATE: ${hits}</text>
+  <text x="220" y="95" class="stat-label">PROFILE_VIEWS</text>
+  <text x="220" y="110" class="stat-val">${hits} VISITS</text>
 
-  <!-- Column 3: Server Telemetry -->
-  <text x="420" y="55" class="stat-label">JAIPUR_LOCAL_TIME</text>
+  <!-- Column 3: Regional Context -->
+  <text x="420" y="55" class="stat-label">LOCAL_TIME_IST</text>
   <text x="420" y="70" class="stat-val">${jaipurTimeStr}</text>
 
-  <text x="420" y="95" class="stat-label">DAEMON_UPTIME</text>
-  <text x="420" y="110" class="stat-val">${uptimeStr}</text>
+  <text x="420" y="95" class="stat-label">LOCATION</text>
+  <text x="420" y="110" class="stat-val">JAIPUR, INDIA</text>
 
   <!-- Vertical Column Dividers -->
   <line x1="200" y1="32" x2="200" y2="130" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
