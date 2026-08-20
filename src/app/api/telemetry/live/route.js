@@ -38,23 +38,8 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  // 2. Compute Jaipur time (IST = UTC+5:30)
-  const utcDate = new Date();
-  const utcMs = utcDate.getTime() + utcDate.getTimezoneOffset() * 60000;
-  const jaipurTimeMs = utcMs + (3600000 * 5.5);
-  const jaipurDate = new Date(jaipurTimeMs);
-  
-  let hh = jaipurDate.getHours();
-  const mm = String(jaipurDate.getMinutes()).padStart(2, '0');
-  const ss = String(jaipurDate.getSeconds()).padStart(2, '0');
-  const ampm = hh >= 12 ? 'PM' : 'AM';
-  hh = hh % 12;
-  hh = hh ? hh : 12; // the hour '0' should be '12'
-  const hhStr = String(hh).padStart(2, '0');
-  const jaipurTimeStr = `${hhStr}:${mm}:${ss} ${ampm}`;
-
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 130" width="100%" height="100%">
-  <rect x="0.5" y="0.5" width="599" height="129" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="6" ry="6" />
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 85" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="799" height="84" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="6" ry="6" />
   <style>
     .label-header {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
@@ -87,35 +72,26 @@ export async function GET() {
   </style>
 
   <!-- Top Bar -->
-  <line x1="0" y1="32" x2="600" y2="32" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="21" class="text-title">LIVE DEVELOPER TELEMETRY</text>
-  <text x="580" y="21" class="label-header" text-anchor="end">CANDIDATE_STATUS: ACTIVE</text>
+  <line x1="0" y1="26" x2="800" y2="26" stroke="#1e293b" stroke-width="1" />
+  <text x="20" y="17" class="text-title">LIVE DEVELOPER TELEMETRY</text>
 
   <!-- Grid Layout -->
-  <!-- Column 1: Role & Project Info -->
-  <text x="20" y="55" class="stat-label">TARGET_ROLE</text>
-  <text x="20" y="70" class="stat-val">MERN / FULL-STACK DEV</text>
+  <!-- Column 1: Role & Project Focus -->
+  <text x="20" y="46" class="stat-label">TARGET_ROLE  :</text>
+  <text x="130" y="46" class="stat-val">MERN / FULL-STACK DEV</text>
 
-  <text x="20" y="95" class="stat-label">CURRENT_FOCUS</text>
-  <text x="20" y="110" class="stat-val stat-accent">BUILDING CONSISTPAY</text>
+  <text x="20" y="68" class="stat-label">CURRENT_FOCUS:</text>
+  <text x="130" y="68" class="stat-val stat-accent">BUILDING CONSISTPAY</text>
 
-  <!-- Column 2: Core Engineering Metrics -->
-  <text x="220" y="55" class="stat-label">DSA_ENGINE</text>
-  <text x="220" y="70" class="stat-val stat-accent">300+ SOLVED [C++]</text>
+  <!-- Column 2: Engineering Metrics -->
+  <text x="420" y="46" class="stat-label">DSA_ENGINE   :</text>
+  <text x="530" y="46" class="stat-val stat-accent">300+ SOLVED [C++]</text>
 
-  <text x="220" y="95" class="stat-label">PROFILE_VIEWS</text>
-  <text x="220" y="110" class="stat-val">${hits} VISITS</text>
+  <text x="420" y="68" class="stat-label">PROFILE_VIEWS:</text>
+  <text x="530" y="68" class="stat-val">${hits} VISITS</text>
 
-  <!-- Column 3: Regional Context -->
-  <text x="420" y="55" class="stat-label">LOCAL_TIME_IST</text>
-  <text x="420" y="70" class="stat-val">${jaipurTimeStr}</text>
-
-  <text x="420" y="95" class="stat-label">LOCATION</text>
-  <text x="420" y="110" class="stat-val">JAIPUR, INDIA</text>
-
-  <!-- Vertical Column Dividers -->
-  <line x1="200" y1="32" x2="200" y2="130" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
-  <line x1="400" y1="32" x2="400" y2="130" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
+  <!-- Vertical Column Divider -->
+  <line x1="400" y1="26" x2="400" y2="85" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
 </svg>`;
 
   return new NextResponse(svg, {
