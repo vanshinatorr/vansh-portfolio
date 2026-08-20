@@ -38,8 +38,8 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 85" width="100%" height="100%">
-  <rect x="0.5" y="0.5" width="799" height="84" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="6" ry="6" />
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 105" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="799" height="104" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="6" ry="6" />
   <style>
     .label-header {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
@@ -73,25 +73,25 @@ export async function GET() {
 
   <!-- Top Bar -->
   <line x1="0" y1="26" x2="800" y2="26" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="17" class="text-title">LIVE DEVELOPER TELEMETRY</text>
+  <text x="25" y="17" class="text-title">LIVE DEVELOPER TELEMETRY</text>
 
   <!-- Grid Layout -->
   <!-- Column 1: Role & Project Focus -->
-  <text x="20" y="46" class="stat-label">TARGET_ROLE  :</text>
-  <text x="130" y="46" class="stat-val">MERN / FULL-STACK DEV</text>
+  <text x="25" y="46" class="stat-label">TARGET_ROLE</text>
+  <text x="25" y="58" class="stat-val">MERN / FULL-STACK DEV</text>
 
-  <text x="20" y="68" class="stat-label">CURRENT_FOCUS:</text>
-  <text x="130" y="68" class="stat-val stat-accent">BUILDING CONSISTPAY</text>
+  <text x="25" y="80" class="stat-label">CURRENT_FOCUS</text>
+  <text x="25" y="92" class="stat-val stat-accent">BUILDING CONSISTPAY</text>
 
   <!-- Column 2: Engineering Metrics -->
-  <text x="420" y="46" class="stat-label">DSA_ENGINE   :</text>
-  <text x="530" y="46" class="stat-val stat-accent">300+ SOLVED [C++]</text>
+  <text x="425" y="46" class="stat-label">DSA_ENGINE</text>
+  <text x="425" y="58" class="stat-val stat-accent">300+ SOLVED [C++]</text>
 
-  <text x="420" y="68" class="stat-label">PROFILE_VIEWS:</text>
-  <text x="530" y="68" class="stat-val">${hits} VISITS</text>
+  <text x="425" y="80" class="stat-label">PROFILE_VIEWS</text>
+  <text x="425" y="92" class="stat-val">${hits} VISITS</text>
 
   <!-- Vertical Column Divider -->
-  <line x1="400" y1="26" x2="400" y2="85" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
+  <line x1="400" y1="26" x2="400" y2="105" stroke="#1e293b" stroke-dasharray="2 2" stroke-width="1" />
 </svg>`;
 
   return new NextResponse(svg, {
