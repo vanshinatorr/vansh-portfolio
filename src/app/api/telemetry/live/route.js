@@ -38,8 +38,8 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 245" width="100%" height="100%">
-  <rect x="0.5" y="0.5" width="799" height="244" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 270" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="799" height="269" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
   
   <style>
     .label-meta {
@@ -94,74 +94,74 @@ export async function GET() {
   </style>
 
   <!-- Middle Divider -->
-  <line x1="395" y1="0" x2="395" y2="174" stroke="#1e293b" stroke-width="1" />
+  <line x1="395" y1="0" x2="395" y2="196" stroke="#1e293b" stroke-width="1" />
 
   <!-- Left Column: Tech Stack -->
-  <text x="20" y="26" class="label-meta">TECH STACK</text>
+  <text x="20" y="30" class="label-meta">TECH STACK</text>
 
   <!-- Box 1: Frontend -->
-  <rect x="20" y="36" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="53" class="box-label">FRONTEND</text>
-  <text x="363" y="53" class="box-val" text-anchor="end">React.js • Next.js • Tailwind CSS</text>
+  <rect x="20" y="42" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <text x="32" y="60" class="box-label">FRONTEND</text>
+  <text x="363" y="60" class="box-val" text-anchor="end">React.js • Next.js • Tailwind CSS</text>
 
   <!-- Box 2: Backend -->
-  <rect x="20" y="70" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="87" class="box-label">BACKEND</text>
-  <text x="363" y="87" class="box-val" text-anchor="end">Node.js • Express • REST APIs</text>
+  <rect x="20" y="80" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <text x="32" y="98" class="box-label">BACKEND</text>
+  <text x="363" y="98" class="box-val" text-anchor="end">Node.js • Express • REST APIs</text>
 
   <!-- Box 3: Database -->
-  <rect x="20" y="104" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="121" class="box-label">DATABASE</text>
-  <text x="363" y="121" class="box-val" text-anchor="end">MongoDB • Mongoose ODM</text>
+  <rect x="20" y="118" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <text x="32" y="136" class="box-label">DATABASE</text>
+  <text x="363" y="136" class="box-val" text-anchor="end">MongoDB • Mongoose ODM</text>
 
   <!-- Box 4: Services -->
-  <rect x="20" y="138" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="155" class="box-label">SERVICES</text>
-  <text x="363" y="155" class="box-val" text-anchor="end">Razorpay • Gemini AI API</text>
+  <rect x="20" y="156" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <text x="32" y="174" class="box-label">SERVICES</text>
+  <text x="363" y="174" class="box-val" text-anchor="end">Razorpay • Gemini AI API</text>
 
   <!-- Right Column: Core Specifications -->
-  <text x="415" y="26" class="label-meta">OVERVIEW</text>
+  <text x="415" y="30" class="label-meta">OVERVIEW</text>
 
-  <text x="415" y="50" class="spec-label">DEVELOPER   :</text>
-  <text x="525" y="50" class="spec-val">Vansh Vijay</text>
+  <text x="415" y="54" class="spec-label">DEVELOPER   :</text>
+  <text x="525" y="54" class="spec-val">Vansh Vijay</text>
 
-  <text x="415" y="76" class="spec-label">EDUCATION   :</text>
-  <text x="525" y="76" class="spec-val">B.Tech CSE</text>
+  <text x="415" y="84" class="spec-label">EDUCATION   :</text>
+  <text x="525" y="84" class="spec-val">B.Tech CSE</text>
 
-  <text x="415" y="102" class="spec-label">EXPERIENCE  :</text>
-  <text x="525" y="102" class="spec-val">Full-Stack Intern @ <tspan class="spec-accent">Plasmid Innovation</tspan></text>
+  <text x="415" y="114" class="spec-label">EXPERIENCE  :</text>
+  <text x="525" y="114" class="spec-val">Full-Stack Intern @ <tspan class="spec-accent">Plasmid Innovation</tspan></text>
 
-  <text x="415" y="128" class="spec-label">ACTIVE BUILD:</text>
-  <text x="525" y="128" class="spec-val spec-accent">ConsistPay (100+ Active Users)</text>
+  <text x="415" y="144" class="spec-label">ACTIVE BUILD:</text>
+  <text x="525" y="144" class="spec-val spec-accent">ConsistPay (100+ Active Users)</text>
 
-  <text x="415" y="154" class="spec-label">CREDENTIALS :</text>
-  <text x="525" y="154" class="spec-val">GCP &amp; MongoDB Certified</text>
+  <text x="415" y="174" class="spec-label">CREDENTIALS :</text>
+  <text x="525" y="174" class="spec-val">GCP &amp; MongoDB Certified</text>
 
   <!-- Bottom Telemetry Section -->
-  <line x1="0" y1="174" x2="800" y2="174" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="192" class="label-meta">TELEMETRY</text>
+  <line x1="0" y1="196" x2="800" y2="196" stroke="#1e293b" stroke-width="1" />
+  <text x="20" y="216" class="label-meta">TELEMETRY</text>
 
   <!-- Metric 1: Target Role -->
-  <text x="20" y="209" class="telemetry-label">TARGET ROLE</text>
-  <text x="20" y="230" class="telemetry-val">MERN / FULL-STACK DEV</text>
+  <text x="20" y="236" class="telemetry-label">TARGET ROLE</text>
+  <text x="20" y="256" class="telemetry-val">MERN / FULL-STACK DEV</text>
 
-  <line x1="205" y1="196" x2="205" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="205" y1="222" x2="205" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 2: Current Focus -->
-  <text x="220" y="209" class="telemetry-label">CURRENT FOCUS</text>
-  <text x="220" y="230" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
+  <text x="220" y="236" class="telemetry-label">CURRENT FOCUS</text>
+  <text x="220" y="256" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
 
-  <line x1="405" y1="196" x2="405" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="405" y1="222" x2="405" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 3: DSA Engine -->
-  <text x="420" y="209" class="telemetry-label">DSA ENGINE</text>
-  <text x="420" y="230" class="telemetry-val stat-accent">300+ SOLVED</text>
+  <text x="420" y="236" class="telemetry-label">DSA ENGINE</text>
+  <text x="420" y="256" class="telemetry-val stat-accent">300+ SOLVED</text>
 
-  <line x1="605" y1="196" x2="605" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="605" y1="222" x2="605" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 4: Profile Views -->
-  <text x="620" y="209" class="telemetry-label">PROFILE VIEWS</text>
-  <text x="620" y="230" class="telemetry-val">${hits} VISITS</text>
+  <text x="620" y="236" class="telemetry-label">PROFILE VIEWS</text>
+  <text x="620" y="256" class="telemetry-val">${hits} VISITS</text>
 </svg>`;
 
   return new NextResponse(svg, {
