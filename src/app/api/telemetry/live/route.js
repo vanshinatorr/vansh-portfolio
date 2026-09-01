@@ -38,8 +38,8 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 270" width="100%" height="100%">
-  <rect x="0.5" y="0.5" width="799" height="269" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 285" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="799" height="284" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
   
   <style>
     .label-meta {
@@ -93,11 +93,12 @@ export async function GET() {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9.5px;
       fill: #94a3b8;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
+      font-weight: bold;
     }
     .telemetry-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 11.5px;
       fill: #ffffff;
       font-weight: bold;
     }
@@ -112,7 +113,7 @@ export async function GET() {
   <text x="780" y="22" class="text-status" text-anchor="end">STATUS: ACTIVE</text>
 
   <!-- Middle Grid: Architecture + Specs -->
-  <line x1="395" y1="34" x2="395" y2="200" stroke="#1e293b" stroke-width="1" />
+  <line x1="395" y1="34" x2="395" y2="198" stroke="#1e293b" stroke-width="1" />
 
   <!-- Left Column: System Stack Pipeline -->
   <text x="20" y="54" class="label-meta">01 / SYSTEM STACK PIPELINE</text>
@@ -156,30 +157,30 @@ export async function GET() {
   <text x="525" y="182" class="spec-val">GCP &amp; MongoDB Certified</text>
 
   <!-- Bottom Telemetry Section -->
-  <line x1="0" y1="200" x2="800" y2="200" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="217" class="label-meta">03 / LIVE METRICS TELEMETRY</text>
+  <line x1="0" y1="198" x2="800" y2="198" stroke="#1e293b" stroke-width="1" />
+  <text x="20" y="215" class="label-meta">03 / LIVE METRICS TELEMETRY</text>
 
   <!-- Metric 1: Target Role -->
-  <text x="20" y="238" class="telemetry-label">TARGET_ROLE</text>
-  <text x="20" y="254" class="telemetry-val">MERN / FULL-STACK DEV</text>
+  <text x="20" y="236" class="telemetry-label">TARGET_ROLE</text>
+  <text x="20" y="260" class="telemetry-val">MERN / FULL-STACK DEV</text>
 
-  <line x1="205" y1="225" x2="205" y2="260" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="205" y1="220" x2="205" y2="268" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 2: Current Focus -->
-  <text x="220" y="238" class="telemetry-label">CURRENT_FOCUS</text>
-  <text x="220" y="254" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
+  <text x="220" y="236" class="telemetry-label">CURRENT_FOCUS</text>
+  <text x="220" y="260" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
 
-  <line x1="405" y1="225" x2="405" y2="260" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="405" y1="220" x2="405" y2="268" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 3: DSA Engine -->
-  <text x="420" y="238" class="telemetry-label">DSA_ENGINE</text>
-  <text x="420" y="254" class="telemetry-val stat-accent">300+ SOLVED [C++]</text>
+  <text x="420" y="236" class="telemetry-label">DSA_ENGINE</text>
+  <text x="420" y="260" class="telemetry-val stat-accent">300+ SOLVED [C++]</text>
 
-  <line x1="605" y1="225" x2="605" y2="260" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="605" y1="220" x2="605" y2="268" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 4: Profile Views -->
-  <text x="620" y="238" class="telemetry-label">PROFILE_VIEWS</text>
-  <text x="620" y="254" class="telemetry-val">${hits} VISITS</text>
+  <text x="620" y="236" class="telemetry-label">PROFILE_VIEWS</text>
+  <text x="620" y="260" class="telemetry-val">${hits} VISITS</text>
 </svg>`;
 
   return new NextResponse(svg, {
