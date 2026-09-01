@@ -38,8 +38,8 @@ export async function GET() {
   // 1. Increment hits
   const hits = incrementHits();
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 270" width="100%" height="100%">
-  <rect x="0.5" y="0.5" width="799" height="269" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 255" width="100%" height="100%">
+  <rect x="0.5" y="0.5" width="799" height="254" fill="#0d0e12" stroke="#1e293b" stroke-width="1" rx="8" ry="8" />
   
   <style>
     .label-meta {
@@ -147,29 +147,28 @@ export async function GET() {
 
   <!-- Bottom Telemetry Section -->
   <line x1="0" y1="196" x2="800" y2="196" stroke="#1e293b" stroke-width="1" />
-  <text x="20" y="216" class="label-meta">TELEMETRY</text>
 
   <!-- Metric 1: Target Role -->
-  <text x="20" y="236" class="telemetry-label">TARGET ROLE</text>
-  <text x="20" y="256" class="telemetry-val">MERN / FULL-STACK DEV</text>
+  <text x="20" y="216" class="telemetry-label">TARGET ROLE</text>
+  <text x="20" y="238" class="telemetry-val">MERN / FULL-STACK DEV</text>
 
-  <line x1="205" y1="222" x2="205" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="205" y1="206" x2="205" y2="246" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 2: Current Focus -->
-  <text x="220" y="236" class="telemetry-label">CURRENT FOCUS</text>
-  <text x="220" y="256" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
+  <text x="220" y="216" class="telemetry-label">CURRENT FOCUS</text>
+  <text x="220" y="238" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
 
-  <line x1="405" y1="222" x2="405" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="405" y1="206" x2="405" y2="246" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 3: DSA Engine -->
-  <text x="420" y="236" class="telemetry-label">DSA ENGINE</text>
-  <text x="420" y="256" class="telemetry-val stat-green">300+ SOLVED</text>
+  <text x="420" y="216" class="telemetry-label">DSA ENGINE</text>
+  <text x="420" y="238" class="telemetry-val stat-green">300+ SOLVED</text>
 
-  <line x1="605" y1="222" x2="605" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
+  <line x1="605" y1="206" x2="605" y2="246" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 4: Profile Views -->
-  <text x="620" y="236" class="telemetry-label">PROFILE VIEWS</text>
-  <text x="620" y="256" class="telemetry-val stat-accent">${hits} VISITS</text>
+  <text x="620" y="216" class="telemetry-label">PROFILE VIEWS</text>
+  <text x="620" y="238" class="telemetry-val stat-accent">${hits} VISITS</text>
 </svg>`;
 
   return new NextResponse(svg, {
