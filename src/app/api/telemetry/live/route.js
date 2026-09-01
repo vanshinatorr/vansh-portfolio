@@ -126,7 +126,7 @@ export async function GET() {
   <text x="525" y="50" class="spec-val">Vansh Vijay</text>
 
   <text x="415" y="76" class="spec-label">EDUCATION   :</text>
-  <text x="525" y="76" class="spec-val">B.Tech CSE (CGPA: 7.75)</text>
+  <text x="525" y="76" class="spec-val">B.Tech CSE</text>
 
   <text x="415" y="102" class="spec-label">EXPERIENCE  :</text>
   <text x="525" y="102" class="spec-val">Full-Stack Intern @ Plasmid</text>
