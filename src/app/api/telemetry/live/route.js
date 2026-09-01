@@ -142,25 +142,25 @@ export async function GET() {
   <text x="20" y="192" class="label-meta">TELEMETRY</text>
 
   <!-- Metric 1: Target Role -->
-  <text x="20" y="209" class="telemetry-label">TARGET_ROLE</text>
+  <text x="20" y="209" class="telemetry-label">TARGET ROLE</text>
   <text x="20" y="230" class="telemetry-val">MERN / FULL-STACK DEV</text>
 
   <line x1="205" y1="196" x2="205" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 2: Current Focus -->
-  <text x="220" y="209" class="telemetry-label">CURRENT_FOCUS</text>
+  <text x="220" y="209" class="telemetry-label">CURRENT FOCUS</text>
   <text x="220" y="230" class="telemetry-val stat-accent">BUILDING CONSISTPAY</text>
 
   <line x1="405" y1="196" x2="405" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 3: DSA Engine -->
-  <text x="420" y="209" class="telemetry-label">DSA_ENGINE</text>
+  <text x="420" y="209" class="telemetry-label">DSA ENGINE</text>
   <text x="420" y="230" class="telemetry-val stat-accent">300+ SOLVED</text>
 
   <line x1="605" y1="196" x2="605" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 4: Profile Views -->
-  <text x="620" y="209" class="telemetry-label">PROFILE_VIEWS</text>
+  <text x="620" y="209" class="telemetry-label">PROFILE VIEWS</text>
   <text x="620" y="230" class="telemetry-val">${hits} VISITS</text>
 </svg>`;
 
