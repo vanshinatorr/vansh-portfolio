@@ -129,7 +129,7 @@ export async function GET() {
   <text x="525" y="76" class="spec-val">B.Tech CSE</text>
 
   <text x="415" y="102" class="spec-label">EXPERIENCE  :</text>
-  <text x="525" y="102" class="spec-val">Full-Stack Intern @ Plasmid</text>
+  <text x="525" y="102" class="spec-val">Full-Stack Intern @ <tspan class="spec-accent">Plasmid Innovation</tspan></text>
 
   <text x="415" y="128" class="spec-label">ACTIVE BUILD:</text>
   <text x="525" y="128" class="spec-val spec-accent">ConsistPay (100+ Active Users)</text>
