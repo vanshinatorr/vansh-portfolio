@@ -99,24 +99,24 @@ export async function GET() {
   <!-- Left Column: Tech Stack -->
   <text x="20" y="26" class="label-meta">TECH STACK</text>
 
-  <!-- Box 1: Client UI -->
+  <!-- Box 1: Frontend -->
   <rect x="20" y="36" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="53" class="box-label">CLIENT UI</text>
+  <text x="32" y="53" class="box-label">FRONTEND</text>
   <text x="363" y="53" class="box-val" text-anchor="end">React.js • Next.js • Tailwind CSS</text>
 
-  <!-- Box 2: Backend API -->
+  <!-- Box 2: Backend -->
   <rect x="20" y="70" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="87" class="box-label">BACKEND API</text>
+  <text x="32" y="87" class="box-label">BACKEND</text>
   <text x="363" y="87" class="box-val" text-anchor="end">Node.js • Express • REST APIs</text>
 
-  <!-- Box 3: Database Layer -->
+  <!-- Box 3: Database -->
   <rect x="20" y="104" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="121" class="box-label">DATABASE LAYER</text>
+  <text x="32" y="121" class="box-label">DATABASE</text>
   <text x="363" y="121" class="box-val" text-anchor="end">MongoDB • Mongoose ODM</text>
 
-  <!-- Box 4: Integrations -->
+  <!-- Box 4: Services -->
   <rect x="20" y="138" width="355" height="26" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
-  <text x="32" y="155" class="box-label">INTEGRATIONS</text>
+  <text x="32" y="155" class="box-label">SERVICES</text>
   <text x="363" y="155" class="box-val" text-anchor="end">Razorpay • Gemini AI API</text>
 
   <!-- Right Column: Core Specifications -->
