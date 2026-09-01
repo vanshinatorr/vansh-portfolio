@@ -52,7 +52,7 @@ export async function GET() {
     .box-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      fill: #ffffff;
+      fill: #f8fafc;
       font-weight: bold;
     }
     .box-val {
@@ -69,11 +69,15 @@ export async function GET() {
     .spec-val {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      fill: #ffffff;
+      fill: #f8fafc;
       font-weight: bold;
     }
     .spec-accent {
       fill: #38bdf8;
+    }
+    .spec-green {
+      fill: #34d399;
+      font-weight: bold;
     }
     .telemetry-label {
       font-family: 'JetBrains Mono', monospace;
@@ -85,11 +89,15 @@ export async function GET() {
     .telemetry-val {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11.5px;
-      fill: #ffffff;
+      fill: #f8fafc;
       font-weight: bold;
     }
     .stat-accent {
       fill: #38bdf8;
+    }
+    .stat-green {
+      fill: #34d399;
+      font-weight: bold;
     }
   </style>
 
@@ -100,22 +108,22 @@ export async function GET() {
   <text x="20" y="30" class="label-meta">TECH STACK</text>
 
   <!-- Box 1: Frontend -->
-  <rect x="20" y="42" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <rect x="20" y="42" width="355" height="28" fill="#0f172a" stroke="#334155" stroke-width="1" rx="4" />
   <text x="32" y="60" class="box-label">FRONTEND</text>
   <text x="363" y="60" class="box-val" text-anchor="end">React.js • Next.js • Tailwind CSS</text>
 
   <!-- Box 2: Backend -->
-  <rect x="20" y="80" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <rect x="20" y="80" width="355" height="28" fill="#0f172a" stroke="#334155" stroke-width="1" rx="4" />
   <text x="32" y="98" class="box-label">BACKEND</text>
   <text x="363" y="98" class="box-val" text-anchor="end">Node.js • Express • REST APIs</text>
 
   <!-- Box 3: Database -->
-  <rect x="20" y="118" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <rect x="20" y="118" width="355" height="28" fill="#0f172a" stroke="#334155" stroke-width="1" rx="4" />
   <text x="32" y="136" class="box-label">DATABASE</text>
   <text x="363" y="136" class="box-val" text-anchor="end">MongoDB • Mongoose ODM</text>
 
   <!-- Box 4: Services -->
-  <rect x="20" y="156" width="355" height="28" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4" />
+  <rect x="20" y="156" width="355" height="28" fill="#0f172a" stroke="#334155" stroke-width="1" rx="4" />
   <text x="32" y="174" class="box-label">SERVICES</text>
   <text x="363" y="174" class="box-val" text-anchor="end">Razorpay • Gemini AI API</text>
 
@@ -132,10 +140,10 @@ export async function GET() {
   <text x="525" y="114" class="spec-val">Full-Stack Intern @ <tspan class="spec-accent">Plasmid Innovation</tspan></text>
 
   <text x="415" y="144" class="spec-label">ACTIVE BUILD:</text>
-  <text x="525" y="144" class="spec-val spec-accent">ConsistPay (100+ Active Users)</text>
+  <text x="525" y="144" class="spec-val"><tspan class="spec-accent">ConsistPay</tspan> <tspan class="spec-green">(100+ Active Users)</tspan></text>
 
   <text x="415" y="174" class="spec-label">CREDENTIALS :</text>
-  <text x="525" y="174" class="spec-val">GCP &amp; MongoDB Certified</text>
+  <text x="525" y="174" class="spec-val"><tspan class="spec-green">GCP</tspan> &amp; <tspan class="spec-green">MongoDB</tspan> Certified</text>
 
   <!-- Bottom Telemetry Section -->
   <line x1="0" y1="196" x2="800" y2="196" stroke="#1e293b" stroke-width="1" />
@@ -155,13 +163,13 @@ export async function GET() {
 
   <!-- Metric 3: DSA Engine -->
   <text x="420" y="236" class="telemetry-label">DSA ENGINE</text>
-  <text x="420" y="256" class="telemetry-val stat-accent">300+ SOLVED</text>
+  <text x="420" y="256" class="telemetry-val stat-green">300+ SOLVED</text>
 
   <line x1="605" y1="222" x2="605" y2="262" stroke="#1e293b" stroke-dasharray="2 2" />
 
   <!-- Metric 4: Profile Views -->
   <text x="620" y="236" class="telemetry-label">PROFILE VIEWS</text>
-  <text x="620" y="256" class="telemetry-val">${hits} VISITS</text>
+  <text x="620" y="256" class="telemetry-val stat-accent">${hits} VISITS</text>
 </svg>`;
 
   return new NextResponse(svg, {
