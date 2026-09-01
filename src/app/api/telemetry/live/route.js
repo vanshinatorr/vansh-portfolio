@@ -155,7 +155,7 @@ export async function GET() {
 
   <!-- Metric 3: DSA Engine -->
   <text x="420" y="209" class="telemetry-label">DSA_ENGINE</text>
-  <text x="420" y="230" class="telemetry-val stat-accent">300+ SOLVED [C++]</text>
+  <text x="420" y="230" class="telemetry-val stat-accent">300+ SOLVED</text>
 
   <line x1="605" y1="196" x2="605" y2="236" stroke="#1e293b" stroke-dasharray="2 2" />
 
