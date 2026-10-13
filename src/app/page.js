@@ -1334,20 +1334,20 @@ function ChessPuzzle() {
         {solved ? (
           <div className="chess-certified-top-banner">
             <span className="certified-status-dot" />
-            <span>You can be a certified friend of Vansh ✨</span>
+            <span>Looks like we&apos;re friends now.</span>
           </div>
         ) : (
-          <span className="chess-widget-title">Friendship Qualifier</span>
+          <span className="chess-widget-title">FRIENDSHIP QUALIFIER</span>
         )}
       </div>
 
       {vibeState === 'init' && (
         <div className="vibe-scanner-panel">
           <div className="vibe-scanner-orb"></div>
-          <h3>Tactical Compatibility</h3>
-          <p>Check if you are eligible to be Vansh&apos;s friend.</p>
+          <h3>FRIENDSHIP QUALIFIER</h3>
+          <p>Let&apos;s see if we&apos;re the same kind of weird.</p>
           <button className="vibe-scan-btn" onClick={startVibeCheck}>
-            Scan Eligibility
+            MAKE A MISTAKE →
           </button>
         </div>
       )}
@@ -1706,7 +1706,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [hoveredProject, setHoveredProject] = useState(null);
-  const [githubContributions, setGithubContributions] = useState(204);
+  const [githubContributions, setGithubContributions] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [activeSkill, setActiveSkill] = useState("Figma (Layout & Prototyping)");
   
@@ -2129,7 +2129,7 @@ export default function Home() {
           <ScrambleText text=" not projects." delay={700} />
         </h1>
         <p className="hero-statement" style={{ position: "relative", zIndex: 1 }}>
-          <strong>Developer & Designer, founder of ConsistPay</strong> — a real platform used by 100+ students. Blending high-performance systems engineering with pixel-perfect Figma layouts.{" "}
+          Full Stack Developer building real-world applications with Java, Spring Boot, and modern web technologies. Creator of ConsistPay, a coding consistency platform used by 100+ students.{" "}
           <Typewriter lines={["Full Stack & UI/UX Design.", "Designing in Figma.", "Final year CSE @ JECRC.", "Shipping real products."]} />
         </p>
         <div className="hero-actions" style={{ position: "relative", zIndex: 1 }}>
@@ -2137,7 +2137,7 @@ export default function Home() {
           <a href="https://github.com/vanshinatorr" target="_blank" rel="noreferrer" className="btn-ghost" data-track="GitHub (Hero)">GitHub →</a>
         </div>
         <div className="hero-stats" style={{ position: "relative", zIndex: 1 }}>
-          {[{ to: 100, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess ELO" }, { to: githubContributions, suffix: "", label: "GitHub Contributions" }].map(s => (
+          {[{ to: 68, suffix: "+", label: "ConsistPay Users" }, { to: 300, suffix: "+", label: "DSA Problems" }, { to: 1500, suffix: "+", label: "Chess Rating" }, { to: githubContributions, suffix: "", label: "GitHub Contributions" }].map(s => (
             <div className="stat-item" key={s.label}>
               <span className="stat-num"><Counter to={s.to} suffix={s.suffix} /></span>
               <span className="stat-label">{s.label}</span>
@@ -2156,9 +2156,9 @@ export default function Home() {
           <div className="bento-card bento-bio reveal">
             <h2 className="bento-headline">Who is Vansh?</h2>
             <div className="bento-body">
-              <p>I&apos;m a final year Computer Science student at JECRC University, Jaipur. I operate at the intersection of robust backend engineering and high-fidelity user interface design.</p>
-              <p>I specialize in building full-stack products with the MERN Stack while simultaneously crafting pixel-perfect, modern component design systems in Figma.</p>
-              <p>As the founder of <strong>ConsistPay</strong>, I shipped real-world code to 100+ users. Currently solving DSA consistently and looking for opportunities to design and build premium digital platforms.</p>
+              <p>I&apos;m Vansh — a final-year Computer Science student who likes building things, breaking things, and figuring out how they work. I work mainly with Java, Spring Boot, REST APIs, databases, and modern web technologies.</p>
+              <p>I built ConsistPay, a coding consistency platform used by 68+ students. It taught me what happens when an idea leaves the notebook and meets real users.</p>
+              <p>Outside code, I&apos;m an extrovert and a <span style={{ color: 'var(--accent)' }}>jack of all trades</span> — I&apos;ll be playing chess one day, chasing a trail the next, then picking up a ukulele or bansuri just because I felt like it. Gym, running, skating, calisthenics… if something sparks my curiosity, I&apos;m probably trying it.</p>
             </div>
           </div>
 

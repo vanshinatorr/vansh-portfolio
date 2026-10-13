@@ -190,6 +190,6 @@ export async function fetchGithubContributions() {
   } catch (e) {
     console.warn("Server action failed to fetch Github contributions:", e.message);
   }
-  return 521;
+  return 0;
 }
 
