@@ -174,14 +174,22 @@ export async function fetchGithubContributions() {
     });
     if (res.ok) {
       const data = await res.json();
+      // Sum numeric values, coercing strings to numbers when needed
       if (data && data.total) {
-        const sum = Object.values(data.total).reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : 0), 0);
+        const sum = Object.values(data.total).reduce((acc, curr) => {
+          const num = typeof curr === 'number' ? curr : Number(curr);
+          return acc + (isNaN(num) ? 0 : num);
+        }, 0);
         if (sum > 0) {
           return sum;
         }
       }
+      // Fallback for older shape where contributions is an array
       if (data && data.contributions && Array.isArray(data.contributions)) {
-        const sum = data.contributions.reduce((acc, item) => acc + (item.count || 0), 0);
+        const sum = data.contributions.reduce((acc, item) => {
+          const cnt = item.count ? Number(item.count) : 0;
+          return acc + (isNaN(cnt) ? 0 : cnt);
+        }, 0);
         if (sum > 0) {
           return sum;
         }
