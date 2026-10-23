@@ -217,30 +217,49 @@ const playSynthSFX = (type) => {
 function Counter({ to, suffix = "" }) {
   const [val, setVal] = useState(0);
   const ref = useRef(null);
-  const started = useRef(false);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        let v = 0; 
-        const step = Math.ceil(to / 50);
-        const t = setInterval(() => { 
-          v += step; 
-          if (v >= to) { 
-            setVal(to); 
-            clearInterval(t); 
-          } else {
-            setVal(v); 
-          }
-        }, 28);
+    if (!to || to <= 0) {
+      setVal(0);
+      return;
+    }
+
+    let timer = null;
+    let animated = false;
+
+    const runCount = () => {
+      if (animated) return;
+      animated = true;
+      let v = 0;
+      const step = Math.max(1, Math.ceil(to / 50));
+      timer = setInterval(() => {
+        v += step;
+        if (v >= to) {
+          setVal(to);
+          clearInterval(timer);
+        } else {
+          setVal(v);
+        }
+      }, 24);
+    };
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        runCount();
       }
-    }, { threshold: 0.5 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+    }, { threshold: 0.1 });
+
+    if (ref.current) {
+      obs.observe(ref.current);
+    }
+
+    return () => {
+      obs.disconnect();
+      if (timer) clearInterval(timer);
+    };
   }, [to]);
 
-  return <span ref={ref}>{val}{suffix}</span>;
+  return <span ref={ref}>{val > 0 ? val : (to > 0 ? to : 0)}{suffix}</span>;
 }
 
 // ── Typewriter ────────────────────────────────────────────────────────────────
@@ -1766,13 +1785,38 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     fetchGithubContributions()
       .then(total => {
-        if (total > 0) {
+        if (active && total > 0) {
           setGithubContributions(total);
+        } else if (active) {
+          // Direct client fallback in case server action is cached with 0 or blocked
+          fetch("https://github-contributions-api.jogruber.de/v4/vanshinatorr")
+            .then(res => res.json())
+            .then(data => {
+              if (active && data?.total) {
+                const sum = Object.values(data.total).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+                if (sum > 0) setGithubContributions(sum);
+              }
+            })
+            .catch(() => {});
         }
       })
-      .catch(err => console.warn("Failed to fetch Github contributions via Server Action:", err));
+      .catch(() => {
+        if (active) {
+          fetch("https://github-contributions-api.jogruber.de/v4/vanshinatorr")
+            .then(res => res.json())
+            .then(data => {
+              if (active && data?.total) {
+                const sum = Object.values(data.total).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+                if (sum > 0) setGithubContributions(sum);
+              }
+            })
+            .catch(() => {});
+        }
+      });
+    return () => { active = false; };
   }, []);
 
   const handleProjectMouseMove = useCallback((e) => {
@@ -2007,7 +2051,7 @@ export default function Home() {
   }, [introDone]);
 
   const projects = [
-    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "100+ users" },
+    { idx: "01", name: "ConsistPay", desc: "A real coding accountability platform — not a tutorial project. Students deposit money, submit daily proof, and earn it back. Built full-stack: JWT auth, Razorpay payments, Gemini AI insights, streak engine, and GitHub-style analytics.", tags: ["Node.js", "Express", "MongoDB", "JWT", "Razorpay", "Gemini AI", "React"], live: "https://daily-coding-habit-tracker.vercel.app", video: "https://youtu.be/pGqnJAbAFBw?si=Gd-PFwZWQzlqk0c1", repo: "https://github.com/vanshinatorr/Daily-coding-habit-tracker", badge: "100+ users" },
     { idx: "02", name: "Chess Multiplayer", desc: "Real-time multiplayer chess platform. Room-based matchmaking, live move sync across clients, turn management, and game timers — all over WebSockets.", tags: ["Socket.IO", "Node.js", "WebSockets", "JavaScript"], live: "https://chess-multiplayer-y54n.onrender.com", repo: "https://github.com/vanshinatorr/chess-multiplayer", badge: "Live" },
     { idx: "03", name: "Automated Speaking Test Solver", desc: "An intelligent automation engine that solves interactive speaking tests in real-time. Features live speech-to-text (STT) audio transcription, conversational LLM API integration for response generation, and text-to-speech (TTS) voice synthesis.", tags: ["Python", "Speech-to-Text", "Text-to-Speech", "LLM APIs", "Automation"], repo: "https://github.com/vanshinatorr/automated-speaking-test-solver", badge: "Automation" },
     { idx: "04", name: "Hotel Landing Page", desc: "Modern responsive hotel booking website with room showcase and booking form. Focused on clean UI, responsive layouts, and visual design — demonstrating frontend fundamentals done right.", tags: ["HTML", "CSS", "Responsive Design", "UI/UX"], repo: "https://github.com/vanshinatorr/hotel-landing-page-01", badge: "Frontend" },
@@ -2212,6 +2256,14 @@ export default function Home() {
                   <div className="project-card-actions">
                     {p.live && (
                       <a href={p.live} target="_blank" rel="noreferrer" className="btn-card-primary" data-track={`Live Demo: ${p.name}`}>Live Demo ↗</a>
+                    )}
+                    {p.video && (
+                      <a href={p.video} target="_blank" rel="noreferrer" className="btn-card-video" data-track={`Video Demo: ${p.name}`}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Demo ↗
+                      </a>
                     )}
                     {p.repo && (
                       <a href={p.repo} target="_blank" rel="noreferrer" className="btn-card-ghost" data-track={`GitHub Repo: ${p.name}`}>GitHub ↗</a>

@@ -2202,6 +2202,7 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 }
 .project-card-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.65rem;
   margin-top: auto;
 }
@@ -2220,6 +2221,28 @@ footer { border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; 
 .btn-card-primary:hover {
   background: var(--accent2);
   box-shadow: 0 0 12px rgba(167, 139, 250, 0.35);
+}
+.btn-card-video {
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.95rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 0, 0.4);
+  background: rgba(255, 107, 0, 0.08);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+.btn-card-video:hover {
+  background: rgba(255, 107, 0, 0.2);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(255, 107, 0, 0.3);
 }
 .btn-card-ghost {
   text-decoration: none;

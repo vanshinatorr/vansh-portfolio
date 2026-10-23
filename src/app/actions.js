@@ -170,7 +170,7 @@ export async function sendDiscordMessage({ name, contact, message }) {
 export async function fetchGithubContributions() {
   try {
     const res = await fetch("https://github-contributions-api.jogruber.de/v4/vanshinatorr", {
-      next: { revalidate: 1800 }
+      next: { revalidate: 60 }
     });
     if (res.ok) {
       const data = await res.json();
